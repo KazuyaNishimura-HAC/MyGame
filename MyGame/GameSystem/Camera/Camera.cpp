@@ -1,13 +1,14 @@
 ﻿#include "Camera.h"
-#include "InputSystem/InputSystem.h"
-#include "Screen.h"
+#include "../InputSystem/InputSystem.h"
+#include "../../Screen.h"
 #include <imgui/imgui.h>
 #include <GSeffect.h>
 #include <array>
 const double PI{ 3.1415926535f };
 Camera::Camera(IWorld* world,int id)
 {
-    world_ = world;    
+    world_ = world;
+    delete world;
     viewRange_ = Screen::WindowsScreen();
     viewOffset_ = { 0,0 };
     priority_ = IsDebug;

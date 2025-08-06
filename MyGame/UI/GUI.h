@@ -3,7 +3,7 @@
 
 #include <gslib.h>
 #include "../Screen.h"
-#include "../Camera.h"
+#include "../GameSystem/Camera/Camera.h"
 
 class GUI
 {

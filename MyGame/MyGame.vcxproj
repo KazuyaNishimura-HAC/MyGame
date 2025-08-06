@@ -138,20 +138,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="InputSystem\GamepadInput.cpp" />
-    <ClCompile Include="InputSystem\InputSystem.cpp" />
+    <ClCompile Include="GameSystem\Camera\Camera.cpp" />
+    <ClCompile Include="GameSystem\InputSystem\GamepadInput.cpp" />
+    <ClCompile Include="GameSystem\InputSystem\InputSystem.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Scene\SceneManager.cpp" />
+    <ClCompile Include="Scene\Scenes\GamePlayScene.cpp" />
+    <ClCompile Include="Scene\Scenes\LoadScene.cpp" />
+    <ClCompile Include="Scene\Scenes\ResultScene.cpp" />
+    <ClCompile Include="Scene\Scenes\TitleScene.cpp" />
     <ClCompile Include="UI\GUIManager.cpp" />
     <ClCompile Include="UI\Image.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="InputSystem\GamepadInput.h" />
-    <ClInclude Include="InputSystem\IInputModule.h" />
-    <ClInclude Include="InputSystem\InputSystem.h" />
-    <ClInclude Include="InputSystem\NullInput.h" />
+    <ClInclude Include="GameSystem\Camera\Camera.h" />
+    <ClInclude Include="GameSystem\InputSystem\GamepadInput.h" />
+    <ClInclude Include="GameSystem\InputSystem\IInputModule.h" />
+    <ClInclude Include="GameSystem\InputSystem\InputSystem.h" />
+    <ClInclude Include="GameSystem\InputSystem\NullInput.h" />
     <ClInclude Include="NameTag.h" />
+    <ClInclude Include="Scene\IScene.h" />
+    <ClInclude Include="Scene\SceneData.h" />
+    <ClInclude Include="Scene\SceneManager.h" />
+    <ClInclude Include="Scene\SceneNull.h" />
+    <ClInclude Include="Scene\Scenes\GamePlayScene.h" />
+    <ClInclude Include="Scene\Scenes\LoadScene.h" />
+    <ClInclude Include="Scene\Scenes\ResultScene.h" />
+    <ClInclude Include="Scene\Scenes\TitleScene.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="UI\GUI.h" />
     <ClInclude Include="UI\GUIManager.h" />

@@ -1,34 +1,36 @@
 ﻿#include "GamePlayScene.h"
+#include "../../World/World.h"
+#include "../../AssetID/Assets.h"
+#include "../../GameSystem/InputSystem/InputSystem.h"
 
 // 開始
 void GamePlayScene::Start() {
+    
     //メッシュ読み込み
-    gsLoadMesh(0, "Assets/Model/patti.msh");
-    gsLoadTexture(0, "Assets/SkyBox/default.dds");
-    camera_ = new Camera(nullptr, 0);
+    gsLoadMesh(Model::Player, "Assets/Model/Charactor/Player/Player.mshb");
+
+    world_.AddPlayer(new Player(&world_));
+    world_.AddCameras(new Camera(&world_, 0));
+    world_.Start();
 }
 
 // 更新
 void GamePlayScene::Update(float delta_time) {
-    camera_->Update(delta_time);
-    
+    world_.Update(delta_time);
 }
 // 描画
 void GamePlayScene::Draw() const {
     //バッファクリア（色と深度）
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    camera_->Draw();
-    gsDrawSkyboxCubemap(0);
-    draw_grid3D();
-    // メッシュの描画
-    gsDrawMesh(0);
-
+    world_.Draw();
+    
+    //draw_grid3D();
 }
 
 // 終了しているか
 bool GamePlayScene::IsEnd() const {
-    return false;
+    return InputSystem::ButtonTrigger(InputSystem::Button::Y);
 }
 
 // 次のシーンを返す
@@ -38,8 +40,7 @@ SceneIndex GamePlayScene::Next() const {
 
 // 終了
 void GamePlayScene::End() {
-    delete camera_;
-    camera_ = nullptr;
+    world_.Clear();
 }
 
 bool GamePlayScene::IsRunning()

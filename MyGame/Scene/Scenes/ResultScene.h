@@ -24,6 +24,9 @@ public:
         return false;
     }
     virtual void Debug(float delta_time)override;
+
+private:
+    bool sceneEnd_{ false };
 };
 
 #endif

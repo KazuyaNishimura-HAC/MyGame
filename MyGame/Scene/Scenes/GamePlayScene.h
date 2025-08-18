@@ -2,6 +2,7 @@
 #define GAME_PLAY_SCENE_H_
 
 #include "../IScene.h"
+#include "../../World/World.h"
 #include "../SceneManager.h"
 #include "../../GameSystem/Camera/Camera.h"
 #include <gslib.h>
@@ -27,8 +28,9 @@ public:
     virtual void SetSceneData(SceneData data) override;
     virtual void Debug(float delta_time)override;
 private:
-    void draw_grid3D() const ;
-    Camera* camera_;
+    void draw_grid3D() const;
+    World world_;
+    bool sceneEnd_{ false };
 };
 
 #endif

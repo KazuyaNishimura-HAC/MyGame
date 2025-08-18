@@ -1,4 +1,5 @@
 ﻿#include "TitleScene.h"
+#include "../../GameSystem/InputSystem/InputSystem.h"
 
 // 開始
 void TitleScene::Start() {
@@ -12,11 +13,12 @@ void TitleScene::Update(float delta_time) {
 
 // 描画
 void TitleScene::Draw() const {
+	gsDrawText("Title");
 }
 
 // 終了しているか
 bool TitleScene::IsEnd() const {
-	return false;
+	return InputSystem::ButtonTrigger(InputSystem::Button::Y);
 }
 
 // 次のシーンを返す

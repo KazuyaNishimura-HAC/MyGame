@@ -8,7 +8,6 @@ const double PI{ 3.1415926535f };
 Camera::Camera(IWorld* world,int id)
 {
     world_ = world;
-    delete world;
     viewRange_ = Screen::WindowsScreen();
     viewOffset_ = { 0,0 };
     priority_ = IsDebug;
@@ -257,10 +256,10 @@ void Camera::FreeMode()
     if (gsGetKeyState(GKEY_L)) yaw = -2 * deltaTimer_;
     transform_.rotate(up, yaw, 0.0f);
     GSvector3 velocity{ 0,0,0 };
-    if (gsGetKeyState(GKEY_W)) velocity.z = 5 * deltaTimer_;
-    if (gsGetKeyState(GKEY_S)) velocity.z = -5 * deltaTimer_;
-    if (gsGetKeyState(GKEY_A)) velocity.x = 5 * deltaTimer_;
-    if (gsGetKeyState(GKEY_D)) velocity.x = -5 * deltaTimer_;
+    if (gsGetKeyState(GKEY_W)) velocity.z = 0.25f * deltaTimer_;
+    if (gsGetKeyState(GKEY_S)) velocity.z = -0.25f * deltaTimer_;
+    if (gsGetKeyState(GKEY_A)) velocity.x = 0.25f * deltaTimer_;
+    if (gsGetKeyState(GKEY_D)) velocity.x = -0.25f * deltaTimer_;
     transform_.translate(velocity);
 }
 

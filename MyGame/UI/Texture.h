@@ -8,13 +8,6 @@ class Texture
 public:
     enum Name
     {
-        ////SkyBox
-        //SkyBox,
-
-        ////Octree
-        //Stage1,
-        //Stage1Collider,
-
         //Gamepad
         GamepadA,
         GamepadB,

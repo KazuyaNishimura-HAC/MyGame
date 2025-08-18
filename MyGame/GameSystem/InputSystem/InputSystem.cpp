@@ -63,28 +63,6 @@ int InputSystem::ConnectedCount()
     return inputModule_->ConnectedCount();
 }
 
-bool InputSystem::AnyBeginTrainingInput()
-{
-    return BeginTraining1() || BeginTraining2();
-}
-
-int InputSystem::BeginTraining()
-{
-    if (BeginTraining1())return 0;
-    if (BeginTraining2())return 1;
-    return -1;
-}
-
-bool InputSystem::BeginTraining1()
-{
-    return ButtonTrigger(Button::A);
-}
-
-bool InputSystem::BeginTraining2()
-{
-    return ButtonTrigger(Button::B);
-}
-
 bool InputSystem::MenuInput()
 {
     return ButtonTrigger(Button::Start);

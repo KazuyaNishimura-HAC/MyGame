@@ -1,5 +1,6 @@
 ﻿#include "LoadScene.h"
 #include <GSgame.h>
+#include "../../GameSystem/InputSystem/InputSystem.h"
 
 // 開始
 void LoadScene::Start() {
@@ -12,11 +13,12 @@ void LoadScene::Update(float delta_time) {
 
 // 描画
 void LoadScene::Draw() const {
+    gsDrawText("Load");
 }
 
 // 終了しているか
 bool LoadScene::IsEnd() const {
-    return false;
+    return InputSystem::ButtonTrigger(InputSystem::Button::Y);
 }
 
 // 次のシーンを返す

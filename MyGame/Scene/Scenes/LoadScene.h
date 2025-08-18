@@ -26,9 +26,11 @@ public:
         return false;
     }
     virtual void Debug(float delta_time)override;
+
 private:
     // 素材の読み込み関数
     void Load();
+    bool sceneEnd_{ false };
 };
 
 #endif

@@ -138,25 +138,58 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Actor\Actor.cpp" />
+    <ClCompile Include="Actor\ActorManager.cpp" />
+    <ClCompile Include="Actor\AnimatedMesh\AnimatedMesh.cpp" />
+    <ClCompile Include="Actor\BoundingSphere.cpp" />
     <ClCompile Include="GameSystem\Camera\Camera.cpp" />
+    <ClCompile Include="GameSystem\Event\Event.cpp" />
+    <ClCompile Include="GameSystem\Event\EventManager.cpp" />
+    <ClCompile Include="GameSystem\Field\FieldActor.cpp" />
+    <ClCompile Include="GameSystem\Field\FIeldManager.cpp" />
+    <ClCompile Include="GameSystem\Field\Light.cpp" />
     <ClCompile Include="GameSystem\InputSystem\GamepadInput.cpp" />
     <ClCompile Include="GameSystem\InputSystem\InputSystem.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mesh\MeshDrawer.cpp" />
+    <ClCompile Include="Actor\Player\Player.cpp" />
     <ClCompile Include="Scene\SceneManager.cpp" />
     <ClCompile Include="Scene\Scenes\GamePlayScene.cpp" />
     <ClCompile Include="Scene\Scenes\LoadScene.cpp" />
     <ClCompile Include="Scene\Scenes\ResultScene.cpp" />
     <ClCompile Include="Scene\Scenes\TitleScene.cpp" />
+    <ClCompile Include="Sound\SoundManager.cpp" />
     <ClCompile Include="UI\GUIManager.cpp" />
     <ClCompile Include="UI\Image.cpp" />
+    <ClCompile Include="World\World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Actor\Actor.h" />
+    <ClInclude Include="Actor\ActorManager.h" />
+    <ClInclude Include="Actor\AnimatedMesh\AnimatedMesh.h" />
+    <ClInclude Include="Actor\BoundingSphere.h" />
+    <ClInclude Include="AssetID\Assets.h" />
+    <ClInclude Include="AssetID\Model.h" />
+    <ClInclude Include="Assets\Model\Model.h" />
+    <ClInclude Include="AssetID\SkyBox.h" />
+    <ClInclude Include="Assets\Sound\Sound.h" />
+    <ClInclude Include="Assets\Texture\Texture.h" />
     <ClInclude Include="GameSystem\Camera\Camera.h" />
+    <ClInclude Include="GameSystem\Event\Event.h" />
+    <ClInclude Include="GameSystem\Event\EventManager.h" />
+    <ClInclude Include="GameSystem\Field\FieldActor.h" />
+    <ClInclude Include="GameSystem\Field\FieldManager.h" />
+    <ClInclude Include="GameSystem\Field\Light.h" />
+    <ClInclude Include="GameSystem\Field\Line.h" />
+    <ClInclude Include="GameSystem\Field\Ray.h" />
     <ClInclude Include="GameSystem\InputSystem\GamepadInput.h" />
     <ClInclude Include="GameSystem\InputSystem\IInputModule.h" />
     <ClInclude Include="GameSystem\InputSystem\InputSystem.h" />
     <ClInclude Include="GameSystem\InputSystem\NullInput.h" />
+    <ClInclude Include="GameSystem\Time.h" />
+    <ClInclude Include="Mesh\MeshDrawer.h" />
     <ClInclude Include="NameTag.h" />
+    <ClInclude Include="Actor\Player\Player.h" />
     <ClInclude Include="Scene\IScene.h" />
     <ClInclude Include="Scene\SceneData.h" />
     <ClInclude Include="Scene\SceneManager.h" />
@@ -166,10 +199,14 @@
     <ClInclude Include="Scene\Scenes\ResultScene.h" />
     <ClInclude Include="Scene\Scenes\TitleScene.h" />
     <ClInclude Include="Screen.h" />
+    <ClInclude Include="Sound\Sound.h" />
+    <ClInclude Include="Sound\SoundManager.h" />
     <ClInclude Include="UI\GUI.h" />
     <ClInclude Include="UI\GUIManager.h" />
     <ClInclude Include="UI\Image.h" />
     <ClInclude Include="UI\Texture.h" />
+    <ClInclude Include="World\IWorld.h" />
+    <ClInclude Include="World\World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

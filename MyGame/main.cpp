@@ -1,5 +1,8 @@
 #include <GSgame.h>
 #include <imgui/imgui.h>
+#include <GSstandard_shader.h>
+#include <GSeffect.h>
+
 #include "Screen.h"
 #include "GameSystem/InputSystem/GamepadInput.h"
 #include "GameSystem/InputSystem/InputSystem.h"
@@ -23,6 +26,10 @@ private:
 #if !_DEBUG
         gsHideMouseCursor();
 #endif
+        //シェーダーの初期化（絶対に入れなさいよ）
+        gsInitDefaultShader();
+        // エフェクトの初期化
+        gsInitEffect();
         //インプットシステム起動
         InputSystem::Initialize(&gamePad_);
         sceneManager_.Add(SceneIndex::TitleScene, new TitleScene());
@@ -47,11 +54,13 @@ private:
 
     //強制終了処理
     bool is_running()override {
-        return true;
+        return !InputSystem::ForceQuit();
     }
     
     void end() override {
         sceneManager_.Clear();
+        gsStopAllEffects();
+        gsFinishEffect();
     }
 
     void debug(float delta_time) {

@@ -1,5 +1,5 @@
 ﻿#include "ResultScene.h"
-
+#include "../../GameSystem/InputSystem/InputSystem.h"
 
 // 開始
 void ResultScene::Start() {
@@ -13,11 +13,12 @@ void ResultScene::Update(float delta_time) {
 
 // 描画
 void ResultScene::Draw() const {
+	gsDrawText("Result");
 }
 
 // 終了しているか
 bool ResultScene::IsEnd() const {
-	return false;
+	return InputSystem::ButtonTrigger(InputSystem::Button::Y);
 }
 
 // 次のシーンを返す

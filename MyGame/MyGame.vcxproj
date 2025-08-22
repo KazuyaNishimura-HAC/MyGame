@@ -153,12 +153,15 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh\MeshDrawer.cpp" />
     <ClCompile Include="Actor\Player\Player.cpp" />
+    <ClCompile Include="Actor\Player\State\PlayerIdle.cpp" />
+    <ClCompile Include="Actor\Player\State\PlayerMove.cpp" />
     <ClCompile Include="Scene\SceneManager.cpp" />
     <ClCompile Include="Scene\Scenes\GamePlayScene.cpp" />
     <ClCompile Include="Scene\Scenes\LoadScene.cpp" />
     <ClCompile Include="Scene\Scenes\ResultScene.cpp" />
     <ClCompile Include="Scene\Scenes\TitleScene.cpp" />
     <ClCompile Include="Sound\SoundManager.cpp" />
+    <ClCompile Include="State\StateMachine.cpp" />
     <ClCompile Include="UI\GUIManager.cpp" />
     <ClCompile Include="UI\Image.cpp" />
     <ClCompile Include="World\World.cpp" />
@@ -168,6 +171,7 @@
     <ClInclude Include="Actor\ActorManager.h" />
     <ClInclude Include="Actor\AnimatedMesh\AnimatedMesh.h" />
     <ClInclude Include="Actor\BoundingSphere.h" />
+    <ClInclude Include="Actor\Player\State\PlayerState.h" />
     <ClInclude Include="AssetID\Assets.h" />
     <ClInclude Include="AssetID\Model.h" />
     <ClInclude Include="Assets\Model\Model.h" />
@@ -190,6 +194,8 @@
     <ClInclude Include="Mesh\MeshDrawer.h" />
     <ClInclude Include="NameTag.h" />
     <ClInclude Include="Actor\Player\Player.h" />
+    <ClInclude Include="Actor\Player\State\PlayerIdle.h" />
+    <ClInclude Include="Actor\Player\State\PlayerMove.h" />
     <ClInclude Include="Scene\IScene.h" />
     <ClInclude Include="Scene\SceneData.h" />
     <ClInclude Include="Scene\SceneManager.h" />
@@ -201,6 +207,9 @@
     <ClInclude Include="Screen.h" />
     <ClInclude Include="Sound\Sound.h" />
     <ClInclude Include="Sound\SoundManager.h" />
+    <ClInclude Include="State\StateMachine.h" />
+    <ClInclude Include="State\IState.h" />
+    <ClInclude Include="State\StateNull.h" />
     <ClInclude Include="UI\GUI.h" />
     <ClInclude Include="UI\GUIManager.h" />
     <ClInclude Include="UI\Image.h" />

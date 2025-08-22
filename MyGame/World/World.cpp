@@ -189,7 +189,7 @@ bool World::Timer()
 
 void World::Debug(float deltaTime)
 {
-
+    actorManager_.Debug(deltaTime);
     if (!debug_) return;
     ImGui::Begin("WorldDebug");
     if (ImGui::Button("DrawGUI")) {

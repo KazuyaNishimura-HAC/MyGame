@@ -4,6 +4,7 @@
 #include <vector>
 #include "../Actor.h"
 #include "../../AssetID/Model.h"
+#include "../../State/StateMachine.h"
 
 class GUI;
 
@@ -23,5 +24,9 @@ public:
     void Draw()const override;
     //ÚG”»’è
     void React(Actor& other)override;
+
+    void Debug(float deltaTime)override;
+private:
+    StateMachine states_;
 };
 #endif

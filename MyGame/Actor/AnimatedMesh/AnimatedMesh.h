@@ -8,16 +8,6 @@
 
 #include "../../Mesh/MeshDrawer.h"
 
-struct AnimationEvent
-{
-    AnimationEvent(GSuint motion, GSfloat time, std::function<void()>callback)
-        :motion_{ motion }, time_{ time }, callback_{ callback }
-    {}
-
-    GSuint motion_;
-    GSfloat time_;
-    std::function<void()>callback_;
-};
 struct Motion
 {
     GSuint clip_ = 0;
@@ -49,10 +39,7 @@ public:
     float MotionEndTime(GSuint motion)const;
     bool IsMotion(int motion);
     GSmatrix4 boneMatrices(int boneNo)const;
-
-    //追加したインデックスを返す
-    int AddEvent(GSuint motion, GSfloat time, std::function<void()>callback);
-    void RemoveEvent(int index);
+    int MotionCount()const;
 
     virtual void Debug();
 
@@ -61,7 +48,6 @@ protected:
 
     float UpdateMotionTimer(float deltaTime, Motion motion);
     float UpdateMotionTimer(float deltaTime, float timer, float motionSpeed, bool motionLoop, float motionEndTime);
-    void UpdateEvent(float deltaTime);
 
     MeshDrawer mesh_;
     GSmatrix4 transform_;
@@ -76,9 +62,8 @@ protected:
     std::vector<GSmatrix4>localBoneMatrices_;
     std::vector<GSmatrix4>boneMatrices_;
 
-    std::vector<AnimationEvent*>events_;
-
     friend class DebugScene;
+    float testTimer{ 0 };
 };
 
 #endif

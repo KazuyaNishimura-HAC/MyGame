@@ -32,6 +32,7 @@ void World::Update(float deltaTime)
 #endif
     fieldManager_.Update(deltaTime);
     actorManager_.Update(deltaTime);
+    actorManager_.LateUpdate(deltaTime);
     eventManager_.Update(time_.GameDeltaTime());
     guiManager_.Update(deltaTime, time_.GameDeltaTime());
     fieldManager_.Remove();

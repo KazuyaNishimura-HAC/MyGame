@@ -11,21 +11,17 @@ AnimatedMesh::AnimatedMesh(GSuint id, GSuint motion, bool loop, GSuint numBones)
     localBoneMatrices_{ numBones },
     boneMatrices_{ numBones }
 {
+
 }
 
 AnimatedMesh::~AnimatedMesh()
 {
-    for (auto animEvent : events_)
-    {
-        delete animEvent;
-    }
-    events_.clear();
+
 }
 
 void AnimatedMesh::Update(float deltaTime)
 {
-    UpdateEvent(deltaTime);
-
+    //ここが原因！
     curMotion_.timer_ = UpdateMotionTimer(deltaTime, curMotion_);
     prevMotion_.timer_ = UpdateMotionTimer(deltaTime, prevMotion_);
 
@@ -39,13 +35,12 @@ void AnimatedMesh::Draw() const
     gsBindSkeleton(mesh_.MeshID());
     gsSetMatrixSkeleton(boneMatrices_.data());
     mesh_.Draw(transform_);
-
     gsEnable(GS_CALC_SKELETON);
 }
 
 void AnimatedMesh::ChangeMotion(GSuint motion, bool loop, bool forceChange, float motionTime, float lerpTime)
 {
-    if (curMotion_.clip_ == motion && !forceChange)return;
+    if (curMotion_.clip_ == motion && !forceChange && gsGetNumAnimations(mesh_.MeshID()) >= motion)return;
 
     if (lerpTimer_ > (constLerpTime * 0.5f))
     {
@@ -110,6 +105,11 @@ GSmatrix4 AnimatedMesh::boneMatrices(int boneNo) const
     return boneMatrices_[boneNo] * transform_;
 }
 
+int AnimatedMesh::MotionCount() const
+{
+    return gsGetNumAnimations(mesh_.MeshID());
+}
+
 void AnimatedMesh::UpdateLerpTimer(float deltaTime)
 {
     //モーションの補間タイマーを進める
@@ -123,63 +123,20 @@ float AnimatedMesh::UpdateMotionTimer(float deltaTime, Motion motion)
 
 float AnimatedMesh::UpdateMotionTimer(float deltaTime, float timer, float motionSpeed, bool motionLoop, float motionEndTime)
 {
-    timer = MAX(timer + deltaTime * motionSpeed, 0);
-    if (motionLoop)
-        timer = std::fmod(timer, motionEndTime);
-    else
-        timer = std::min(timer, motionEndTime - 1);
+    timer += deltaTime;
+    if (motionLoop) timer = std::fmod(timer, motionEndTime);
+    else timer = std::min(timer, motionEndTime - 1.0f);
 
     return timer;
 }
 
-int AnimatedMesh::AddEvent(GSuint motion, GSfloat time, std::function<void()> callback)
-{
-    events_.push_back(new AnimationEvent(motion, time, callback));
-    return events_.size() - 1;
-}
-
-void AnimatedMesh::RemoveEvent(int index)
-{
-    for (auto i = events_.begin(); i != events_.end();)
-    {
-        if (index == 0)
-        {
-            delete* i;
-            events_.erase(i);
-            return;
-        }
-        index--;
-        ++i;
-    }
-}
-
-void AnimatedMesh::UpdateEvent(float deltaTime)
-{
-    GSfloat prevTimer = curMotion_.timer_;
-    GSfloat nextTimer = UpdateMotionTimer(deltaTime, curMotion_);
-    bool looped = nextTimer < prevTimer;
-    for (const auto& event : events_)
-    {
-        if (event->motion_ != curMotion_.clip_)continue;
-
-        if (looped)
-        {
-            if (prevTimer >= event->time_ && event->time_ > nextTimer)
-                continue;
-            event->callback_();
-        }
-        else
-        {
-            if (prevTimer >= event->time_ || event->time_ > nextTimer)
-                continue;
-            event->callback_();
-        }
-    }
-}
-
 void AnimatedMesh::Debug()
 {
-    ImGui::Begin("Anim");
+    int motion = curMotion_.clip_;
+    const int motionCount = MotionCount();
+
+    ImGui::Begin("AnimationLog");
+    ImGui::Value("AnimCount", motionCount);
     ImGui::Value("curAnim", curMotion_.clip_);
     ImGui::Value("cur", curMotion_.timer_);
     ImGui::Value("curLoop", curMotion_.loop_);
@@ -187,5 +144,9 @@ void AnimatedMesh::Debug()
     ImGui::Value("prev", prevMotion_.timer_);
     ImGui::Value("prevLoop", prevMotion_.loop_);
     ImGui::Value("lerp", lerpTimer_);
+    ImGui::InputInt("changeAnim",&motion);
     ImGui::End();
+
+    motion = CLAMP(motion,0, motionCount - 1);
+    ChangeMotion(motion,true);
 }

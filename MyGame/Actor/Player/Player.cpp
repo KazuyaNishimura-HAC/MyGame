@@ -15,6 +15,7 @@ Player::Player(IWorld* world, GSuint mesh, const GSvector3& position)
 {
     //‰ŠúÀ•WÝ’è
     transform_.position(position);
+
 }
 Player::~Player()
 {
@@ -23,6 +24,7 @@ Player::~Player()
 void Player::Update(float deltaTime)
 {
     Actor::Update(deltaTime);
+    mesh_->Debug();
 }
 void Player::LateUpdate(float deltaTime)
 {

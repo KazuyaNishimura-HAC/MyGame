@@ -102,7 +102,7 @@ Actor* ActorManager::GetActor(std::string string)
 
 void ActorManager::Debug(float deltaTime)
 {
-    //player_->Debug(deltaTime);
+    player_->Debug(deltaTime);
 }
 
 void ActorManager::ActorUpdate(float deltaTime, Actor& actor)

@@ -7,10 +7,11 @@
 void GamePlayScene::Start() {
     
     //メッシュ読み込み
-    gsLoadMesh(Model::Player, "Assets/Model/Charactor/Player/Player.mshb");
-
+    gsLoadSkinMesh(Model::Player, "Assets/Model/Charactor/Player/Player.mshb");
+    gsLoadMesh(Model::DefaultMap,"Assets/Model/Stage/TestPlane.mshb");
     world_.AddPlayer(new Player(&world_));
     world_.AddCameras(new Camera(&world_, 0));
+    world_.AddField(new FieldActor({0,0,0},Model::DefaultMap,Model::DefaultMap));
     world_.Start();
 }
 

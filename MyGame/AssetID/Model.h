@@ -9,38 +9,10 @@ public:
         //[Player]
         Player,
         //[MAP]
-        StraightRoad,
-        HoleRoad,
-        LeftCurvingRoad,
-        LeftCurvingRoad2,
-        LeftCurvingRoad3,
-        LeftCurvingRoad4,
-        RightCurvingRoad,
-        RightCurvingRoad2,
-        RightCurvingRoad3,
-        RightCurvingRoad4,
-        LeftStraightRoad,
-        MiddleStraightRoad,
-        SharpLeftCurvingRoad,
-        SharpRightCurvingRoad,
+        DefaultMap,
         //[Debug]
         PathObject,
         EditObject,
-        
-        //[Item]
-        RandomBox,
-        FlipIcon,
-        MagicHand,
-
-        //[Gimmick]
-        GoalObject,
-        AccelerationFloor,
-        AccelerationRing,
-        VerticalLaser,
-        HorizontalLaser,
-        Guardrail,
-        ColliderGuardrail,
-        Sign
     };
 };
 #endif

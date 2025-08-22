@@ -48,7 +48,7 @@ protected:
     IWorld* world_{ nullptr };
     GStransform transform_;
     BoundingSphere collider_;
-    AnimatedMesh* mesh_;
+    AnimatedMesh* mesh_{ nullptr };
     Rigidbody* rigidbody_;
 
     bool dead_{ false };

@@ -17,9 +17,12 @@ public:
     void Remove();
     void Clear();
     void Enable(bool enable);
+    void Debug();
 private:
     std::list<GUI*> gui_;
     std::list<GUI*> cameraGUI_;
+    //全描画
+    bool isAllDraw_{ true };
 };
 
 #endif

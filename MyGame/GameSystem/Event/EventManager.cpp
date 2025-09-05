@@ -1,6 +1,5 @@
 ﻿#include "EventManager.h"
 #include "Event.h"
-#include "../../World/IWorld.h"
 
 EventManager::~EventManager()
 {

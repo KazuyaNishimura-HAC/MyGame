@@ -1,8 +1,9 @@
 ﻿#include "World.h"
 #include "../Actor/Actor.h"
+#include "../Actor/Player/Player.h"
 #include "../GameSystem/InputSystem/InputSystem.h"
 #include "../UI/GUI.h"
-#include "../GameSystem/Event/EventManager.h"
+#include "../GameSystem/Event/Event.h"
 #include "../AssetID/SkyBox.h"
 #include <imgui/imgui.h>
 #include <GSeffect.h>
@@ -25,11 +26,6 @@ void World::Start()
 
 void World::Update(float deltaTime)
 {
-#if _DEBUG
-    if (!debug_ && InputSystem::DebugInput()) {
-        debug_ = true;
-    }
-#endif
     fieldManager_.Update(deltaTime);
     actorManager_.Update(deltaTime);
     actorManager_.LateUpdate(deltaTime);
@@ -43,15 +39,17 @@ void World::Update(float deltaTime)
     actorManager_.Collide();
     eventManager_.Collide();
     time_.Update(deltaTime);
-    for (auto camera : cameras_) camera->Update(deltaTime);
+    cameraManager_.Update(deltaTime);
     // エフェクトの更新処理
     gsUpdateEffect(deltaTime);
-    Debug(deltaTime);
+    
 }
 
 void World::Draw() const
 {
-    for (auto camera : cameras_) {
+    for (auto camera : cameraManager_.GetCameras()) {
+        //バッファクリア（色と深度）
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         camera->Draw();
         gsDrawSkyboxCubemap(SkyBox::GamePlay);
         fieldManager_.Draw(camera);
@@ -73,14 +71,11 @@ void World::DrawGUI() const
 void World::Clear()
 {
     isEnd_ = false;
-    for (auto camera : cameras_) {
-        delete camera;
-    }
-    cameras_.clear();
     fieldManager_.Clear();
     actorManager_.Clear();
     eventManager_.Clear();
     guiManager_.Clear();
+    cameraManager_.Clear();
     time_.Pause(false);
     isEnd_ = false;
     isStart_ = false;
@@ -120,14 +115,19 @@ FieldManager& World::Fields()
 
 
 
-Camera* World::GetCameras(float id)
+Camera* World::GetCamera(float id)
 {
-    return cameras_[id];
+    return cameraManager_.GetCamera(id);
+}
+
+CameraController* World::GetCameraController(CameraController::Priority p)
+{
+    return nullptr;
 }
 
 int World::GetCameraCount()
 {
-    return cameras_.size();
+    return cameraManager_.CameraCount();
 }
 
 void World::AddGUI(GUI* gui)
@@ -145,9 +145,14 @@ void World::AddEvent(Event* newEvent)
     eventManager_.AddEvent(newEvent);
 }
 
-void World::AddCameras(Camera* camera)
+void World::AddCamera(Camera* camera)
 {
-    cameras_.push_back(camera);
+    cameraManager_.AddCamera(camera);
+}
+
+void World::AddCameraController(CameraController* controller)
+{
+    cameraManager_.AddController(controller);
 }
 
 
@@ -189,20 +194,30 @@ bool World::Timer()
 
 void World::Debug(float deltaTime)
 {
+    //Back+Xでデバック表示切替
+    if (InputSystem::DebugInput()) {
+        isDebug_ = !isDebug_;
+    }
+
+    if (!isDebug_) return;
     actorManager_.Debug(deltaTime);
-    if (!debug_) return;
-    ImGui::Begin("WorldDebug");
-    if (ImGui::Button("DrawGUI")) {
-        draw_ = !draw_;
-        guiManager_.Enable(draw_);
-    }
-    if (ImGui::Button("Close")) {
-        debug_ = false;
-    }
-    ImGui::End();
+    cameraManager_.Debug();
+    guiManager_.Debug();
 }
 
 bool World::IsDebug()
 {
-    return draw_;
+    return isDebug_;
+}
+
+void World::Message(EventMessage message)
+{
+    switch (message) {
+    case EventMessage::GameStart:
+        break;
+    case EventMessage::GameEnd:
+        break;
+    default:
+        break;
+    }
 }

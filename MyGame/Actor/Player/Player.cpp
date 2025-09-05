@@ -14,9 +14,12 @@ Player::Player(IWorld* world, GSuint mesh)
 {
     world_ = world;
     //ステートの追加
-    states_.AddState(PlayerState::PlayerState::Idle, new PlayerIdle(this));
-    states_.AddState(PlayerState::PlayerState::Move, new PlayerMove(this));
-    states_.ChangeState(PlayerState::PlayerState::Move);
+    states_.AddState(PlayerState::Idle, new PlayerIdle(this));
+    states_.AddState(PlayerState::Move, new PlayerMove(this));
+    states_.ChangeState(PlayerState::Move);
+
+    camera_ = new CameraController(CameraController::Player);
+    world_->AddCameraController(camera_);
 }
 
 Player::Player(IWorld* world, GSuint mesh, const GSvector3& position)
@@ -33,7 +36,7 @@ void Player::Update(float deltaTime)
 {
     Actor::Update(deltaTime);
     states_.Update(deltaTime);
-    mesh_->Debug();
+    
 }
 void Player::LateUpdate(float deltaTime)
 {
@@ -52,6 +55,7 @@ void Player::React(Actor& other)
 
 void Player::Debug(float deltaTime)
 {
+    mesh_->Debug();
     if(InputSystem::ButtonTrigger(InputSystem::Button::A)) states_.ChangeState(PlayerState::PlayerState::Idle);
     if (InputSystem::ButtonTrigger(InputSystem::Button::B)) states_.ChangeState(PlayerState::PlayerState::Move);
 }

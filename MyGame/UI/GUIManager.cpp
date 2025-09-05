@@ -1,6 +1,9 @@
 ﻿#include "GUIManager.h"
 #include "GUI.h"
 
+#include <string>
+#include <imgui/imgui.h>
+
 GUIManager::~GUIManager()
 {
     Clear();
@@ -101,4 +104,18 @@ void GUIManager::Enable(bool enable)
     {
         gui->Enable(enable);
     }
+}
+
+void GUIManager::Debug()
+{
+    const std::string buttonText = isAllDraw_ ? "OFF" : "ON";
+
+    ImGui::Begin("UIDebug");
+    ImGui::Text("AllDraw");
+    ImGui::SameLine();
+    if (ImGui::Button(buttonText.c_str(),ImVec2(40,20))) {
+        isAllDraw_ = !isAllDraw_;
+        Enable(isAllDraw_);
+    }
+    ImGui::End();
 }

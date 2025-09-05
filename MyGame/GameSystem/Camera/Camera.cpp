@@ -4,42 +4,24 @@
 #include <imgui/imgui.h>
 #include <GSeffect.h>
 #include <array>
-const double PI{ 3.1415926535f };
+
 Camera::Camera(IWorld* world,int id)
 {
     world_ = world;
     viewRange_ = Screen::WindowsScreen();
     viewOffset_ = { 0,0 };
-    priority_ = IsDebug;
-    debugMode_ = Free;
     id_ = id;
 }
 
 void Camera::Update(float deltaTime)
 {
+    //視錐台カリング
+    gsUpdateFrustum();
     deltaTimer_ = deltaTime;
-#if  _DEBUG
-    if (priority_ == IsDebug) {
-        ImGui::Begin("Camera");
-        ImGui::InputFloat3("Position", transform_.position());
-        ImGui::DragFloat3("Rotation", transform_.eulerAngles());
-        ImGui::InputFloat3("LookAt", transform_.position() + transform_.forward());
-        ImGui::InputFloat3("UP", transform_.up());
-        ImGui::InputFloat("FoV", &fov_);
-        ImGui::InputInt("Mode", &debugMode_);
-        debugMode_ = CLAMP(debugMode_,0,1);
-        if (ImGui::Button("Close")) {
-            priority_ = Player;
-        }
-        ImGui::End();
-    }
-    
-    if (priority_ != IsDebug && InputSystem::DebugInput())
-    {
-        SetPriority(IsDebug);
-    }
-    Debug(deltaTime);
-#endif
+    //コントローラーが存在しなかったら移動しない
+    if (!controller_) return;
+    View currentView = controller_->GetView();
+    SetView(currentView);
 }
 
 void Camera::Draw() const
@@ -55,7 +37,7 @@ void Camera::Draw() const
     // モデルビューモードにする
     glMatrixMode(GL_MODELVIEW);
     ////オフセットは左下基準
-    //glViewport(viewOffset_.x, viewOffset_.y, viewRange_.x, viewRange_.y);
+    glViewport(viewOffset_.x, viewOffset_.y, viewRange_.x, viewRange_.y);
     glLoadIdentity();
     gluLookAt
     (
@@ -65,68 +47,29 @@ void Camera::Draw() const
     );
 
     // エフェクト用のカメラを設定
-    //gsSetEffectCamera();
+    gsSetEffectCamera();
     // 透視変換行列の取得
     glGetFloatv(GL_PROJECTION_MATRIX, (GLfloat*)&projection_);
     // 視点変換行列の取得
     glGetFloatv(GL_MODELVIEW_MATRIX, (GLfloat*)&view_);
 }
 
-void Camera::Debug(float deltaTime)
+void Camera::Debug()
 {
-    if (priority_ != IsDebug) return;
-    if (debugMode_ == Free) FreeMode();
-    /*if (debugMode_ == Orbit) OrbitMode();
-    if (debugMode_ == TPS)   TPSMode();*/
+    ImGui::Begin("Camera");
+    ImGui::InputFloat3("Position", transform_.position());
+    ImGui::DragFloat3("Rotation", transform_.eulerAngles());
+    ImGui::InputFloat3("LookAt", transform_.position() + transform_.forward());
+    ImGui::InputFloat3("UP", transform_.up());
+    ImGui::InputFloat("FoV", &fov_);
+    int p = controller_->GetPriority();
+    ImGui::DragInt("Priority", &p);
+    ImGui::End();
 }
 
-void Camera::SetPriority(float priority)
+CameraController::Priority Camera::GetPriority()
 {
-    priority_ = priority;
-}
-
-int Camera::GetPriority()
-{
-    return priority_;
-}
-
-void Camera::SetPosition(GSvector3 position,bool Smooth)
-{
-    //瞬間的な移動かどうか
-    if (!Smooth) {
-        transform_.position(position);
-        return;
-    }
-    // スムースダンプによる滑らかな補間
-    const float SmoothTime{ 6.0f };    // 補間フレーム数
-    const float MaxSpeed{ 100 };       // 移動スピードの最大値
-    GSvector3 pos = GSvector3::smoothDamp(transform_.position(), position, velocity_,SmoothTime, MaxSpeed, deltaTimer_);
-    transform_.position(pos);
-}
-
-void Camera::SetRotate(GSvector3 rotate)
-{
-    transform_.rotate(rotate);
-}
-
-void Camera::SetEulerAngle(const GSvector3& euler)
-{
-    transform_.localEulerAngles(euler);
-}
-
-void Camera::View(GSvector3 target)
-{
-    transform_.lookAt(target,transform_.up());
-}
-
-GSvector3 Camera::GetPosition()
-{
-    return transform_.position();
-}
-
-GSvector3 Camera::GetRotate()
-{
-    return transform_.eulerAngles();
+    return controller_->GetPriority();
 }
 
 GStransform& Camera::Transform()
@@ -157,17 +100,7 @@ const GSmatrix4& Camera::GetViewMatrix()
 }
 
 
-GSvector3 Camera::CalculatePosition(GSvector3 target,float distance, float azimuthDeg, float elevationDeg) {
-    float azimuth = azimuthDeg * (PI / 180.0f);
-    float elevation = elevationDeg * (PI / 180.0f);
 
-    GSvector3 pos;
-    pos.x = target.x + distance * cosf(elevation) * sinf(azimuth);
-    pos.y = target.y + distance * sinf(elevation);
-    pos.z = target.z + distance * cosf(elevation) * cosf(azimuth);
-    SetPosition(pos,false);
-    return pos;
-}
 //カメラが反転しているか
 bool Camera::IsInversion()
 {
@@ -231,64 +164,37 @@ GSvector2 Camera::GetViewSize()
     return viewRange_;
 }
 
-float Camera::GetFov()
-{
-    return fov_;
-}
-
-void Camera::SetFov(const int fov)
-{
-    fov_ = fov;
-}
-
 int Camera::GetID()
 {
     return id_;
 }
 
-void Camera::FreeMode()
+bool Camera::IsDead()
 {
-    float yaw = 0;
-    float up = 0;
-    if (gsGetKeyState(GKEY_I)) up = -2 * deltaTimer_;
-    if (gsGetKeyState(GKEY_J)) yaw = 2 * deltaTimer_;
-    if (gsGetKeyState(GKEY_K)) up = 2 * deltaTimer_;
-    if (gsGetKeyState(GKEY_L)) yaw = -2 * deltaTimer_;
-    transform_.rotate(up, yaw, 0.0f);
-    GSvector3 velocity{ 0,0,0 };
-    if (gsGetKeyState(GKEY_W)) velocity.z = 0.25f * deltaTimer_;
-    if (gsGetKeyState(GKEY_S)) velocity.z = -0.25f * deltaTimer_;
-    if (gsGetKeyState(GKEY_A)) velocity.x = 0.25f * deltaTimer_;
-    if (gsGetKeyState(GKEY_D)) velocity.x = -0.25f * deltaTimer_;
-    transform_.translate(velocity);
+    return false;
 }
 
-//void Camera::TPSMode()
-//{
-//    Charactor* player = world_->GetCharactor(0);
-//    const GSvector3 cameraOffset{ 0,6,15 };
-//    const GSvector3 playerOffset{ 0,6,0 };
-//    SetEulerAngle(player->Transform().eulerAngles());
-//    //カメラ後ろ振り向き
-//    SetPosition(cameraOffset * player->Transform().localToWorldMatrix());
-//    View(playerOffset * transform_.localToWorldMatrix());
-//}
-//
-//void Camera::OrbitMode()
-//{
-//    const GSvector3 playerOffset{ 0,6,0 };
-//    if (gsGetKeyState(GKEY_W)) distance_ += deltaTimer_;
-//    if (gsGetKeyState(GKEY_A)) cameraAzimuths_ += deltaTimer_;
-//    if (gsGetKeyState(GKEY_S)) distance_ -= deltaTimer_;
-//    if (gsGetKeyState(GKEY_D)) cameraAzimuths_ -= deltaTimer_;
-//
-//    Charactor* player = world_->GetCharactor(0);
-//    SetEulerAngle(player->Transform().eulerAngles());
-//    CalculatePosition(
-//        playerOffset * player->Transform().localToWorldMatrix(),
-//        distance_,
-//        cameraAzimuths_,
-//        0
-//    );
-//    View(player->Transform().position());
-//}
+void Camera::SetController(CameraController* controller)
+{
+    controller_ = controller;
+}
+
+void Camera::SetView(View view)
+{
+    
+    //瞬間的な移動かどうか
+    if (view.isSmooth) {
+        transform_.position(view.pos);
+    }
+    else {
+        // スムースダンプによる滑らかな補間
+        const float SmoothTime{ 6.0f };    // 補間フレーム数
+        const float MaxSpeed{ 100 };       // 移動スピードの最大値
+        GSvector3 pos = GSvector3::smoothDamp(transform_.position(), view.tar, velocity_, SmoothTime, MaxSpeed, deltaTimer_);
+        transform_.position(pos);
+    }
+    
+    transform_.lookAt(view.tar, transform_.up());
+    fov_ = view.fov;
+}
+

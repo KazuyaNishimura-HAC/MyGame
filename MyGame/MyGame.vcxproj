@@ -142,7 +142,10 @@
     <ClCompile Include="Actor\ActorManager.cpp" />
     <ClCompile Include="Actor\AnimatedMesh\AnimatedMesh.cpp" />
     <ClCompile Include="Actor\BoundingSphere.cpp" />
+    <ClCompile Include="GameSystem\Camera\CameraController.cpp" />
     <ClCompile Include="GameSystem\Camera\Camera.cpp" />
+    <ClCompile Include="GameSystem\Camera\CameraManager.cpp" />
+    <ClCompile Include="GameSystem\Camera\DebugCamera.cpp" />
     <ClCompile Include="GameSystem\Event\Event.cpp" />
     <ClCompile Include="GameSystem\Event\EventManager.cpp" />
     <ClCompile Include="GameSystem\Field\FieldActor.cpp" />
@@ -178,7 +181,10 @@
     <ClInclude Include="AssetID\SkyBox.h" />
     <ClInclude Include="Assets\Sound\Sound.h" />
     <ClInclude Include="Assets\Texture\Texture.h" />
+    <ClInclude Include="GameSystem\Camera\CameraController.h" />
     <ClInclude Include="GameSystem\Camera\Camera.h" />
+    <ClInclude Include="GameSystem\Camera\CameraManager.h" />
+    <ClInclude Include="GameSystem\Camera\DebugCamera.h" />
     <ClInclude Include="GameSystem\Event\Event.h" />
     <ClInclude Include="GameSystem\Event\EventManager.h" />
     <ClInclude Include="GameSystem\Field\FieldActor.h" />

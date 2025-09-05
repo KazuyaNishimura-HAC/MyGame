@@ -4,6 +4,7 @@
 #include <string>
 #include <GStransform.h>
 #include "../GameSystem/Time.h"
+#include "../GameSystem/Camera/CameraController.h"
 #include <vector>
 #include <list>
 
@@ -14,7 +15,13 @@ class Player;
 class FieldActor;
 class FieldManager;
 class Event;
-class Charactor;
+class CameraController;
+
+enum class EventMessage
+{
+    GameStart,
+    GameEnd,
+};
 
 class IWorld
 {
@@ -22,7 +29,8 @@ public:
     virtual ~IWorld() = default;
 
     virtual Player* GetPlayer() = 0;
-    virtual Camera* GetCameras(float index) = 0;
+    virtual Camera* GetCamera(float index) = 0;
+    virtual CameraController* GetCameraController(CameraController::Priority p) = 0;
     virtual int GetCameraCount() = 0;
 
     virtual void AddActor(Actor* actor) = 0;
@@ -30,7 +38,8 @@ public:
     virtual void AddCameraGUI(GUI* gui,int indep) = 0;
     virtual void AddField(FieldActor* field) = 0;
     virtual void AddEvent(Event* newEvent) {};
-    virtual void AddCameras(Camera* camera) = 0;
+    virtual void AddCamera(Camera* camera) = 0;
+    virtual void AddCameraController(CameraController* controller) = 0;
 
     virtual void SetTimeScale(TimeScale timeScale) = 0;
 
@@ -46,6 +55,8 @@ public:
     virtual bool Timer() = 0;
 
     virtual bool IsDebug() = 0;
+
+    virtual void Message(EventMessage message) = 0;
     
 };
 

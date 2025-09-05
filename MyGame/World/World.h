@@ -3,18 +3,17 @@
 
 #include "IWorld.h"
 #include "../Actor/ActorManager.h"
-#include "../Actor/Player/Player.h"
 #include "../UI/GUIManager.h"
 #include "../Mesh/MeshDrawer.h"
 #include "../Scene/SceneData.h"
-#include "../GameSystem/Camera/Camera.h"
 #include "../GameSystem/Field/FieldManager.h"
 #include "../GameSystem/Event/EventManager.h"
-#include <vector>
+#include "../GameSystem/Camera/CameraManager.h"
 class GUI;
 class Player;
 class Event;
 class Camera;
+class CameraController;
 
 class World :public IWorld
 {
@@ -34,10 +33,12 @@ public:
     void AddGUI(GUI* gui)override;
     void AddCameraGUI(GUI* gui,int indep)override;
     void AddEvent(Event* newEvent)override;
-    void AddCameras(Camera* camera)override;
+    void AddCamera(Camera* camera)override;
+    void AddCameraController(CameraController* controller)override;
 
     Player* GetPlayer()override;
-    Camera* GetCameras(float id)override;
+    Camera* GetCamera(float id)override;
+    CameraController* GetCameraController(CameraController::Priority p)override;
     int GetCameraCount()override;
 
     ActorManager& GetActorManager();
@@ -61,15 +62,17 @@ public:
     void Debug(float deltaTime);
     bool IsDebug()override;
 
+    void Message(EventMessage message)override;
+
 private:
-    std::vector<Camera*> cameras_;
     ActorManager actorManager_;
     GUIManager guiManager_;
     FieldManager fieldManager_;
     EventManager eventManager_;
+    CameraManager cameraManager_;
     Time time_;
     bool draw_{ true };
-    bool debug_{ false };
+    bool isDebug_{ true };
     //ゲーム終了フラグ
     bool isEnd_{ false };
     bool isStart_{ false };

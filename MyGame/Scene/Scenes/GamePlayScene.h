@@ -4,8 +4,9 @@
 #include "../IScene.h"
 #include "../../World/World.h"
 #include "../SceneManager.h"
-#include "../../GameSystem/Camera/Camera.h"
 #include <gslib.h>
+
+class DebugCamera;
 
 // プレイ中シーン
 class GamePlayScene : public IScene {
@@ -31,6 +32,8 @@ private:
     void draw_grid3D() const;
     World world_;
     bool sceneEnd_{ false };
+
+    DebugCamera* debugCamera_{ nullptr };
 };
 
 #endif

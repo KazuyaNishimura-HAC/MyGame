@@ -2,6 +2,11 @@
 #include "../../World/World.h"
 #include "../../AssetID/Assets.h"
 #include "../../GameSystem/InputSystem/InputSystem.h"
+#include "../../Actor/Player/Player.h"
+#include "../../GameSystem/Camera/DebugCamera.h"
+
+//動作確認用
+#include "../../UI/Image.h"
 
 // 開始
 void GamePlayScene::Start() {
@@ -9,9 +14,20 @@ void GamePlayScene::Start() {
     //メッシュ読み込み
     gsLoadSkinMesh(Model::Player, "Assets/Model/Charactor/Player/Player.mshb");
     gsLoadMesh(Model::DefaultMap,"Assets/Model/Stage/TestPlane.mshb");
+    
     world_.AddPlayer(new Player(&world_));
-    world_.AddCameras(new Camera(&world_, 0));
+    world_.AddCamera(new Camera(&world_));
+    
+    
     world_.AddField(new FieldActor({0,0,0},Model::DefaultMap,Model::DefaultMap));
+    //動作チェック用
+    gsLoadTexture(Texture::MenuSliderBackGround, "Assets/Texture/Menu/SliderBackGround.png");
+    gsLoadTexture(Texture::MenuSliderFill, "Assets/Texture/Menu/SliderFill.png");
+    world_.AddGUI(new Image({ 200,200 }, Texture::MenuSliderBackGround));
+    world_.AddGUI(new Image({ 200,400 }, Texture::MenuSliderFill));
+
+    debugCamera_ = new DebugCamera(&world_);
+
     world_.Start();
 }
 
@@ -21,11 +37,9 @@ void GamePlayScene::Update(float delta_time) {
 }
 // 描画
 void GamePlayScene::Draw() const {
-    //バッファクリア（色と深度）
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     world_.Draw();
-    
+    debugCamera_->Draw();
     //draw_grid3D();
 }
 
@@ -42,6 +56,9 @@ SceneIndex GamePlayScene::Next() const {
 // 終了
 void GamePlayScene::End() {
     world_.Clear();
+    delete debugCamera_;
+    debugCamera_ = nullptr;
+
 }
 
 bool GamePlayScene::IsRunning()
@@ -56,6 +73,8 @@ void GamePlayScene::SetSceneData(SceneData data)
 
 void GamePlayScene::Debug(float delta_time)
 {
+    world_.Debug(delta_time);
+    debugCamera_->Update(delta_time);
 }
 
 void GamePlayScene::draw_grid3D()const 

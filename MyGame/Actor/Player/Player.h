@@ -7,6 +7,7 @@
 #include "../../State/StateMachine.h"
 
 class GUI;
+class CameraController;
 
 class Player : public Actor
 {
@@ -28,5 +29,6 @@ public:
     void Debug(float deltaTime)override;
 private:
     StateMachine states_;
+    CameraController* camera_{ nullptr };
 };
 #endif

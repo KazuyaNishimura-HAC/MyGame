@@ -21,7 +21,7 @@ AnimatedMesh::~AnimatedMesh()
 
 void AnimatedMesh::Update(float deltaTime)
 {
-    //ここが原因！
+
     curMotion_.timer_ = UpdateMotionTimer(deltaTime, curMotion_);
     prevMotion_.timer_ = UpdateMotionTimer(deltaTime, prevMotion_);
 

@@ -6,11 +6,6 @@
 class PlayerState :public IState
 {
 public:
-	PlayerState(Player* owner) : owner_{ owner }{};
-	virtual void Update(float deltaTime)override {};
-	virtual void Enter()override {};
-	virtual void Exit()override {};
-
 	enum State {
 		Idle,
 		Move,
@@ -19,6 +14,11 @@ public:
 		Skill,
 		Ultimate
 	};
+
+	PlayerState(Player* owner) : owner_{ owner }{};
+	virtual void Update(float deltaTime)override {};
+	virtual void Enter()override {};
+	virtual void Exit()override {};
 
 protected:
 	Player* owner_;

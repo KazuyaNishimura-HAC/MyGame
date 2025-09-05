@@ -2,6 +2,7 @@
 #include "../InputSystem/InputSystem.h"
 #include "../../Screen.h"
 #include <imgui/imgui.h>
+#include <string>
 #include <GSeffect.h>
 #include <array>
 
@@ -56,14 +57,13 @@ void Camera::Draw() const
 
 void Camera::Debug()
 {
-    ImGui::Begin("Camera");
+    ImGui::Begin("CurrentCamera");
+    ImGui::Text("%s", ("Priority : " + controller_->GetPriorityName()).c_str());
     ImGui::InputFloat3("Position", transform_.position());
     ImGui::DragFloat3("Rotation", transform_.eulerAngles());
     ImGui::InputFloat3("LookAt", transform_.position() + transform_.forward());
     ImGui::InputFloat3("UP", transform_.up());
     ImGui::InputFloat("FoV", &fov_);
-    int p = controller_->GetPriority();
-    ImGui::DragInt("Priority", &p);
     ImGui::End();
 }
 
@@ -183,7 +183,7 @@ void Camera::SetView(View view)
 {
     
     //瞬間的な移動かどうか
-    if (view.isSmooth) {
+    if (!view.isSmooth) {
         transform_.position(view.pos);
     }
     else {
@@ -194,7 +194,7 @@ void Camera::SetView(View view)
         transform_.position(pos);
     }
     
-    transform_.lookAt(view.tar, transform_.up());
+    transform_.lookAt(view.tar);
     fov_ = view.fov;
 }
 

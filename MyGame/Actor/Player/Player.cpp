@@ -20,6 +20,7 @@ Player::Player(IWorld* world, GSuint mesh)
 
     camera_ = new CameraController(CameraController::Player);
     world_->AddCameraController(camera_);
+    camera_->SetSmooth(true);
 }
 
 Player::Player(IWorld* world, GSuint mesh, const GSvector3& position)
@@ -36,7 +37,6 @@ void Player::Update(float deltaTime)
 {
     Actor::Update(deltaTime);
     states_.Update(deltaTime);
-    
 }
 void Player::LateUpdate(float deltaTime)
 {

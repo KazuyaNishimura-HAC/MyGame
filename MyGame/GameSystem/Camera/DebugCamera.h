@@ -13,8 +13,8 @@ public:
     ~DebugCamera();
     void Update(float deltaTime);
     void Draw()const;
+    void DrawImGui();
 private:
-
     void FreeMode(float deltaTime);
     void FocusMode(float deltaTime);
     GSvector3 CalculatePosition(GSvector3 target, float distance, float azimuthDeg, float elevationDeg);
@@ -29,8 +29,8 @@ private:
     GSvector3 position_{ 0,0,0 };
     GSvector3 target_{ 0,0,0 };
     int mode_{ Mode::Free };
-
     float cameraDistance_{ 0 };
     float cameraAzimuths_{ 0 };
+    bool isDebug_{ false };
 };
 #endif

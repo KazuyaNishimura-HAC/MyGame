@@ -159,5 +159,5 @@ GSvector3 InputSystem::DebugMouseDelta()
 {
     int x{ 0 }, y{ 0 }, z{ 0 };
     gsGetMouseVelocity(&x, &y, &z);
-    return GSvector3{ (float)x / -10.0f,(float)y / -10.0f,(float)z / -120.0f };
+    return GSvector3{ (float)x * 0.05f,(float)y * 0.05f,(float)z * 0.05f };
 }

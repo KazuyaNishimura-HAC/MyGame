@@ -44,6 +44,24 @@ CameraController::Priority CameraController::GetPriority() const
 	return priority_;
 }
 
+std::string CameraController::GetPriorityName() const
+{
+	std::string Name;
+	switch (priority_) {
+	case Disable: Name = "Disable";
+		break;
+	case Player: Name = "Player";
+		break;
+	case Event: Name = "Event";
+		break;
+	case Debug: Name = "Debug";
+		break;
+	default: Name = "Disable";
+		break;
+	}
+	return Name;
+}
+
 void CameraController::SetID(int id)
 {
 	id_ = id;
@@ -59,9 +77,19 @@ void CameraController::SetFov(float fov)
 	view_.fov = fov;
 }
 
-int CameraController::GetFov() const
+float CameraController::GetFov() const
 {
 	return view_.fov;
+}
+
+void CameraController::SetSmooth(bool smooth)
+{
+	view_.isSmooth = smooth;
+}
+
+bool CameraController::GetSmooth()
+{
+	return view_.isSmooth;
 }
 
 View& CameraController::GetView()

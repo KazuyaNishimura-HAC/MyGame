@@ -39,7 +39,7 @@ void GamePlayScene::Update(float delta_time) {
 void GamePlayScene::Draw() const {
 
     world_.Draw();
-    debugCamera_->Draw();
+    
     //draw_grid3D();
 }
 

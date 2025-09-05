@@ -41,12 +41,6 @@ public:
 
     static int ConnectedCount();
 
-    //[抽象化入力]
-    static bool AnyBeginTrainingInput();
-    static int BeginTraining();
-    static bool BeginTraining1();
-    static bool BeginTraining2();
-
     static bool MenuInput();
     /// <summary>
     /// 十字,左右スティックの入力の和を返す

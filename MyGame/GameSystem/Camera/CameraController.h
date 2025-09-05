@@ -1,13 +1,13 @@
 #ifndef CAMERA_CONTROLLER_H_
 #define CAMERA_CONTROLLER_H_
 #include <GStransform.h>
-
+#include <string>
 
 struct View {
 	GSvector3 pos;
 	GSvector3 tar;
 	float fov{ 45.0f };
-	bool isSmooth{ true };
+	bool isSmooth{ false };
 };
 
 class CameraController
@@ -27,10 +27,14 @@ public:
 	void SetPriority(Priority p);
 	void SetView(const GSvector3& pos,const GSvector3& tar);
 	Priority GetPriority() const;
+	std::string GetPriorityName() const;
 	void SetID(int id);
 	int GetID() const;
 	void SetFov(float fov);
-	int GetFov() const;
+	float GetFov() const;
+	void SetSmooth(bool smooth);
+	bool GetSmooth();
+
 
 	View& GetView();
 	

@@ -4,7 +4,7 @@
 #include "IWorld.h"
 #include "../Actor/ActorManager.h"
 #include "../UI/GUIManager.h"
-#include "../Mesh/MeshDrawer.h"
+#include "../Graphics/Mesh/MeshDrawer.h"
 #include "../Scene/SceneData.h"
 #include "../GameSystem/Field/FieldManager.h"
 #include "../GameSystem/Event/EventManager.h"

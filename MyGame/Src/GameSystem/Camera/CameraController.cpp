@@ -1,4 +1,5 @@
 #include "CameraController.h"
+#include "../../NameTag.h"
 
 CameraController::CameraController(Priority priority, int id, const GSvector3& position, const GSvector3& target)
 {
@@ -10,7 +11,6 @@ CameraController::CameraController(Priority priority, int id, const GSvector3& p
 
 void CameraController::Update(float deltaTime)
 {
-	//Ç±Ç±Ç…LerpèàóùèëÇ≠
 }
 
 void CameraController::SetPosition(const GSvector3& pos)
@@ -53,15 +53,15 @@ std::string CameraController::GetPriorityName() const
 {
 	std::string Name;
 	switch (priority_) {
-	case Disable: Name = "Disable";
+	case Disable: Name = PriorityName::Disable;
 		break;
-	case Player: Name = "Player";
+	case Player: Name = PriorityName::Player;
 		break;
-	case Event: Name = "Event";
+	case Event: Name = PriorityName::Event;
 		break;
-	case Debug: Name = "Debug";
+	case Debug: Name = PriorityName::Debug;
 		break;
-	default: Name = "Disable";
+	default: Name = PriorityName::Disable;
 		break;
 	}
 	return Name;

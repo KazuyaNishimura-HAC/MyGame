@@ -6,7 +6,7 @@
 #include <list>
 #include <functional>
 
-#include "../../Mesh/MeshDrawer.h"
+#include "../../Graphics/Mesh/MeshDrawer.h"
 
 struct Motion
 {

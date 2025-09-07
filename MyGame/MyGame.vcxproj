@@ -154,7 +154,7 @@
     <ClCompile Include="Src\GameSystem\InputSystem\GamepadInput.cpp" />
     <ClCompile Include="Src\GameSystem\InputSystem\InputSystem.cpp" />
     <ClCompile Include="Src\main.cpp" />
-    <ClCompile Include="Src\Mesh\MeshDrawer.cpp" />
+    <ClCompile Include="Src\Graphics\Mesh\MeshDrawer.cpp" />
     <ClCompile Include="Src\Actor\Player\Player.cpp" />
     <ClCompile Include="Src\Actor\Player\State\PlayerIdle.cpp" />
     <ClCompile Include="Src\Actor\Player\State\PlayerMove.cpp" />
@@ -197,7 +197,7 @@
     <ClInclude Include="Src\GameSystem\InputSystem\InputSystem.h" />
     <ClInclude Include="Src\GameSystem\InputSystem\NullInput.h" />
     <ClInclude Include="Src\GameSystem\Time.h" />
-    <ClInclude Include="Src\Mesh\MeshDrawer.h" />
+    <ClInclude Include="Src\Graphics\Mesh\MeshDrawer.h" />
     <ClInclude Include="Src\NameTag.h" />
     <ClInclude Include="Src\Actor\Player\Player.h" />
     <ClInclude Include="Src\Actor\Player\State\PlayerIdle.h" />

@@ -17,7 +17,6 @@ void EventManager::Update(float deltaTime)
 
 void EventManager::Draw() const
 {
-    
     for (auto ev : events_)
     {
         if (ev == nullptr)continue;

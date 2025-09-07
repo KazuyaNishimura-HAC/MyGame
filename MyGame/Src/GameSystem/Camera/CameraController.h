@@ -6,6 +6,7 @@
 struct View {
 	GSvector3 pos;
 	GSvector3 tar;
+	GSvector3 rot;
 	float fov{ 45.0f };
 	bool isSmooth{ false };
 };
@@ -20,6 +21,7 @@ public:
 		Debug     //デバック用
 	};
 	CameraController(Priority p = Priority::Disable,int id = 0,const GSvector3& position = { 0,0,0 }, const GSvector3& target = { 0,0,0 });
+	void Update(float deltaTime);
 	void SetPosition(const GSvector3& pos);
 	GSvector3 GetPosition() const;
 	void SetViewTarget(const GSvector3& tar);

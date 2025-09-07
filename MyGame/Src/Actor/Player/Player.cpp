@@ -37,6 +37,8 @@ void Player::Update(float deltaTime)
 {
     Actor::Update(deltaTime);
     states_.Update(deltaTime);
+
+    MovePosition();
 }
 void Player::LateUpdate(float deltaTime)
 {
@@ -58,4 +60,20 @@ void Player::Debug(float deltaTime)
     mesh_->Debug();
     if(InputSystem::ButtonTrigger(InputSystem::Button::A)) states_.ChangeState(PlayerState::PlayerState::Idle);
     if (InputSystem::ButtonTrigger(InputSystem::Button::B)) states_.ChangeState(PlayerState::PlayerState::Move);
+}
+
+void Player::MovePosition()
+{
+    GSvector2 moveVelocity = InputSystem::LeftStick() / 10;
+    transform_.translate({ moveVelocity.x,0,moveVelocity.y });
+    transform_.rotate({0,1,0});
+}
+
+void Player::MoveInput()
+{
+}
+
+void Player::CameraMove()
+{
+    GSvector2 cameraVelocity = InputSystem::RightStick();
 }

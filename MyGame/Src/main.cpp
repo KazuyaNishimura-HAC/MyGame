@@ -16,8 +16,8 @@
 // ÉQÅ[ÉÄÉNÉâÉX
 class MyGame : public gslib::Game {
 public:
-    MyGame() :gslib::Game{ Screen::ScreenWidth, Screen::ScreenHeight, Screen::fullScreen}{};
-    
+    MyGame() :gslib::Game{ Screen::ScreenWidth, Screen::ScreenHeight, Screen::fullScreen }{};
+
 private:
     GamepadInput gamePad_;
     SceneManager sceneManager_;
@@ -45,7 +45,7 @@ private:
 #if _DEBUG
         debug(delta_time);
 #endif
-        
+
     }
 
     void draw() override {
@@ -56,7 +56,7 @@ private:
     bool is_running()override {
         return !InputSystem::ForceQuit();
     }
-    
+
     void end() override {
         sceneManager_.Clear();
         gsStopAllEffects();

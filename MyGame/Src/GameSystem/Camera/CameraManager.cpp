@@ -23,6 +23,9 @@ void CameraManager::Update(float deltaTime)
 void CameraManager::ControllerUpdate(float deltaTime)
 {
     CameraController* activeController = GetActiveController();
+
+    activeController->Update(deltaTime);
+
     for (auto& camera : cameras_) {
         camera->SetController(activeController);
     }

@@ -28,6 +28,9 @@ public:
 
     void Debug(float deltaTime)override;
 private:
+    void MovePosition();
+    void MoveInput();
+    void CameraMove();
     StateMachine states_;
     CameraController* camera_{ nullptr };
 };

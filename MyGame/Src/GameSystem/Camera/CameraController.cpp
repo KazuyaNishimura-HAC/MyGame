@@ -8,6 +8,11 @@ CameraController::CameraController(Priority priority, int id, const GSvector3& p
 	view_.tar = target;
 }
 
+void CameraController::Update(float deltaTime)
+{
+	//‚±‚±‚ÉLerpˆ—‘‚­
+}
+
 void CameraController::SetPosition(const GSvector3& pos)
 {
 	view_.pos = pos;

@@ -1,7 +1,7 @@
 ﻿#include "FieldActor.h"
 #include "Line.h"
 #include "Ray.h"
-#include "../../AssetID/Model.h"
+#include "../../Actor/Model.h"
 #include "../../Actor/BoundingSphere.h"
 
 FieldActor::FieldActor(const GSvector3& position, GSuint mesh,GSuint meshCollider, float rotate)

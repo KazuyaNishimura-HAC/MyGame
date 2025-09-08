@@ -31,6 +31,7 @@ public:
     const BoundingSphere& Collider()const;
     Rigidbody* GetRigidbody();
     void ChangeMotion(int motion, bool loop = true, bool forceChange = false, float motionTime = 0, float lerpTime = 0);
+    AnimatedMesh* GetMesh();
     void Die();
     void SetEnable(bool enable);
     std::string GetName();

@@ -58,9 +58,6 @@ void DebugCamera::DrawImGui()
 
     ImGui::InputInt("Move", &mode_);
     ImGui::End();
-    
-
-    
 }
 
 void DebugCamera::FreeMode(float deltaTime)

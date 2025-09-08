@@ -99,6 +99,11 @@ void Actor::ChangeMotion(int motion, bool loop, bool forceChange, float motionTi
     mesh_->ChangeMotion(motion, loop, forceChange, motionTime, lerpTime);
 }
 
+AnimatedMesh* Actor::GetMesh()
+{
+    return mesh_;
+}
+
 float Actor::DeltaSeconds(float deltaTime)
 {
     return deltaTime / 60.0f;

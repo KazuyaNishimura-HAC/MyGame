@@ -1,14 +1,15 @@
 #include "Player.h"
 #include <imgui/imgui.h>
-#include "../../AssetID/Model.h"
+#include "../../Actor/Model.h"
 #include "../../World/IWorld.h"
+#include "../../GameSystem/Camera/Camera.h"
 #include "../../GameSystem/InputSystem/InputSystem.h"
 
 //ステートヘッダー
-#include "State/PlayerState.h"
 #include "State/PlayerIdle.h"
 #include "State/PlayerMove.h"
 
+const GSvector3 cameraOffset{ 0,3,5 };
 Player::Player(IWorld* world, GSuint mesh)
     :Actor(mesh)
 {
@@ -16,7 +17,7 @@ Player::Player(IWorld* world, GSuint mesh)
     //ステートの追加
     states_.AddState(PlayerState::Idle, new PlayerIdle(this));
     states_.AddState(PlayerState::Move, new PlayerMove(this));
-    states_.ChangeState(PlayerState::Move);
+    states_.ChangeState(PlayerState::Idle);
 
     camera_ = new CameraController(CameraController::Player);
     world_->AddCameraController(camera_);
@@ -37,8 +38,8 @@ void Player::Update(float deltaTime)
 {
     Actor::Update(deltaTime);
     states_.Update(deltaTime);
-
-    MovePosition();
+    if(InputSystem::ButtonTrigger(InputSystem::Button::B)) states_.ChangeState(PlayerState::Attack);
+    MoveCamera(deltaTime);
 }
 void Player::LateUpdate(float deltaTime)
 {
@@ -55,25 +56,96 @@ void Player::React(Actor& other)
 
 }
 
+void Player::ChangeState(int state)
+{
+    states_.ChangeState(state);
+}
+void Player::IsAttack(bool isAttack)
+{
+    isAttack_ = isAttack;
+}
+bool Player::IsAttack()
+{
+    return false;
+}
+
+void Player::MovePosition(float deltaTime)
+{
+    GSvector2 input = InputSystem::LeftStick() * 0.1f * deltaTime;
+
+    GSvector3 forward = CameraTransform().forward();
+    GSvector3 right = CameraTransform().right();
+    // Y成分は無視してXZ平面に投影
+    forward.y = 0;
+    right.y = 0;
+    forward.normalize();
+    right.normalize();
+
+    // 入力をカメラ方向に変換
+    GSvector3 moveDirection = (forward * input.y) + (right * input.x);
+    moveDirection.normalize();
+    //入力rawを移動の強さにする
+    float magnitude = input.magnitude();
+
+    GSvector3 moveVector = moveDirection * magnitude * deltaTime;
+
+    //プレイヤーを滑らかに回転
+    if (input != GSvector2::zero())
+    {
+        //向きの補間
+        GSquaternion rotation =
+            GSquaternion::rotateTowards(
+                transform_.rotation(),
+                GSquaternion::lookRotation(moveDirection), 15.0f * deltaTime);
+        transform_.rotation(rotation);
+    }
+
+    // 平行移動する（ワールド基準）
+    transform_.translate(moveVector, GStransform::Space::World);
+}
+
+void Player::MoveCamera(float deltaTime)
+{
+    float yaw = 0, pitch = 0;
+    yaw = InputSystem::RightStick().x  * 3 * deltaTime;
+    pitch = InputSystem::RightStick().y * 3 * deltaTime;
+    cameraRotation_.y -= yaw;
+    cameraRotation_.x -= pitch;
+    cameraRotation_.x = CLAMP(cameraRotation_.x, 0.0f, 20.0f);
+
+    float yawRad = DEG_TO_RAD(cameraRotation_.y);
+    float pitchRad = DEG_TO_RAD(cameraRotation_.x);
+
+    GSvector3 offset;
+    offset.x = cos(pitchRad) * sin(yawRad);
+    offset.y = sin(pitchRad);
+    offset.z = cos(pitchRad) * cos(yawRad);
+
+    GSvector3 cameraPos = transform_.position() + cameraOffset_ + (offset * cameraDepth_);
+    GSvector3 target = transform_.position() + cameraFocusOffset_;
+    
+    camera_->SetView(cameraPos,target);
+}
+
+//現在のカメラの方向を取得
+GSvector3 Player::GetCameraDirection()
+{
+    return GSvector3(sin(DEG_TO_RAD(cameraRotation_.y)), sin(DEG_TO_RAD(cameraRotation_.x)), cos(DEG_TO_RAD(cameraRotation_.y))).normalized();
+}
+
+float Player::GetCameraHorizontalRadian()
+{
+    return DEG_TO_RAD(world_->GetCamera()->Transform().eulerAngles().y);
+}
+
+GStransform& Player::CameraTransform()
+{
+    return world_->GetCamera()->Transform();
+}
+
 void Player::Debug(float deltaTime)
 {
     mesh_->Debug();
-    if(InputSystem::ButtonTrigger(InputSystem::Button::A)) states_.ChangeState(PlayerState::PlayerState::Idle);
-    if (InputSystem::ButtonTrigger(InputSystem::Button::B)) states_.ChangeState(PlayerState::PlayerState::Move);
-}
-
-void Player::MovePosition()
-{
-    GSvector2 moveVelocity = InputSystem::LeftStick() / 10;
-    transform_.translate({ moveVelocity.x,0,moveVelocity.y });
-    transform_.rotate({0,1,0});
-}
-
-void Player::MoveInput()
-{
-}
-
-void Player::CameraMove()
-{
-    GSvector2 cameraVelocity = InputSystem::RightStick();
+    if (InputSystem::ButtonTrigger(InputSystem::Button::A)) states_.ChangeState(PlayerState::Idle);
+    if (InputSystem::ButtonTrigger(InputSystem::Button::B)) states_.ChangeState(PlayerState::Move);
 }

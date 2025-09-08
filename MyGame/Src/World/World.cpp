@@ -5,6 +5,10 @@
 #include "../UI/GUI.h"
 #include "../GameSystem/Event/Event.h"
 #include "../AssetID/SkyBox.h"
+#include "../Graphics/Shader/RenderTexture.h"
+#include "../Graphics/Shader/RenderTextureID.h"
+#include "../Graphics/Effect/PostEffect.h"
+
 #include <imgui/imgui.h>
 #include <GSeffect.h>
 #include <GSgame.h>
@@ -22,6 +26,7 @@ void World::Start()
 {
     time_ = Time{};
     gsLoadTexture(SkyBox::GamePlay, "Assets/SkyBox/default.dds");
+    PostEffect::Instance().Load();
 }
 
 void World::Update(float deltaTime)
@@ -48,15 +53,22 @@ void World::Update(float deltaTime)
 void World::Draw() const
 {
     for (auto camera : cameraManager_.GetCameras()) {
+        RenderTexture::BeginRender(Rt::BaseScene);
         //バッファクリア（色と深度）
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         camera->Draw();
         gsDrawSkyboxCubemap(SkyBox::GamePlay);
         fieldManager_.Draw(camera);
         actorManager_.Draw();
+        
         eventManager_.Draw();
         // エフェクトの描画
         gsDrawEffect();
+        RenderTexture::EndRender();
+        RenderTexture::BindRenderTexture(Rt::BaseScene,0);
+        //PostEffect::Instance().Bloom(Rt::BaseScene, 0.4f, { 1.0f,1.0f,1.0f,0.0f });
+        //PostEffect::Instance().Fog(Rt::BaseScene, { 0.1f,0.0f,0.1f,1.0f });
+        RenderTexture::DrawRender(Rt::BaseScene);
     }
     //描画範囲を画面全体にリセット
     glViewport(0, 0, Screen::ScreenWidth, Screen::ScreenHeight);

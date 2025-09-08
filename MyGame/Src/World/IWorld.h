@@ -29,7 +29,7 @@ public:
     virtual ~IWorld() = default;
 
     virtual Player* GetPlayer() = 0;
-    virtual Camera* GetCamera(float index) = 0;
+    virtual Camera* GetCamera(float id = 0) = 0;
     virtual CameraController* GetCameraController(CameraController::Priority p) = 0;
     virtual int GetCameraCount() = 0;
 

@@ -1,4 +1,5 @@
 #include "PlayerIdle.h"
+#include "../../../GameSystem/InputSystem/InputSystem.h"
 PlayerIdle::PlayerIdle(Player* owner)
 	:PlayerState::PlayerState(owner)
 {
@@ -6,6 +7,7 @@ PlayerIdle::PlayerIdle(Player* owner)
 
 void PlayerIdle::Update(float deltaTime)
 {
+	if (InputSystem::LeftStick() != GSvector2::zero()) owner_->ChangeState(PlayerState::Move);
 }
 
 void PlayerIdle::Enter()
@@ -15,6 +17,7 @@ void PlayerIdle::Enter()
 
 void PlayerIdle::Exit()
 {
+
 }
 
 void PlayerIdle::SetID(int id)

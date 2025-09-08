@@ -58,7 +58,8 @@ void Camera::Draw() const
 void Camera::Debug()
 {
     ImGui::Begin("CurrentCamera");
-    ImGui::Text("%s", ("Priority : " + controller_->GetPriorityName()).c_str());
+    //なんかシーン遷移するとnullになる後で直せ
+    if(controller_) ImGui::Text("%s", ("Priority : " + controller_->GetPriorityName()).c_str());
     ImGui::InputFloat3("Position", transform_.position());
     ImGui::DragFloat3("Rotation", transform_.eulerAngles());
     ImGui::InputFloat3("LookAt", transform_.position() + transform_.forward());
@@ -188,9 +189,9 @@ void Camera::SetView(View view)
     }
     else {
         // スムースダンプによる滑らかな補間
-        const float SmoothTime{ 6.0f };    // 補間フレーム数
+        const float SmoothTime{ 4.5f };    // 補間フレーム数
         const float MaxSpeed{ 100 };       // 移動スピードの最大値
-        GSvector3 pos = GSvector3::smoothDamp(transform_.position(), view.tar, velocity_, SmoothTime, MaxSpeed, deltaTimer_);
+        GSvector3 pos = GSvector3::smoothDamp(transform_.position(), view.pos, velocity_, SmoothTime, MaxSpeed, deltaTimer_);
         transform_.position(pos);
     }
     

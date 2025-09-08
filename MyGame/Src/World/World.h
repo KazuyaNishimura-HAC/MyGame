@@ -37,7 +37,7 @@ public:
     void AddCameraController(CameraController* controller)override;
 
     Player* GetPlayer()override;
-    Camera* GetCamera(float id)override;
+    Camera* GetCamera(float id = 0)override;
     CameraController* GetCameraController(CameraController::Priority p)override;
     int GetCameraCount()override;
 
@@ -72,7 +72,7 @@ private:
     CameraManager cameraManager_;
     Time time_;
     bool draw_{ true };
-    bool isDebug_{ true };
+    bool isDebug_{ false };
     //ゲーム終了フラグ
     bool isEnd_{ false };
     bool isStart_{ false };

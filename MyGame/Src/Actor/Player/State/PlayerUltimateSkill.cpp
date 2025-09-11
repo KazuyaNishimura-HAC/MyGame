@@ -21,7 +21,8 @@ void PlayerUltimateSkill::Enter()
 {
 	owner_->IsAttack(true);
 	owner_->ChangeMotion(6, false);
-	skillEvent_->IsInvoke(true);
+	//ƒCƒxƒ“ƒg”­‰Î
+	skillEvent_->SetInvoke(true);
 }
 
 void PlayerUltimateSkill::Exit()

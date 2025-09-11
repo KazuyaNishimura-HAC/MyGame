@@ -23,14 +23,16 @@ public:
     virtual void Update(float deltaTime) = 0;
     virtual void Draw() const {};
     virtual bool Invoke();
-    void IsInvoke(bool invoke);
+    void SetInvoke(bool invoke);
+    bool IsInvoke();
     bool IsEnd();
 protected:
     virtual void BeginEvent() = 0;
     virtual void EndEvent() = 0;
     bool EventWait(float deltaTime);
     bool IsCollide();
-    bool IsInvoke();
+    void ResetTimer();
+    void SetEventTime(float time);
     void IsDebug();
     IWorld* world_{ nullptr };
     GStransform transform_;
@@ -39,7 +41,7 @@ protected:
     //衝突したキャラクター
     Actor* reactCharactor_{ nullptr };
     float timer_{ 0 };
-    float maxTime_{ 0 };
+    float eventTime_{ 0 };
     int sequence_{ 0 };
     int invokeType_;
     bool isInvoke_{ false };

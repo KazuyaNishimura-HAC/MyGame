@@ -11,7 +11,7 @@ void EventManager::Update(float deltaTime)
     //イベントが開始したらUpdate処理
     if (runningEvent_ == nullptr)return;
     runningEvent_->Update(deltaTime);
-    if (runningEvent_->IsEnd()) runningEvent_ = nullptr;
+    if (!runningEvent_->IsInvoke()) runningEvent_ = nullptr;
 }
 
 void EventManager::Draw() const

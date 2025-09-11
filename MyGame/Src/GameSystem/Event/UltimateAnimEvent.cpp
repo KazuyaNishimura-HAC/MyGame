@@ -82,13 +82,13 @@ void UltimateAnimEvent::BeginEvent()
 	GSvector3 cameraTar = cameraPos.forward();
 	camera_->SetView(cameraPos, cameraTar);
 	//モーション時間をイベントの時間と同期させる
-	maxTime_ = player_->GetMesh()->MotionEndTime();
+	SetEventTime(player_->GetMesh()->MotionEndTime());
 }
 
 void UltimateAnimEvent::EndEvent()
 {
 	camera_->SetPriority(CameraController::Disable);
-	IsInvoke(false);
-	timer_ = 0.0f;
+	SetInvoke(false);
+	ResetTimer();
 	PostEffect::Instance().SetIntensity(0.35f);
 }

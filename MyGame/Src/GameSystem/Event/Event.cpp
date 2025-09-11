@@ -40,7 +40,7 @@ bool Event::IsEnd()
 bool Event::EventWait(float deltaTime)
 {
     timer_ += deltaTime;
-    return timer_ > maxTime_;
+    return timer_ > eventTime_;
 }
 
 bool Event::IsCollide()
@@ -58,7 +58,17 @@ bool Event::IsCollide()
     return collidePlayer1;
 }
 
-void Event::IsInvoke(bool invoke)
+void Event::ResetTimer()
+{
+    timer_ = 0.0f;
+}
+
+void Event::SetEventTime(float time)
+{
+    eventTime_ = time;
+}
+
+void Event::SetInvoke(bool invoke)
 {
     isInvoke_ = invoke;
 }

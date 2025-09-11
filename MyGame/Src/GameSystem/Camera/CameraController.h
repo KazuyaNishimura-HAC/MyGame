@@ -6,7 +6,6 @@
 struct View {
 	GSvector3 pos;
 	GSvector3 tar;
-	GSvector3 rot;
 	float fov{ 45.0f };
 	bool isSmooth{ false };
 };

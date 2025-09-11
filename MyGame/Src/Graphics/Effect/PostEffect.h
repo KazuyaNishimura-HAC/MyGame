@@ -8,7 +8,8 @@ public:
 	PostEffect();
 	~PostEffect();
     void Load();
-	void Bloom(GSuint n, float intensity, GScolor col);
+	void Bloom(GSuint n, GScolor col);
+    void SetIntensity(float intensity);
 	void Fog(GSuint n, GScolor col);
 	void Dissolve(GSuint n, GSuint m);
 	void MargeShader(GSuint n, GSuint m);
@@ -32,7 +33,7 @@ private:
     // テクセルの閾値
     float bloomThreshold_{ 0.01f };
     // エフェクトの強さ
-    float bloomIntencity_{ 0.5f };
+    float bloomIntencity_{ 0.35f };
     // エフェクトカラー
     GScolor bloomColor_{ 1.0f,1.0f,1.0f,1.0f };
     // フォグのカラー

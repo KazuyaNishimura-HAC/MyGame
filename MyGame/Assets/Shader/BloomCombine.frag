@@ -51,5 +51,4 @@ void main(void) {
     col.rgb = ACESFilm(col.rgb);
     // ガンマカラー空間に変換しなくても大丈夫！(glEnable(GL_FRAMEBUFFER_SRGB);があるため)
     out_FragColor = vec4(col.rgb, 1.0);
-
 }

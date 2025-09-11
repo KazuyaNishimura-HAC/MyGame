@@ -148,5 +148,5 @@ void AnimatedMesh::Debug()
     ImGui::End();
 
     motion = CLAMP(motion,0, motionCount - 1);
-    ChangeMotion(motion,true);
+    if(curMotion_.clip_ != motion)ChangeMotion(motion,true);
 }

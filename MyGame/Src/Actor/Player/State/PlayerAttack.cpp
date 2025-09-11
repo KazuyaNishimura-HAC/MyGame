@@ -7,13 +7,17 @@ PlayerAttack::PlayerAttack(Player* owner)
 
 void PlayerAttack::Update(float deltaTime)
 {
-	if (owner_->GetMesh()->IsEndMotion()) owner_->ChangeState(PlayerState::Idle);
+	if (owner_->GetMesh()->IsEndMotion()) {
+		owner_->ChangeState(PlayerState::Idle);
+		return;
+	}
+	if(InputSystem::ButtonTrigger(InputSystem::Button::B)) owner_->ChangeMotion(3, false);
 }
 
 void PlayerAttack::Enter()
 {
 	owner_->IsAttack(true);
-	owner_->ChangeMotion(3, false);
+	owner_->ChangeMotion(2, false);
 }
 
 void PlayerAttack::Exit()

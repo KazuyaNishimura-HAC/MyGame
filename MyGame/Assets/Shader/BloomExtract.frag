@@ -9,6 +9,9 @@ uniform sampler2D u_RenderTexture;
 // 輝度のしきい値
 uniform float u_BloomThreshold = 1.0f;
 
+// ブルームカラー（デフォ白）
+uniform vec4 u_BloomColor = vec4(1.0f,1.0f,1.0f,1.0f);
+
 // ガンマカラー空間からリニアカラー空間に変換
 vec3 GammaToLinearSpace(vec3 color) {
     return pow(color, vec3(2.2));
@@ -26,6 +29,8 @@ void main(void) {
     luminance = max(0.0, luminance - u_BloomThreshold);
     // signはプラスの値の場合は1.0,ゼロの場合は0.0となるので、しきい値以下は黒になる
     color.rgb *= sign(luminance);
+    // 発光にカラーを乗算
+    color.rgb *= u_BloomColor.rgb * u_BloomColor.a;
     // 最終カラーの出力
     out_FragColor = vec4(color.rgb, 1.0);
 }

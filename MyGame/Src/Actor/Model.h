@@ -10,6 +10,7 @@ public:
         Player,
         //[MAP]
         DefaultMap,
+        Enemy,
         //[Debug]
         PathObject,
         EditObject,

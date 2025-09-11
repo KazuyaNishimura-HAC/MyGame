@@ -24,11 +24,8 @@ void PostEffect::Load()
     LoadShader();
 }
 
-void PostEffect::Bloom(GSuint n, float intensity, GScolor col)
+void PostEffect::Bloom(GSuint n ,GScolor col)
 {
-    // ブルームの強さを設定
-    bloomIntencity_ = intensity;
-
     // 輝度の高い部分を取り出す
     bloomExtract(n, col);
     // ガウシアンブラーでぼかす
@@ -42,6 +39,12 @@ void PostEffect::Bloom(GSuint n, float intensity, GScolor col)
     RenderTexture::BindRenderTextureEx(Rt::BloomCombine, 0, 0);
     // レンダーターゲット描画
     RenderTexture::DrawRender(Rt::BloomCombine);
+}
+
+void PostEffect::SetIntensity(float intensity)
+{
+    // ブルームの強さを設定
+    bloomIntencity_ = intensity;
 }
 
 void PostEffect::Fog(GSuint n, GScolor col)

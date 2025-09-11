@@ -2,8 +2,8 @@
 #include "../../Actor/Actor.h"
 #include "../../Actor/Player/Player.h"
 
-Event::Event(IWorld* world, const GSvector3& position, GSvector2 size)
-    :world_{ world },size_{ size }
+Event::Event(IWorld* world,int invokeType, const GSvector3& position, GSvector2 size)
+    :world_{ world },invokeType_{ invokeType }, size_{ size }
 {
     transform_.position(position);
 }
@@ -13,11 +13,22 @@ Event::~Event()
     world_ = nullptr;
 }
 
-bool Event::Collide()
+bool Event::Invoke()
 {
-    //当たり判定内に存在したらイベント開始
-    if (!IsCollide())return false;
-    isActive_ = true;
+    bool invoke;
+    switch (invokeType_) {
+    case InvokeType::Collision:
+        invoke = IsCollide();
+        break;
+    case InvokeType::Manual:
+        invoke = IsInvoke();
+        break;
+    default:
+        return false;
+    }
+    //発火フラグが発生したら
+    if (!invoke) return false;
+    //イベント開始
     BeginEvent();
     return true;
 }
@@ -26,11 +37,10 @@ bool Event::IsEnd()
 {
     return isEnd_;
 }
-
 bool Event::EventWait(float deltaTime)
 {
-    timer_ -= deltaTime;
-    return timer_ <= 0;
+    timer_ += deltaTime;
+    return timer_ > maxTime_;
 }
 
 bool Event::IsCollide()
@@ -46,6 +56,16 @@ bool Event::IsCollide()
     if (collidePlayer1) reactCharactor_ = player;
 
     return collidePlayer1;
+}
+
+void Event::IsInvoke(bool invoke)
+{
+    isInvoke_ = invoke;
+}
+
+bool Event::IsInvoke()
+{
+    return isInvoke_;
 }
 
 void Event::IsDebug()

@@ -11,7 +11,7 @@ public:
     ~EventManager();
     void Update(float deltaTime);
     void Draw()const;
-    void Collide();
+    void Invoke();
     void AddEvent(Event* newEvent);
     void Remove();
     void Clear();

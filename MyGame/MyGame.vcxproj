@@ -138,6 +138,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Actor\Enemy\State\EnemyAttack.cpp" />
+    <ClCompile Include="Src\Actor\Enemy\State\EnemyIdle.cpp" />
+    <ClCompile Include="Src\Actor\Enemy\State\EnemyMove.cpp" />
+    <ClCompile Include="Src\Actor\Enemy\Enemy.cpp" />
+    <ClCompile Include="Src\Actor\Player\State\PlayerUltimateSkill.cpp" />
     <ClCompile Include="Src\Actor\Player\State\PlayerAttack.cpp" />
     <ClCompile Include="Src\Graphics\Shader\RenderTexture.cpp" />
     <ClCompile Include="Src\Graphics\Effect\PostEffect.cpp" />
@@ -172,8 +177,15 @@
     <ClCompile Include="Src\UI\GUIManager.cpp" />
     <ClCompile Include="Src\UI\Image.cpp" />
     <ClCompile Include="Src\World\World.cpp" />
+    <ClCompile Include="Src\GameSystem\Event\UltimateAnimEvent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Actor\Enemy\State\EnemyAttack.h" />
+    <ClInclude Include="Src\Actor\Enemy\State\EnemyIdle.h" />
+    <ClInclude Include="Src\Actor\Enemy\State\EnemyMove.h" />
+    <ClInclude Include="Src\Actor\Enemy\Enemy.h" />
+    <ClInclude Include="Src\Actor\Enemy\State\EnemyState.h" />
+    <ClInclude Include="Src\Actor\Player\State\PlayerUltimateSkill.h" />
     <ClInclude Include="Src\Actor\Player\State\PlayerAttack.h" />
     <ClInclude Include="Src\AssetID\Graphics.h" />
     <ClInclude Include="Src\Graphics\Shader\RenderTexture.h" />
@@ -235,6 +247,7 @@
     <ClInclude Include="Src\World\World.h">
       <DeploymentContent>false</DeploymentContent>
     </ClInclude>
+    <ClInclude Include="Src\GameSystem\Event\UltimateAnimEvent.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shader\BloomCombine.frag" />

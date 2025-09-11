@@ -8,8 +8,9 @@
 //ステートヘッダー
 #include "State/PlayerIdle.h"
 #include "State/PlayerMove.h"
+#include "State/PlayerAttack.h"
+#include "State/PlayerUltimateSkill.h"
 
-const GSvector3 cameraOffset{ 0,3,5 };
 Player::Player(IWorld* world, GSuint mesh)
     :Actor(mesh)
 {
@@ -17,8 +18,10 @@ Player::Player(IWorld* world, GSuint mesh)
     //ステートの追加
     states_.AddState(PlayerState::Idle, new PlayerIdle(this));
     states_.AddState(PlayerState::Move, new PlayerMove(this));
+    states_.AddState(PlayerState::Attack, new PlayerAttack(this));
+    states_.AddState(PlayerState::Ultimate, new PlayerUltimateSkill(this));
     states_.ChangeState(PlayerState::Idle);
-
+    collider_ = BoundingSphere(1.0f,{0.0f,2.0f,0.0f});
     camera_ = new CameraController(CameraController::Player);
     world_->AddCameraController(camera_);
     camera_->SetSmooth(true);
@@ -38,7 +41,13 @@ void Player::Update(float deltaTime)
 {
     Actor::Update(deltaTime);
     states_.Update(deltaTime);
-    if(InputSystem::ButtonTrigger(InputSystem::Button::B)) states_.ChangeState(PlayerState::Attack);
+    if (!IsAttack() && InputSystem::ButtonTrigger(InputSystem::Button::B)) {
+        states_.ChangeState(PlayerState::Attack);
+    }
+    if (!IsAttack() && InputSystem::ButtonTrigger(InputSystem::Button::A)) {
+        states_.ChangeState(PlayerState::Ultimate);
+    }
+
     MoveCamera(deltaTime);
 }
 void Player::LateUpdate(float deltaTime)
@@ -60,13 +69,18 @@ void Player::ChangeState(int state)
 {
     states_.ChangeState(state);
 }
+
+int Player::CurrentState()
+{
+    return states_.CurrentState();
+}
 void Player::IsAttack(bool isAttack)
 {
     isAttack_ = isAttack;
 }
 bool Player::IsAttack()
 {
-    return false;
+    return isAttack_;
 }
 
 void Player::MovePosition(float deltaTime)
@@ -143,9 +157,12 @@ GStransform& Player::CameraTransform()
     return world_->GetCamera()->Transform();
 }
 
+IWorld* Player::World()
+{
+    return world_;
+}
+
 void Player::Debug(float deltaTime)
 {
     mesh_->Debug();
-    if (InputSystem::ButtonTrigger(InputSystem::Button::A)) states_.ChangeState(PlayerState::Idle);
-    if (InputSystem::ButtonTrigger(InputSystem::Button::B)) states_.ChangeState(PlayerState::Move);
 }

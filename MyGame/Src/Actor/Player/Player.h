@@ -28,10 +28,13 @@ public:
     void React(Actor& other)override;
     
     void ChangeState(int state);
+    int CurrentState();
     void MovePosition(float deltaTime);
     
     void IsAttack(bool isAttack);
     bool IsAttack();
+
+    IWorld* World();
     void Debug(float deltaTime)override;
 private:
     GSvector3 GetCameraDirection();

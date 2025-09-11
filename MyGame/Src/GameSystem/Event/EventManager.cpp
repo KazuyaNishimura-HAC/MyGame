@@ -10,9 +10,8 @@ void EventManager::Update(float deltaTime)
 {
     //イベントが開始したらUpdate処理
     if (runningEvent_ == nullptr)return;
-
     runningEvent_->Update(deltaTime);
-    if (runningEvent_->IsEnd())runningEvent_ = nullptr;
+    if (runningEvent_->IsEnd()) runningEvent_ = nullptr;
 }
 
 void EventManager::Draw() const
@@ -24,13 +23,13 @@ void EventManager::Draw() const
     }
 }
 
-void EventManager::Collide()
+void EventManager::Invoke()
 {
     //イベントの重複処理禁止
     if (runningEvent_ != nullptr)return;
     for (auto ev : events_)
     {
-        if (!ev->Collide())continue;
+        if (!ev->Invoke())continue;
         runningEvent_ = ev;
         break;
     }

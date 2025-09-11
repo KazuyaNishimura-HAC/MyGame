@@ -42,7 +42,7 @@ void World::Update(float deltaTime)
     guiManager_.Remove();
     //当たり判定
     actorManager_.Collide();
-    eventManager_.Collide();
+    eventManager_.Invoke();
     time_.Update(deltaTime);
     cameraManager_.Update(deltaTime);
     // エフェクトの更新処理
@@ -66,7 +66,7 @@ void World::Draw() const
         gsDrawEffect();
         RenderTexture::EndRender();
         RenderTexture::BindRenderTexture(Rt::BaseScene,0);
-        //PostEffect::Instance().Bloom(Rt::BaseScene, 0.4f, { 1.0f,1.0f,1.0f,0.0f });
+        PostEffect::Instance().Bloom(Rt::BaseScene, { 1.0f,1.0f,1.0f,1.0f });
         //PostEffect::Instance().Fog(Rt::BaseScene, { 0.1f,0.0f,0.1f,1.0f });
         RenderTexture::DrawRender(Rt::BaseScene);
     }

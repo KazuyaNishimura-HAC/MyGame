@@ -3,6 +3,7 @@
 #include "../../AssetID/Assets.h"
 #include "../../GameSystem/InputSystem/InputSystem.h"
 #include "../../Actor/Player/Player.h"
+#include "../../Actor/Enemy/Enemy.h"
 #include "../../GameSystem/Camera/DebugCamera.h"
 
 //動作確認用
@@ -13,9 +14,11 @@ void GamePlayScene::Start() {
     
     //メッシュ読み込み
     gsLoadSkinMesh(Model::Player, "Assets/Model/Charactor/Player/Player.mshb");
+    gsLoadSkinMesh(Model::Enemy, "Assets/Model/Charactor/Enemy/Enemy1.mshb");
     gsLoadMesh(Model::DefaultMap,"Assets/Model/Stage/TestPlane.mshb");
     
     world_.AddPlayer(new Player(&world_));
+    //world_.AddActor(new Enemy(&world_,Model::Enemy,{0,0,-5}));
     world_.AddCamera(new Camera(&world_));
     
     

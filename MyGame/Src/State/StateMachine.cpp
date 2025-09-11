@@ -36,7 +36,6 @@ void StateMachine::AddState(int stateName, IState* state)
 
 void StateMachine::ChangeState(int stateName)
 {
-
 	//‘JˆÚ—v‘f‚ª–³‚¯‚ê‚Îreturn
 	if (states_.count(stateName) == 0) return;
 	IState* nextState = states_[stateName];

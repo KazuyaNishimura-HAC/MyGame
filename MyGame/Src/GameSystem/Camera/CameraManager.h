@@ -1,7 +1,6 @@
 #ifndef CAMERA_MANAGER_H_
 #define CAMERA_MANAGER_H_
 #include <vector>
-
 class Camera;
 class CameraController;
 

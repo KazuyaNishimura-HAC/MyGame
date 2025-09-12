@@ -11,6 +11,8 @@ CameraController::CameraController(Priority priority, int id, const GSvector3& p
 
 void CameraController::Update(float deltaTime)
 {
+	if (!IsShake()) return;
+	shake_.Update(deltaTime);
 }
 
 void CameraController::SetPosition(const GSvector3& pos)
@@ -38,12 +40,6 @@ void CameraController::SetPriority(Priority p)
 	priority_ = p;
 }
 
-void CameraController::SetView(const GSvector3& pos, const GSvector3& tar)
-{
-	SetPosition(pos);
-	SetViewTarget(tar);
-}
-
 CameraController::Priority CameraController::GetPriority() const
 {
 	return priority_;
@@ -67,6 +63,16 @@ std::string CameraController::GetPriorityName() const
 	return Name;
 }
 
+void CameraController::SetView(const GSvector3& pos, const GSvector3& tar)
+{
+	SetPosition(pos);
+	SetViewTarget(tar);
+}
+
+View& CameraController::GetView()
+{
+	return view_;
+}
 void CameraController::SetID(int id)
 {
 	id_ = id;
@@ -92,15 +98,12 @@ void CameraController::SetSmooth(bool smooth)
 	view_.isSmooth = smooth;
 }
 
-bool CameraController::GetSmooth()
+bool CameraController::IsSmooth() const
 {
 	return view_.isSmooth;
 }
 
-View& CameraController::GetView()
-{
-	return view_;
-}
+
 
 void CameraController::Die()
 {
@@ -112,3 +115,27 @@ bool CameraController::IsDead() const
 	return isDead_;
 }
 
+View CameraController::GetAffectedView()
+{
+	return shake_.ShakeView(view_);
+}
+
+void CameraController::SetShakeValues(float timer, float strength, float decayTime, float decaySpeed, float hz, GSvector2 vectorAffect, float fovAffect)
+{
+	shake_ = {timer,strength,decayTime,decaySpeed,hz,vectorAffect,fovAffect};
+}
+
+void CameraController::SetShake(const CameraShake& shake)
+{
+	shake_ = shake;
+}
+
+CameraShake& CameraController::GetShake()
+{
+	return shake_;
+}
+
+bool CameraController::IsShake()
+{
+	return shake_.timer != 0.0f;
+}

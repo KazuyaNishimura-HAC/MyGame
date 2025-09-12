@@ -43,6 +43,7 @@ void Player::Update(float deltaTime)
     states_.Update(deltaTime);
     if (!IsAttack() && InputSystem::ButtonTrigger(InputSystem::Button::B)) {
         states_.ChangeState(PlayerState::Attack);
+        camera_->SetShakeValues(180.0f, 1.0f, 160.0f, 1.0f, 20.0f, { 0.1f,0.1f }, 0.0f);
     }
     if (!IsAttack() && InputSystem::ButtonTrigger(InputSystem::Button::A)) {
         states_.ChangeState(PlayerState::Ultimate);

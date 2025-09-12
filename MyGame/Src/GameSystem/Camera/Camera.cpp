@@ -21,7 +21,11 @@ void Camera::Update(float deltaTime)
     deltaTimer_ = deltaTime;
     //コントローラーが存在しなかったら移動しない
     if (!controller_) return;
-    View currentView = controller_->GetView();
+
+    View currentView;
+    if(controller_->IsShake()) currentView = controller_->GetAffectedView();
+    else currentView = controller_->GetView();
+     
     SetView(currentView);
 }
 
@@ -65,6 +69,15 @@ void Camera::Debug()
     ImGui::InputFloat3("LookAt", transform_.position() + transform_.forward());
     ImGui::InputFloat3("UP", transform_.up());
     ImGui::InputFloat("FoV", &fov_);
+    ImGui::End();
+
+    CameraShake debugShake = controller_->GetShake();
+    ImGui::Begin("ShakeValues");
+    ImGui::InputFloat("Timer", &debugShake.timer);
+    ImGui::InputFloat("Strength", &debugShake.strength);
+    ImGui::InputFloat("DecayTime", &debugShake.decayTime);
+    ImGui::InputFloat("DecaySpeed", &debugShake.decaySpeed);
+    ImGui::InputFloat("HZ", &debugShake.hz);
     ImGui::End();
 }
 

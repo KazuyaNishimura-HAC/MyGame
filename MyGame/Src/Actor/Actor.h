@@ -10,8 +10,6 @@
 #include <string>
 
 class IWorld;
-class Rigidbody;
-
 class Actor
 {
 public:
@@ -29,7 +27,6 @@ public:
     const GStransform& Transform()const;
     GStransform& Transform();
     const BoundingSphere& Collider()const;
-    Rigidbody* GetRigidbody();
     void ChangeMotion(int motion, bool loop = true, bool forceChange = false, float motionTime = 0, float lerpTime = 0);
     AnimatedMesh* GetMesh();
     void Die();
@@ -50,7 +47,6 @@ protected:
     GStransform transform_;
     BoundingSphere collider_;
     AnimatedMesh* mesh_{ nullptr };
-    Rigidbody* rigidbody_;
 
     bool dead_{ false };
     bool enable_{ true };

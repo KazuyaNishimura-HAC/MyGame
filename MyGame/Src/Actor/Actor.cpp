@@ -89,11 +89,6 @@ const BoundingSphere& Actor::Collider() const
     return collider_;
 }
 
-Rigidbody* Actor::GetRigidbody()
-{
-    return rigidbody_;
-}
-
 void Actor::ChangeMotion(int motion, bool loop, bool forceChange, float motionTime, float lerpTime)
 {
     mesh_->ChangeMotion(motion, loop, forceChange, motionTime, lerpTime);

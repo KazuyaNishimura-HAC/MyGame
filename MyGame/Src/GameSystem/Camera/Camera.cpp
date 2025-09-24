@@ -18,7 +18,6 @@ void Camera::Update(float deltaTime)
 {
     //視錐台カリング
     gsUpdateFrustum();
-    deltaTimer_ = deltaTime;
     //コントローラーが存在しなかったら移動しない
     if (!controller_) return;
 
@@ -26,7 +25,7 @@ void Camera::Update(float deltaTime)
     if(controller_->IsShake()) currentView = controller_->GetAffectedView();
     else currentView = controller_->GetView();
      
-    SetView(currentView);
+    SetView(currentView,deltaTime);
 }
 
 void Camera::Draw() const
@@ -113,8 +112,6 @@ const GSmatrix4& Camera::GetViewMatrix()
     return view_;
 }
 
-
-
 //カメラが反転しているか
 bool Camera::IsInversion()
 {
@@ -193,7 +190,7 @@ void Camera::SetController(CameraController* controller)
     controller_ = controller;
 }
 
-void Camera::SetView(View view)
+void Camera::SetView(View view,float deltaTime)
 {
     
     //瞬間的な移動かどうか
@@ -204,7 +201,7 @@ void Camera::SetView(View view)
         // スムースダンプによる滑らかな補間
         const float SmoothTime{ 4.5f };    // 補間フレーム数
         const float MaxSpeed{ 100 };       // 移動スピードの最大値
-        GSvector3 pos = GSvector3::smoothDamp(transform_.position(), view.pos, velocity_, SmoothTime, MaxSpeed, deltaTimer_);
+        GSvector3 pos = GSvector3::smoothDamp(transform_.position(), view.pos, velocity_, SmoothTime, MaxSpeed, deltaTime);
         transform_.position(pos);
     }
     

@@ -41,7 +41,7 @@ public:
     bool IsDead();
     void SetController(CameraController* controller_);
 private:
-    void SetView(View view);
+    void SetView(View view,float deltaTime);
     CameraController* controller_{ nullptr };
 
     GSmatrix4 projection_;
@@ -58,6 +58,5 @@ private:
     GStransform transform_;
     GSvector3 velocity_{0,0,0};
     GSvector2 viewRange_, viewOffset_;
-    float deltaTimer_{ 0.0f };
 };
 #endif

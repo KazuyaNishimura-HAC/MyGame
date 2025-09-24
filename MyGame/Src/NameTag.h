@@ -20,12 +20,16 @@ namespace NameTag {
 		static constexpr const char* Player = "Player";
 		static constexpr const char* Enemy = "Enemy";
 	};
+	struct PostEffect {
+		static constexpr const char* Bloom = "Bloom";
+	};
 }
 
 //ŒÄ‚Ño‚µŠÈ—ª‰»
 using SceneName = NameTag::Scene;
 using PriorityName = NameTag::Priority;
 using ActorName = NameTag::Actor;
+using EffectName = NameTag::PostEffect;
 
 
 #endif

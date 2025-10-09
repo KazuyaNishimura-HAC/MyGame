@@ -85,6 +85,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>C:\JsonFile\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -101,6 +102,7 @@
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>C:\JsonFile\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -138,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Graphics\Effect\EffectManager.cpp" />
     <ClCompile Include="Src\Actor\Enemy\State\EnemyAttack.cpp" />
     <ClCompile Include="Src\Actor\Enemy\State\EnemyIdle.cpp" />
     <ClCompile Include="Src\Actor\Enemy\State\EnemyMove.cpp" />
@@ -178,8 +181,12 @@
     <ClCompile Include="Src\UI\Image.cpp" />
     <ClCompile Include="Src\World\World.cpp" />
     <ClCompile Include="Src\GameSystem\Event\UltimateAnimEvent.cpp" />
+    <ClCompile Include="Src\GameSystem\Event\TimeLine\TimeLineEditor.cpp" />
+    <ClCompile Include="Src\GameSystem\Event\TimeLine\TimeLine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\GameSystem\Event\TimeLine\TImeLineData.h" />
+    <ClInclude Include="Src\Graphics\Effect\EffectManager.h" />
     <ClInclude Include="Src\Actor\Enemy\State\EnemyAttack.h" />
     <ClInclude Include="Src\Actor\Enemy\State\EnemyIdle.h" />
     <ClInclude Include="Src\Actor\Enemy\State\EnemyMove.h" />
@@ -248,6 +255,8 @@
       <DeploymentContent>false</DeploymentContent>
     </ClInclude>
     <ClInclude Include="Src\GameSystem\Event\UltimateAnimEvent.h" />
+    <ClInclude Include="Src\GameSystem\Event\TimeLine\TimeLineEditor.h" />
+    <ClInclude Include="Src\GameSystem\Event\TimeLine\TimeLine.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shader\BloomCombine.frag" />

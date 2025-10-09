@@ -75,7 +75,7 @@ public:
 	void SetViewTarget(const GSvector3& tar);
 	GSvector3 GetViewTarget() const;
 	//優先度設定・取得
-	void SetPriority(Priority p);
+	void SetPriority(Priority p,bool preMove = false);
 	Priority GetPriority() const;
 	//優先度名を取得
 	std::string GetPriorityName() const;
@@ -92,6 +92,9 @@ public:
 	//Lerp設定・取得
 	void SetSmooth(bool smooth);
 	bool IsSmooth() const;
+
+	void SetMovePrevious(bool preMove);
+	bool IsMovePrevious() const;
 
 	void Die();
 	bool IsDead()const;
@@ -114,6 +117,8 @@ private:
 	CameraShake shake_{};
 	int id_{ 0 };
 	bool isDead_{ false };
+	//切替前のカメラから移動するか
+	bool preMove_{ false };
 };
 
 #endif

@@ -60,9 +60,11 @@ void Camera::Draw() const
 
 void Camera::Debug()
 {
-    ImGui::Begin("CurrentCamera");
     //なんかシーン遷移するとnullになる後で直せ
-    if(controller_) ImGui::Text("%s", ("Priority : " + controller_->GetPriorityName()).c_str());
+    if (!controller_) return;
+
+    ImGui::Begin("CurrentCamera");
+    ImGui::Text("%s", ("Priority : " + controller_->GetPriorityName()).c_str());
     ImGui::InputFloat3("Position", transform_.position());
     ImGui::DragFloat3("Rotation", transform_.eulerAngles());
     ImGui::InputFloat3("LookAt", transform_.position() + transform_.forward());

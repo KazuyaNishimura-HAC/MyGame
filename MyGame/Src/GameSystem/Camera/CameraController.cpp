@@ -35,9 +35,10 @@ GSvector3 CameraController::GetViewTarget() const
 	return view_.tar;
 }
 
-void CameraController::SetPriority(Priority p)
+void CameraController::SetPriority(Priority p, bool preMove)
 {
 	priority_ = p;
+	SetMovePrevious(preMove);
 }
 
 CameraController::Priority CameraController::GetPriority() const
@@ -101,6 +102,16 @@ void CameraController::SetSmooth(bool smooth)
 bool CameraController::IsSmooth() const
 {
 	return view_.isSmooth;
+}
+
+void CameraController::SetMovePrevious(bool preMove)
+{
+	preMove_ = preMove;
+}
+
+bool CameraController::IsMovePrevious() const
+{
+	return preMove_;
 }
 
 

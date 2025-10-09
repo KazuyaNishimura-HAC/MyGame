@@ -119,6 +119,12 @@ CameraController* CameraManager::GetActiveController()
         }
         //優先順位の高い物を有効化
         if (activeController->GetPriority() < ctrl->GetPriority()) {
+            //変更前のカメラ位置に移動するか？
+            if (ctrl->IsMovePrevious()) {
+                View preView = activeController->GetView();
+                ctrl->SetView(preView.pos, preView.tar);
+                ctrl->SetMovePrevious(false);
+            }
             activeController = ctrl;
         }
     }

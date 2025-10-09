@@ -62,7 +62,7 @@ void DebugCamera::DrawImGui()
 
 void DebugCamera::FreeMode(float deltaTime)
 {
-    //左クリックしながらカメラ回転
+    //右クリックしながらカメラ回転
     if (gsGetMouseButtonState(GMOUSE_BUTTON_2)) {
         int mouseX = 0;
         int mouseY = 0;

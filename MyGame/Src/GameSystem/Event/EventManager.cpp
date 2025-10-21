@@ -1,6 +1,10 @@
 ﻿#include "EventManager.h"
 #include "Event.h"
 
+EventManager::EventManager()
+{
+}
+
 EventManager::~EventManager()
 {
     Clear();
@@ -8,6 +12,7 @@ EventManager::~EventManager()
 
 void EventManager::Update(float deltaTime)
 {
+    timeLine_.Update(deltaTime);
     //イベントが開始したらUpdate処理
     if (runningEvent_ == nullptr)return;
     runningEvent_->Update(deltaTime);
@@ -61,4 +66,14 @@ void EventManager::Clear()
         delete ev;
     }
     events_.clear();
+    timeLine_.AllClear();
+}
+
+void EventManager::Debug()
+{
+}
+
+TimeLine& EventManager::GetTimeLine()
+{
+    return timeLine_;
 }

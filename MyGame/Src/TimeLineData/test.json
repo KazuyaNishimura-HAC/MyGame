@@ -1,0 +1,122 @@
+{
+    "EventName": "TEST1",
+    "KeyCount": 6,
+    "EventTime": 5.0,
+    "key0": {
+        "frame": 20,
+        "Camera": {
+            "targetType": "Actor",
+            "targetName": "Player",
+            "position": [
+                100.0,
+                20.0,
+                10.0
+            ],
+            "target": [
+                0.0,
+                3.0,
+                0.0
+            ],
+            "fov": 45.0,
+            "smooth": true
+        }
+    },
+    "key1": {
+        "frame": 60,
+        "Camera": {
+            "targetType": "Actor",
+            "targetName": "Player",
+            "position": [
+                0.0,
+                10.0,
+                0.0
+            ],
+            "target": [
+                0.0,
+                0.0,
+                0.0
+            ],
+            "fov": 45.0,
+            "smooth": true
+        }
+    },
+    "key2": {
+        "frame": 115,
+        "Camera": {
+            "targetType": "Actor",
+            "targetName": "Player",
+            "position": [
+                0.0,
+                5.0,
+                5.0
+            ],
+            "target": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "fov": 45.0,
+            "smooth": true
+        }
+    },
+    "key3": {
+        "frame": 140,
+        "Camera": {
+            "targetType": "Actor",
+            "targetName": "Player",
+            "position": [
+                0.0,
+                1.0,
+                4.0
+            ],
+            "target": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "fov": 45.0,
+            "smooth": true
+        }
+    },
+    "key4": {
+        "frame": 180,
+        "Camera": {
+            "targetType": "Actor",
+            "targetName": "Player",
+            "position": [
+                5.0,
+                5.0,
+                0.0
+            ],
+            "target": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "fov": 45.0,
+            "smooth": true
+        },
+        "Effect": {
+            "affected": 255.0
+        }
+    },
+    "key5": {
+        "frame": 240,
+        "Camera": {
+            "targetType": "Actor",
+            "targetName": "Player",
+            "position": [
+                30.0,
+                5.0,
+                0.0
+            ],
+            "target": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "fov": 45.0,
+            "smooth": true
+        }
+    }
+}

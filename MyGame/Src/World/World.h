@@ -14,6 +14,7 @@ class Player;
 class Event;
 class Camera;
 class CameraController;
+class TimeLineEditor;
 
 class World :public IWorld
 {
@@ -37,12 +38,14 @@ public:
     void AddCameraController(CameraController* controller)override;
 
     Player* GetPlayer()override;
+    Actor* GetActor(std::string name)override;
     Camera* GetCamera(float id = 0)override;
     CameraController* GetCameraController(CameraController::Priority p)override;
     int GetCameraCount()override;
 
     ActorManager& GetActorManager();
     FieldManager& Fields()override;
+    TimeLine& GetTimeLine()override;
 
     void SetTimeScale(TimeScale timeScale)override;
 
@@ -65,11 +68,14 @@ public:
     void Message(EventMessage message)override;
 
 private:
+    //管理マネージャー
     ActorManager actorManager_;
     GUIManager guiManager_;
     FieldManager fieldManager_;
     EventManager eventManager_;
     CameraManager cameraManager_;
+    //エディター
+    TimeLineEditor* timeLineEditor_{ nullptr };
     Time time_;
     bool draw_{ true };
     bool isDebug_{ false };

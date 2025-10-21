@@ -16,6 +16,7 @@ class FieldActor;
 class FieldManager;
 class Event;
 class CameraController;
+class TimeLine;
 
 enum class EventMessage
 {
@@ -29,6 +30,7 @@ public:
     virtual ~IWorld() = default;
 
     virtual Player* GetPlayer() = 0;
+    virtual Actor* GetActor(std::string name) = 0;
     virtual Camera* GetCamera(float id = 0) = 0;
     virtual CameraController* GetCameraController(CameraController::Priority p) = 0;
     virtual int GetCameraCount() = 0;
@@ -44,6 +46,7 @@ public:
     virtual void SetTimeScale(TimeScale timeScale) = 0;
 
     virtual FieldManager& Fields() = 0;
+    virtual TimeLine& GetTimeLine() = 0;
 
     virtual void IsEnd(bool end) = 0;
     virtual bool IsEnd() = 0;

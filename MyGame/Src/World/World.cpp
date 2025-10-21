@@ -9,7 +9,8 @@
 #include "../Graphics/Shader/RenderTextureID.h"
 #include "../Graphics/Effect/PostEffect.h"
 
-#include <imgui/imgui.h>
+#include "../GameSystem/Event/TimeLine/TimeLineEditor.h"
+
 #include <GSeffect.h>
 #include <GSgame.h>
 
@@ -26,24 +27,30 @@ void World::Start()
 {
     time_ = Time{};
     gsLoadTexture(SkyBox::GamePlay, "Assets/SkyBox/default.dds");
+    GetTimeLine().SetIWorld(this);
+    timeLineEditor_ = new TimeLineEditor(this,GetTimeLine());
+    GetTimeLine().LoadFile();
     PostEffect::Instance().Load();
 }
 
 void World::Update(float deltaTime)
 {
+    time_.Update(deltaTime);
     fieldManager_.Update(deltaTime);
     actorManager_.Update(deltaTime);
     actorManager_.LateUpdate(deltaTime);
     eventManager_.Update(time_.GameDeltaTime());
     guiManager_.Update(deltaTime, time_.GameDeltaTime());
+
+    //当たり判定
+    actorManager_.Collide();
+    eventManager_.Invoke();
+
     fieldManager_.Remove();
     actorManager_.Remove();
     eventManager_.Remove();
     guiManager_.Remove();
-    //当たり判定
-    actorManager_.Collide();
-    eventManager_.Invoke();
-    time_.Update(deltaTime);
+    
     cameraManager_.Update(deltaTime);
     // エフェクトの更新処理
     gsUpdateEffect(deltaTime);
@@ -82,6 +89,8 @@ void World::DrawGUI() const
 
 void World::Clear()
 {
+    delete timeLineEditor_;
+    timeLineEditor_ = nullptr;
     isEnd_ = false;
     fieldManager_.Clear();
     actorManager_.Clear();
@@ -92,6 +101,7 @@ void World::Clear()
     isEnd_ = false;
     isStart_ = false;
     isTimer_ = true;
+    
     //SoundManager::StopBGM();
 }
 
@@ -115,6 +125,11 @@ Player* World::GetPlayer()
     return actorManager_.GetPlayer();
 }
 
+Actor* World::GetActor(std::string name)
+{
+    return actorManager_.GetActor(name);
+}
+
 ActorManager& World::GetActorManager()
 {
     return actorManager_;
@@ -125,7 +140,10 @@ FieldManager& World::Fields()
     return fieldManager_;
 }
 
-
+TimeLine& World::GetTimeLine()
+{
+    return eventManager_.GetTimeLine();
+}
 
 Camera* World::GetCamera(float id)
 {
@@ -215,6 +233,9 @@ void World::Debug(float deltaTime)
     actorManager_.Debug(deltaTime);
     cameraManager_.Debug();
     guiManager_.Debug();
+    eventManager_.Debug();
+    timeLineEditor_->DrawEditUI();
+    
 }
 
 bool World::IsDebug()

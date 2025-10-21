@@ -11,6 +11,7 @@ Event::Event(IWorld* world,int invokeType, const GSvector3& position, GSvector2 
 Event::~Event()
 {
     world_ = nullptr;
+    camera_ = nullptr;
 }
 
 bool Event::Invoke()

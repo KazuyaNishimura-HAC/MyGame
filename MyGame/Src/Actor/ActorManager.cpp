@@ -94,6 +94,7 @@ Actor* ActorManager::GetActor(int index)
 
 Actor* ActorManager::GetActor(std::string string)
 {
+    if (player_->GetName() == string) return player_;
     for (int i = 0; i < actors_.size();i++) {
         if (actors_[i]->GetName() == string) return actors_[i];
     }
@@ -150,7 +151,7 @@ void ActorManager::ActorCollide(Actor& player, Actor& other)
 
     bool enableCollider = player.Collider().Enable() && other.Collider().Enable();
     if (!enableCollider)return;
-
+    float test = player.Collider().Radius();
     float collideDistance = player.Collider().Radius() + other.Collider().Radius();
     GSvector3 collideVector = player.Transform().position() - other.Collider().Position();
     collideDistance -= collideVector.magnitude();

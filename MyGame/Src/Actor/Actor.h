@@ -6,6 +6,7 @@
 #include "BoundingSphere.h"
 #include "../Screen.h"
 #include "AnimatedMesh/AnimatedMesh.h"
+#include "../NameTag.h"
 
 #include <string>
 
@@ -52,11 +53,13 @@ protected:
     bool enable_{ true };
 
     //タグ名
-    std::string     tag_;
+    std::string     tag_{ ActorName::None };
     //名前
-    std::string     name_;
+    std::string     name_{ ActorName::None };
     //移動量
     GSvector3       velocity_{ 0.0f, 0.0f, 0.0f };
+    //コライダーのオフセット
+    GSvector3       colliderOffset_{ 0.0f,0.0f,0.0f };
     //衝突判定が有効か？
     bool            enable_collider_{ true };
 };

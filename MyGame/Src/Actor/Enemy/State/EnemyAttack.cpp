@@ -7,12 +7,16 @@ EnemyAttack::EnemyAttack(Enemy* owner)
 
 void EnemyAttack::Update(float deltaTime)
 {
+	if (owner_->GetMesh()->IsEndMotion()) {
+		owner_->ChangeState(EnemyState::Idle);
+		return;
+	}
 }
 
 void EnemyAttack::Enter()
 {
 	owner_->IsAttack(true);
-	owner_->ChangeMotion(2, false);
+	owner_->ChangeMotion(6, false);
 }
 
 void EnemyAttack::Exit()

@@ -14,13 +14,11 @@ void EnemyIdle::Update(float deltaTime)
 
 void EnemyIdle::Enter()
 {
-	owner_->IsAttack(true);
 	owner_->ChangeMotion(0, true);
 }
 
 void EnemyIdle::Exit()
 {
-	owner_->IsAttack(false);
 }
 
 void EnemyIdle::SetID(int id)

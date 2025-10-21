@@ -5,10 +5,8 @@
 #include "../../Actor/Player/Player.h"
 #include "../../Actor/Enemy/Enemy.h"
 #include "../../GameSystem/Camera/DebugCamera.h"
-
 //動作確認用
 #include "../../UI/Image.h"
-
 // 開始
 void GamePlayScene::Start() {
     
@@ -18,7 +16,7 @@ void GamePlayScene::Start() {
     gsLoadMesh(Model::DefaultMap,"Assets/Model/Stage/TestPlane.mshb");
     
     world_.AddPlayer(new Player(&world_));
-    //world_.AddActor(new Enemy(&world_,Model::Enemy,{0,0,-5}));
+    world_.AddActor(new Enemy(&world_,Model::Enemy,{0,0,-5}));
     world_.AddCamera(new Camera(&world_));
     
     
@@ -30,7 +28,6 @@ void GamePlayScene::Start() {
     world_.AddGUI(new Image({ 200,400 }, Texture::MenuSliderFill));
 
     debugCamera_ = new DebugCamera(&world_);
-
     world_.Start();
 }
 

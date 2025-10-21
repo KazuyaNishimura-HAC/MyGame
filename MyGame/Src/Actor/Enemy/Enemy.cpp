@@ -17,6 +17,8 @@ Enemy::Enemy(IWorld* world, GSuint mesh)
     states_.AddState(EnemyState::Move, new EnemyMove(this));
     states_.AddState(EnemyState::Attack, new EnemyAttack(this));
     states_.ChangeState(EnemyState::Idle);
+    collider_ = BoundingSphere(1.0f);
+    colliderOffset_ = { 0.0f,1.0f,0.0f };
 }
 
 Enemy::Enemy(IWorld* world, GSuint mesh, const GSvector3& position)
@@ -34,6 +36,10 @@ void Enemy::Update(float deltaTime)
 {
     Actor::Update(deltaTime);
     states_.Update(deltaTime);
+    collider_.Position(transform_.position() + colliderOffset_);
+    /*if (!IsAttack() && InputSystem::ButtonTrigger(InputSystem::Button::X)) {
+        states_.ChangeState(EnemyState::Attack);
+    }*/
 }
 
 void Enemy::LateUpdate(float deltaTime)
@@ -45,6 +51,7 @@ void Enemy::LateUpdate(float deltaTime)
 void Enemy::Draw() const
 {
     Actor::Draw();
+    collider_.Draw();
 }
 
 void Enemy::React(Actor& other)
@@ -53,11 +60,12 @@ void Enemy::React(Actor& other)
 
 void Enemy::ChangeState(int state)
 {
+    states_.ChangeState(state);
 }
 
 int Enemy::CurrentState()
 {
-	return 0;
+	return states_.CurrentState();
 }
 
 void Enemy::MovePosition(float deltaTime)

@@ -123,6 +123,8 @@ CameraController* CameraManager::GetActiveController()
             if (ctrl->IsMovePrevious()) {
                 View preView = activeController->GetView();
                 ctrl->SetView(preView.pos, preView.tar);
+                ctrl->SetFov(preView.fov);
+                ctrl->SetSmooth(preView.isSmooth);
                 ctrl->SetMovePrevious(false);
             }
             activeController = ctrl;

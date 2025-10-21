@@ -4,8 +4,8 @@
 #include <string>
 
 struct View {
-	GSvector3 pos;
-	GSvector3 tar;
+	GSvector3 pos{ 0.0f,0.0f,0.0f };
+	GSvector3 tar{ 0.0f,0.0f,0.0f };
 	float fov{ 45.0f };
 	bool isSmooth{ false };
 };

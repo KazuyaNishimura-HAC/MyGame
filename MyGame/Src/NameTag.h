@@ -17,8 +17,10 @@ namespace NameTag {
 	};
 
 	struct Actor {
+		static constexpr const char* None = "None";
 		static constexpr const char* Player = "Player";
 		static constexpr const char* Enemy = "Enemy";
+		static constexpr const char* Object = "Object";
 	};
 	struct PostEffect {
 		static constexpr const char* Bloom = "Bloom";

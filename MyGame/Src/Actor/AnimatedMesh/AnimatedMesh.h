@@ -8,6 +8,18 @@
 
 #include "../../Graphics/Mesh/MeshDrawer.h"
 
+struct AnimationEvent
+{
+    AnimationEvent(GSuint motion, GSfloat time, std::function<void()>callback)
+        :motion_{ motion }, time_{ time }, callback_{ callback }
+    {}
+
+    GSuint motion_;
+    GSfloat time_;
+    //イベント処理
+    std::function<void()>callback_;
+};
+
 struct Motion
 {
     GSuint clip_ = 0;
@@ -31,6 +43,7 @@ public:
     virtual void Draw()const;
     virtual void ChangeMotion(GSuint motion, bool loop = true, float motionSpeed = 1,float motionTime = 0, float lerpTime = 0, bool forceChange = false);
     virtual void Transform(const GSmatrix4& matrix);
+    void AddEvent(GSuint motion, GSfloat time, std::function<void()> callback);
     int MotionClip()const;
     bool IsEndMotion()const;
     float MotionTime()const;
@@ -45,7 +58,7 @@ public:
 
 protected:
     void UpdateLerpTimer(float deltaTime);
-
+    void UpdateEvent(float deltaTime);
     float UpdateMotionTimer(float deltaTime, Motion motion);
     float UpdateMotionTimer(float deltaTime, float timer, float motionSpeed, bool motionLoop, float motionEndTime);
 
@@ -61,9 +74,7 @@ protected:
 
     std::vector<GSmatrix4>localBoneMatrices_;
     std::vector<GSmatrix4>boneMatrices_;
-
-    friend class DebugScene;
-    float testTimer{ 0 };
+    std::vector<AnimationEvent*>events_;
 };
 
 #endif

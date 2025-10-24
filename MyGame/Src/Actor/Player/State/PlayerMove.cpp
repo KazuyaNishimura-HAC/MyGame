@@ -13,7 +13,7 @@ void PlayerMove::Update(float deltaTime)
 
 void PlayerMove::Enter()
 {
-	owner_->GetMesh()->ChangeMotion(1, true, 1.5f);
+	owner_->ChangeMotion(1, true, 1.5f);
 }
 
 void PlayerMove::Exit()

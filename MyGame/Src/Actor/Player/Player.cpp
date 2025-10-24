@@ -4,24 +4,28 @@
 #include "../../World/IWorld.h"
 #include "../../GameSystem/Camera/Camera.h"
 #include "../../GameSystem/InputSystem/InputSystem.h"
-
+#include "../../GameSystem/Field/FieldManager.h"
+#include "../../GameSystem/Field/Ray.h"
 //ステートヘッダー
 #include "State/PlayerIdle.h"
 #include "State/PlayerMove.h"
 #include "State/PlayerAttack.h"
 #include "State/PlayerUltimateSkill.h"
-
 Player::Player(IWorld* world, GSuint mesh)
     :Actor(mesh)
 {
     world_ = world;
+    name_ = ActorName::Player;
     //ステートの追加
     states_.AddState(PlayerState::Idle, new PlayerIdle(this));
     states_.AddState(PlayerState::Move, new PlayerMove(this));
     states_.AddState(PlayerState::Attack, new PlayerAttack(this));
     states_.AddState(PlayerState::Ultimate, new PlayerUltimateSkill(this));
     states_.ChangeState(PlayerState::Idle);
-    collider_ = BoundingSphere(1.0f,{0.0f,2.0f,0.0f});
+
+    mesh_->AddEvent(2, 60, [=] {AttackCollide(); });
+
+    colliderOffset_ = { 0.0f,1.0f,0.0f };
     camera_ = new CameraController(CameraController::Player);
     world_->AddCameraController(camera_);
     camera_->SetSmooth(true);
@@ -41,6 +45,8 @@ void Player::Update(float deltaTime)
 {
     Actor::Update(deltaTime);
     states_.Update(deltaTime);
+    collider_.Position(transform_.position() + colliderOffset_);
+
     if (!IsAttack() && InputSystem::ButtonTrigger(InputSystem::Button::B)) {
         states_.ChangeState(PlayerState::Attack);
         camera_->SetShakeValues(180.0f, 1.0f, 160.0f, 1.0f, 20.0f, { 0.1f,0.1f }, 0.0f);
@@ -48,7 +54,6 @@ void Player::Update(float deltaTime)
     if (!IsAttack() && InputSystem::ButtonTrigger(InputSystem::Button::A)) {
         states_.ChangeState(PlayerState::Ultimate);
     }
-
     MoveCamera(deltaTime);
 }
 void Player::LateUpdate(float deltaTime)
@@ -59,6 +64,7 @@ void Player::LateUpdate(float deltaTime)
 void Player::Draw()const
 {
     Actor::Draw();
+    collider_.Draw();
 }
 
 void Player::React(Actor& other)
@@ -102,7 +108,7 @@ void Player::MovePosition(float deltaTime)
     //入力rawを移動の強さにする
     float magnitude = input.magnitude();
 
-    GSvector3 moveVector = moveDirection * magnitude * deltaTime;
+    GSvector3 moveVector = moveDirection * magnitude * moveSpeed_ * deltaTime;
 
     //プレイヤーを滑らかに回転
     if (input != GSvector2::zero())
@@ -140,6 +146,11 @@ void Player::MoveCamera(float deltaTime)
     GSvector3 target = transform_.position() + cameraFocusOffset_;
     
     camera_->SetView(cameraPos,target);
+}
+
+void Player::AttackCollide()
+{
+    int test = 0;
 }
 
 //現在のカメラの方向を取得

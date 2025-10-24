@@ -16,11 +16,16 @@ AnimatedMesh::AnimatedMesh(GSuint id, GSuint motion, bool loop, GSuint numBones)
 
 AnimatedMesh::~AnimatedMesh()
 {
-
+    for (auto animEvent : events_)
+    {
+        delete animEvent;
+    }
+    events_.clear();
 }
 
 void AnimatedMesh::Update(float deltaTime)
 {
+    UpdateEvent(deltaTime);
 
     curMotion_.timer_ = UpdateMotionTimer(deltaTime, curMotion_);
     prevMotion_.timer_ = UpdateMotionTimer(deltaTime, prevMotion_);
@@ -63,6 +68,11 @@ void AnimatedMesh::Transform(const GSmatrix4& matrix)
         localBoneMatrices_.data());
     gsBindSkeleton(mesh_.MeshID());
     gsCalculateSkeleton(NULL, localBoneMatrices_.data(), boneMatrices_.data());
+}
+
+void AnimatedMesh::AddEvent(GSuint motion, GSfloat time, std::function<void()> callback)
+{
+    events_.push_back(new AnimationEvent(motion, time, callback));
 }
 
 int AnimatedMesh::MotionClip() const
@@ -115,6 +125,30 @@ void AnimatedMesh::UpdateLerpTimer(float deltaTime)
 {
     //モーションの補間タイマーを進める
     lerpTimer_ = CLAMP(lerpTimer_ + deltaTime, 0, constLerpTime);
+}
+
+void AnimatedMesh::UpdateEvent(float deltaTime)
+{
+    float prevTimer = curMotion_.timer_;
+    float nextTimer = UpdateMotionTimer(deltaTime, curMotion_);
+    bool looped = nextTimer < prevTimer;
+    for (const auto& event : events_)
+    {
+        if (event->motion_ != curMotion_.clip_)continue;
+
+        if (looped)
+        {
+            if (prevTimer >= event->time_ && event->time_ > nextTimer)
+                continue;
+            event->callback_();
+        }
+        else
+        {
+            if (prevTimer >= event->time_ || event->time_ > nextTimer)
+                continue;
+            event->callback_();
+        }
+    }
 }
 
 float AnimatedMesh::UpdateMotionTimer(float deltaTime, Motion motion)

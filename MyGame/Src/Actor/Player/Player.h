@@ -41,7 +41,7 @@ private:
     float GetCameraHorizontalRadian();
     GStransform& CameraTransform();
     void MoveCamera(float deltaTime);
-
+    void AttackCollide();
     StateMachine states_;
     CameraController* camera_{ nullptr };
 
@@ -55,6 +55,7 @@ private:
     float cameraDepth_{ 5.5f };
 
     //以下プレイヤー動作値
+    float moveSpeed_{ 1.5f };
     bool isAttack_{ false };
 };
 #endif

@@ -3,6 +3,7 @@
 PlayerAttack::PlayerAttack(Player* owner)
 	:PlayerState::PlayerState(owner)
 {
+	
 }
 
 void PlayerAttack::Update(float deltaTime)

@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\GameSystem\Field\Field.cpp" />
     <ClCompile Include="Src\Graphics\Effect\EffectManager.cpp" />
     <ClCompile Include="Src\Actor\Enemy\State\EnemyAttack.cpp" />
     <ClCompile Include="Src\Actor\Enemy\State\EnemyIdle.cpp" />
@@ -187,6 +188,7 @@
     <ClCompile Include="Src\GameSystem\Event\TimeLine\TimeLine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\GameSystem\Field\Field.h" />
     <ClInclude Include="Src\GameSystem\Event\TimeLine\TImeLineData.h" />
     <ClInclude Include="Src\Graphics\Effect\EffectManager.h" />
     <ClInclude Include="Src\Actor\Enemy\State\EnemyAttack.h" />
@@ -264,6 +266,8 @@
     <None Include="Assets\Shader\BloomCombine.frag" />
     <None Include="Assets\Shader\BloomExtract.frag" />
     <None Include="Assets\Shader\Dissolve.frag" />
+    <None Include="Assets\Shader\EditBox.frag" />
+    <None Include="Assets\Shader\EditBox.vert" />
     <None Include="Assets\Shader\Fog.frag" />
     <None Include="Assets\Shader\GaussianBlur.frag" />
     <None Include="Assets\Shader\RenderTexture.vert" />

@@ -29,7 +29,7 @@ public:
     virtual ~AnimatedMesh();
     virtual void Update(float deltaTime);
     virtual void Draw()const;
-    virtual void ChangeMotion(GSuint motion, bool loop = true, bool forceChange = false, float motionTime = 0, float lerpTime = 0);
+    virtual void ChangeMotion(GSuint motion, bool loop = true, float motionSpeed = 1,float motionTime = 0, float lerpTime = 0, bool forceChange = false);
     virtual void Transform(const GSmatrix4& matrix);
     int MotionClip()const;
     bool IsEndMotion()const;

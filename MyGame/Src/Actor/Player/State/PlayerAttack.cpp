@@ -17,7 +17,7 @@ void PlayerAttack::Update(float deltaTime)
 void PlayerAttack::Enter()
 {
 	owner_->IsAttack(true);
-	owner_->ChangeMotion(2, false);
+	owner_->ChangeMotion(2, false,1.5f);
 }
 
 void PlayerAttack::Exit()

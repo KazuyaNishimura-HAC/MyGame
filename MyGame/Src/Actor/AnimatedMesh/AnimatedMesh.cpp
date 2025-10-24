@@ -38,7 +38,7 @@ void AnimatedMesh::Draw() const
     gsEnable(GS_CALC_SKELETON);
 }
 
-void AnimatedMesh::ChangeMotion(GSuint motion, bool loop, bool forceChange, float motionTime, float lerpTime)
+void AnimatedMesh::ChangeMotion(GSuint motion, bool loop, float motionSpeed, float motionTime, float lerpTime, bool forceChange)
 {
     if (curMotion_.clip_ == motion && !forceChange && gsGetNumAnimations(mesh_.MeshID()) >= motion)return;
 
@@ -51,6 +51,7 @@ void AnimatedMesh::ChangeMotion(GSuint motion, bool loop, bool forceChange, floa
     curMotion_.clip_ = motion;
     curMotion_.timer_ = motionTime;
     curMotion_.loop_ = loop;
+    curMotion_.speed_ = motionSpeed;
 }
 
 void AnimatedMesh::Transform(const GSmatrix4& matrix)
@@ -123,7 +124,7 @@ float AnimatedMesh::UpdateMotionTimer(float deltaTime, Motion motion)
 
 float AnimatedMesh::UpdateMotionTimer(float deltaTime, float timer, float motionSpeed, bool motionLoop, float motionEndTime)
 {
-    timer += deltaTime;
+    timer += deltaTime * motionSpeed;
     if (motionLoop) timer = std::fmod(timer, motionEndTime);
     else timer = std::min(timer, motionEndTime - 1.0f);
 
@@ -140,9 +141,11 @@ void AnimatedMesh::Debug()
     ImGui::Value("curAnim", curMotion_.clip_);
     ImGui::Value("cur", curMotion_.timer_);
     ImGui::Value("curLoop", curMotion_.loop_);
+    ImGui::Value("curAnimSpeed", curMotion_.speed_);
     ImGui::Value("prevAnim", prevMotion_.clip_);
     ImGui::Value("prev", prevMotion_.timer_);
     ImGui::Value("prevLoop", prevMotion_.loop_);
+    ImGui::Value("preAnimSpeed", prevMotion_.speed_);
     ImGui::Value("lerp", lerpTimer_);
     ImGui::InputInt("changeAnim",&motion);
     ImGui::End();

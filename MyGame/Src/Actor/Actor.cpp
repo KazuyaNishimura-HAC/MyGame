@@ -89,9 +89,9 @@ const BoundingSphere& Actor::Collider() const
     return collider_;
 }
 
-void Actor::ChangeMotion(int motion, bool loop, bool forceChange, float motionTime, float lerpTime)
+void Actor::ChangeMotion(int motion, bool loop, float motionSpeed, float motionTime , float lerpTime , bool forceChange)
 {
-    mesh_->ChangeMotion(motion, loop, forceChange, motionTime, lerpTime);
+    mesh_->ChangeMotion(motion, loop, motionSpeed, motionTime, lerpTime, forceChange);
 }
 
 AnimatedMesh* Actor::GetMesh()

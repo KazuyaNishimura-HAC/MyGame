@@ -28,7 +28,7 @@ public:
     const GStransform& Transform()const;
     GStransform& Transform();
     const BoundingSphere& Collider()const;
-    void ChangeMotion(int motion, bool loop = true, bool forceChange = false, float motionTime = 0, float lerpTime = 0);
+    void ChangeMotion(int motion, bool loop = true, float motionSpeed = 1, float motionTime = 0, float lerpTime = 0, bool forceChange = false);
     AnimatedMesh* GetMesh();
     void Die();
     void SetEnable(bool enable);

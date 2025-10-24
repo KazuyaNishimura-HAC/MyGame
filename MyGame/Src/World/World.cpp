@@ -44,6 +44,7 @@ void World::Update(float deltaTime)
 
     //当たり判定
     actorManager_.Collide();
+    fieldManager_.CollideActor(actorManager_.GetPlayer()->Transform());
     eventManager_.Invoke();
 
     fieldManager_.Remove();
@@ -116,6 +117,11 @@ void World::AddActor(Actor* actor)
 }
 
 void World::AddField(FieldActor* field)
+{
+    return fieldManager_.AddField(field);
+}
+
+void World::AddField(Field* field)
 {
     return fieldManager_.AddField(field);
 }

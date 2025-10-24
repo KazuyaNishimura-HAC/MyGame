@@ -13,6 +13,7 @@ class GUI;
 class Camera;
 class Player;
 class FieldActor;
+class Field;
 class FieldManager;
 class Event;
 class CameraController;
@@ -39,6 +40,7 @@ public:
     virtual void AddGUI(GUI* gui) = 0;
     virtual void AddCameraGUI(GUI* gui,int indep) = 0;
     virtual void AddField(FieldActor* field) = 0;
+    virtual void AddField(Field* field) = 0;
     virtual void AddEvent(Event* newEvent) {};
     virtual void AddCamera(Camera* camera) = 0;
     virtual void AddCameraController(CameraController* controller) = 0;

@@ -3,10 +3,12 @@
 
 #include "../../Actor/ActorManager.h"
 #include "../Camera/Camera.h"
-#include "../../GameSystem/Field/FieldActor.h"
+#include <vector>
 class Ray;
 class Line;
 class BoundingSphere;
+class FieldActor;
+class Field;
 
 // フィールドアクターマネージャー
 class FieldManager {
@@ -18,9 +20,12 @@ public:
     void Draw(Camera* camera = nullptr) const;
 
     void AddField(FieldActor* field);
+    void AddField(Field* field);
     FieldActor* GetField(int index);
     FieldActor* GetFieldID(int index,int id);
     int GetFieldCount();
+    void CollideActor(GStransform& transform);
+    GSvector3 ClampPosition(const GSvector3& position, float radius);
     void Remove();
     void Clear();
     // レイとの衝突判定
@@ -41,7 +46,8 @@ public:
     FieldManager& operator = (const FieldManager& other) = delete;
 
 private:
-    std::vector<FieldActor*>fields_;
+    std::vector<FieldActor*> fieldActor_;
+    std::vector<Field*>fields_;
 };
 
 #endif

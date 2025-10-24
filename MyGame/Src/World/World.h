@@ -31,6 +31,7 @@ public:
     void AddPlayer(Player* player);
     void AddActor(Actor* actor)override;
     void AddField(FieldActor* field)override;
+    void AddField(Field* field)override;
     void AddGUI(GUI* gui)override;
     void AddCameraGUI(GUI* gui,int indep)override;
     void AddEvent(Event* newEvent)override;

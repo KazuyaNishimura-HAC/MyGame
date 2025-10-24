@@ -5,6 +5,8 @@
 #include "../../Actor/Player/Player.h"
 #include "../../Actor/Enemy/Enemy.h"
 #include "../../GameSystem/Camera/DebugCamera.h"
+#include "../../GameSystem/Field/FieldActor.h"
+#include "../../GameSystem/Field/Field.h"
 //動作確認用
 #include "../../UI/Image.h"
 // 開始
@@ -22,6 +24,7 @@ void GamePlayScene::Start() {
     
     
     world_.AddField(new FieldActor({0,0,0},Model::DefaultMap,Model::MapCollide));
+    world_.AddField(new Field({5,0,0},{5,10,1}));
     //動作チェック用
     gsLoadTexture(Texture::MenuSliderBackGround, "Assets/Texture/Menu/SliderBackGround.png");
     gsLoadTexture(Texture::MenuSliderFill, "Assets/Texture/Menu/SliderFill.png");

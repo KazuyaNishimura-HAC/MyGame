@@ -1,5 +1,6 @@
 #ifndef SHADER_H_
 #define	SHADER_H_
+#include "ShaderID.h"
 class Shader
 {
 public:

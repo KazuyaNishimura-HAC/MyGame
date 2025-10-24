@@ -8,7 +8,7 @@ struct Sh {
         GaussianBlur,    // ガウシアンブラー
         BloomCombine,    // ブルームエフェクト合成
         Fog,             // フォグ
-        Dissolve        //ディゾルブ
+        Dissolve,        //ディゾルブ
     };
 };
 #endif

@@ -29,7 +29,6 @@ public:
     virtual void SetSceneData(SceneData data) override;
     virtual void Debug(float delta_time)override;
 private:
-    void draw_grid3D() const;
     World world_;
     bool sceneEnd_{ false };
 

@@ -13,14 +13,15 @@ void GamePlayScene::Start() {
     //メッシュ読み込み
     gsLoadSkinMesh(Model::Player, "Assets/Model/Charactor/Player/Player.mshb");
     gsLoadSkinMesh(Model::Enemy, "Assets/Model/Charactor/Enemy/Enemy1.mshb");
-    gsLoadMesh(Model::DefaultMap,"Assets/Model/Stage/TestPlane.mshb");
+    gsLoadMesh(Model::DefaultMap,"Assets/Model/Stage/Stage1.mshb");
+    gsLoadMesh(Model::MapCollide, "Assets/Model/Stage/StageCollider.mshb");
     
     world_.AddPlayer(new Player(&world_));
     world_.AddActor(new Enemy(&world_,Model::Enemy,{0,0,-5}));
     world_.AddCamera(new Camera(&world_));
     
     
-    world_.AddField(new FieldActor({0,0,0},Model::DefaultMap,Model::DefaultMap));
+    world_.AddField(new FieldActor({0,0,0},Model::DefaultMap,Model::MapCollide));
     //動作チェック用
     gsLoadTexture(Texture::MenuSliderBackGround, "Assets/Texture/Menu/SliderBackGround.png");
     gsLoadTexture(Texture::MenuSliderFill, "Assets/Texture/Menu/SliderFill.png");
@@ -39,8 +40,6 @@ void GamePlayScene::Update(float delta_time) {
 void GamePlayScene::Draw() const {
 
     world_.Draw();
-    
-    //draw_grid3D();
 }
 
 // 終了しているか
@@ -75,59 +74,4 @@ void GamePlayScene::Debug(float delta_time)
 {
     world_.Debug(delta_time);
     debugCamera_->Update(delta_time);
-}
-
-void GamePlayScene::draw_grid3D()const 
-{
-    //ライティング無効
-    glDisable(GL_LIGHTING);
-    // デプステスト無効 
-    glDisable(GL_DEPTH_TEST);
-    for (float g = -100.0f; g <= 100.0f; g += 1.0f) {
-        // xz平面
-        glColor3f(0.3f, 0.0f, 0.0f);	// 茶色
-        glBegin(GL_LINES);
-        glVertex3f(g, 0.0f, -100.0f);
-        glVertex3f(g, 0.0f, 100.0f);
-        glEnd();
-        glBegin(GL_LINES);
-        glVertex3f(-100.0f, 0.0f, g);
-        glVertex3f(100.0f, 0.0f, g);
-        glEnd();
-        // xy平面
-        glColor3f(0.2f, 0.2f, 0.2f);	// グレー
-        glBegin(GL_LINES);
-        glVertex3f(g, -100.0f, 0.0f);
-        glVertex3f(g, 100.0f, 0.0f);
-        glEnd();
-        glBegin(GL_LINES);
-        glVertex3f(-100.0f, g, 0.0f);
-        glVertex3f(100.0f, g, 0.0f);
-        glEnd();
-
-    }
-    // ｘ軸を描画
-    glColor3f(1.0f, 0.0f, 0.0f);	// 赤色
-    glBegin(GL_LINES);
-    glVertex3f(-100.0f, 0.0f, 0.0f);
-    glVertex3f(100.0f, 0.0f, 0.0f);
-    glEnd();
-    // ｙ軸を描画
-    glColor3f(0.0f, 1.0f, 0.0f);	// 緑色
-    glBegin(GL_LINES);
-    glVertex3f(0.0f, -100.0f, 0.0f);
-    glVertex3f(0.0f, 100.0f, 0.0f);
-    glEnd();
-    // z軸を描画
-    glColor3f(0.0f, 0.0f, 1.0f);	// 青色
-    glBegin(GL_LINES);
-    glVertex3f(0.0f, 0.0f, -100.0f);
-    glVertex3f(0.0f, 0.0f, 100.0f);
-    glEnd();
-    // 白に戻す
-    glColor3f(1.0f, 1.0f, 1.0f);
-    //ライティング有効
-    glEnable(GL_LIGHTING);
-    // デプステスト有効
-    glEnable(GL_DEPTH_TEST);
 }

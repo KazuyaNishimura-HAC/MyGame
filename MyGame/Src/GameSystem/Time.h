@@ -48,7 +48,7 @@ public:
     void Pause(bool pause) { pause_ = pause; }
     bool Pause() { return pause_; }
 private:
-    float deltaTime_{ 0 };
+    float deltaTime_{ 0.0f };
     bool pause_{ false };
     TimeScale timeScale_;
 };

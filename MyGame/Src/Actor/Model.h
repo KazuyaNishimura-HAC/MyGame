@@ -10,6 +10,7 @@ public:
         Player,
         //[MAP]
         DefaultMap,
+        MapCollide,
         Enemy,
         //[Debug]
         PathObject,

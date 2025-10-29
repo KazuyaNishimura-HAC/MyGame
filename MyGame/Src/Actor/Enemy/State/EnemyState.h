@@ -12,7 +12,6 @@ public:
 		Stan,
 		Attack,
 	};
-
 	EnemyState(Enemy* owner) : owner_{ owner } {};
 	virtual void Update(float deltaTime)override {};
 	virtual void Enter()override {};

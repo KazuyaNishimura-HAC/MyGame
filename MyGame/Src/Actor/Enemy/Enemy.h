@@ -22,20 +22,22 @@ public:
     virtual void Update(float deltaTime)override;
     virtual void LateUpdate(float deltaTime)override;
     //ï`âÊ
-    void Draw()const override;
+    virtual void Draw()const override;
     //ê⁄êGîªíË
-    void React(Actor& other)override;
+    virtual void React(Actor& other)override;
 
-    void ChangeState(int state);
-    int CurrentState();
-    void MovePosition(float deltaTime);
+    virtual void ChangeState(int state);
+    virtual int CurrentState();
+    virtual void MovePosition(float deltaTime);
 
-    void IsAttack(bool isAttack);
-    bool IsAttack();
+    virtual void IsAttack(bool isAttack);
+    virtual bool IsAttack();
 
-    IWorld* World();
-    void Debug(float deltaTime)override;
-private:
+    virtual IWorld* World();
+protected:
+    
+    virtual void Debug(float deltaTime)override;
+
     StateMachine states_;
     bool isAttack_{ false };
 };

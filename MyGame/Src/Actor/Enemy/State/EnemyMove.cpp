@@ -12,13 +12,11 @@ void EnemyMove::Update(float deltaTime)
 
 void EnemyMove::Enter()
 {
-	owner_->IsAttack(true);
 	owner_->ChangeMotion(1);
 }
 
 void EnemyMove::Exit()
 {
-	owner_->IsAttack(false);
 }
 
 void EnemyMove::SetID(int id)

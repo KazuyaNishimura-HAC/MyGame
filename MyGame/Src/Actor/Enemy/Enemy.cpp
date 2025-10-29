@@ -12,13 +12,6 @@ Enemy::Enemy(IWorld* world, GSuint mesh)
     :Actor(mesh)
 {
     world_ = world;
-    //ステートの追加
-    states_.AddState(EnemyState::Idle, new EnemyIdle(this));
-    states_.AddState(EnemyState::Move, new EnemyMove(this));
-    states_.AddState(EnemyState::Attack, new EnemyAttack(this));
-    states_.ChangeState(EnemyState::Idle);
-    collider_ = BoundingSphere(1.0f);
-    colliderOffset_ = { 0.0f,1.0f,0.0f };
 }
 
 Enemy::Enemy(IWorld* world, GSuint mesh, const GSvector3& position)
@@ -37,15 +30,11 @@ void Enemy::Update(float deltaTime)
     Actor::Update(deltaTime);
     states_.Update(deltaTime);
     collider_.Position(transform_.position() + colliderOffset_);
-    /*if (!IsAttack() && InputSystem::ButtonTrigger(InputSystem::Button::X)) {
-        states_.ChangeState(EnemyState::Attack);
-    }*/
 }
 
 void Enemy::LateUpdate(float deltaTime)
 {
     Actor::LateUpdate(deltaTime);
-    
 }
 
 void Enemy::Draw() const

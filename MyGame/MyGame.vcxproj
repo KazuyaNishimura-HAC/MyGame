@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Actor\Enemy\Default\DefaultEnemy.cpp" />
     <ClCompile Include="Src\GameSystem\Field\Field.cpp" />
     <ClCompile Include="Src\Graphics\Effect\EffectManager.cpp" />
     <ClCompile Include="Src\Actor\Enemy\State\EnemyAttack.cpp" />
@@ -188,6 +189,7 @@
     <ClCompile Include="Src\GameSystem\Event\TimeLine\TimeLine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Actor\Enemy\Default\DefaultEnemy.h" />
     <ClInclude Include="Src\GameSystem\Field\Field.h" />
     <ClInclude Include="Src\GameSystem\Event\TimeLine\TImeLineData.h" />
     <ClInclude Include="Src\Graphics\Effect\EffectManager.h" />

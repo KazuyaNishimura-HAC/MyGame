@@ -4,6 +4,7 @@
 #include "../../GameSystem/InputSystem/InputSystem.h"
 #include "../../Actor/Player/Player.h"
 #include "../../Actor/Enemy/Enemy.h"
+#include "../../Actor/Enemy/Default/DefaultEnemy.h"
 #include "../../GameSystem/Camera/DebugCamera.h"
 #include "../../GameSystem/Field/FieldActor.h"
 #include "../../GameSystem/Field/Field.h"
@@ -19,7 +20,7 @@ void GamePlayScene::Start() {
     gsLoadMesh(Model::MapCollide, "Assets/Model/Stage/StageCollider.mshb");
     
     world_.AddPlayer(new Player(&world_));
-    world_.AddActor(new Enemy(&world_,Model::Enemy,{0,0,-5}));
+    world_.AddActor(new DefaultEnemy(&world_,Model::Enemy,{15,0,0}));
     world_.AddCamera(new Camera(&world_));
     
     

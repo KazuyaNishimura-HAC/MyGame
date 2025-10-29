@@ -2,6 +2,8 @@
 #define ENEMY_IDLE_H_
 #include "EnemyState.h"
 
+class Player;
+
 class EnemyIdle : public EnemyState
 {
 public:
@@ -11,6 +13,8 @@ public:
 	void Exit()override;
 	void SetID(int id = 0)override;
 	int GetID()override;
+private:
+	Player* player_{ nullptr };
 };
 
 #endif

@@ -5,11 +5,16 @@
 EnemyIdle::EnemyIdle(Enemy* owner)
 	:EnemyState::EnemyState(owner)
 {
+	player_ = owner_->World()->GetPlayer();
 }
 
 void EnemyIdle::Update(float deltaTime)
 {
-	Player* player_ = owner_->World()->GetPlayer();
+
+	float dist = GSvector3::distance(owner_->Transform().position(), player_->Transform().position());
+	if (dist < 5) {
+		owner_->ChangeState(State::Move);
+	}
 }
 
 void EnemyIdle::Enter()

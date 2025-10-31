@@ -9,6 +9,7 @@
 #include <list>
 
 class Actor;
+class Charactor;
 class GUI;
 class Camera;
 class Player;
@@ -31,12 +32,15 @@ public:
     virtual ~IWorld() = default;
 
     virtual Player* GetPlayer() = 0;
+    virtual Actor* GetAllActor(std::string name) = 0;
     virtual Actor* GetActor(std::string name) = 0;
+    virtual Charactor* GetCharactor(std::string name) = 0;
     virtual Camera* GetCamera(float id = 0) = 0;
     virtual CameraController* GetCameraController(CameraController::Priority p) = 0;
     virtual int GetCameraCount() = 0;
 
     virtual void AddActor(Actor* actor) = 0;
+    virtual void AddCharactor(Charactor* charactor) = 0;
     virtual void AddGUI(GUI* gui) = 0;
     virtual void AddCameraGUI(GUI* gui,int indep) = 0;
     virtual void AddField(FieldActor* field) = 0;

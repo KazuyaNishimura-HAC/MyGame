@@ -30,6 +30,7 @@ public:
 
     void AddPlayer(Player* player);
     void AddActor(Actor* actor)override;
+    void AddCharactor(Charactor* charactor)override;
     void AddField(FieldActor* field)override;
     void AddField(Field* field)override;
     void AddGUI(GUI* gui)override;
@@ -39,7 +40,9 @@ public:
     void AddCameraController(CameraController* controller)override;
 
     Player* GetPlayer()override;
+    Actor* GetAllActor(std::string name)override;
     Actor* GetActor(std::string name)override;
+    Charactor* GetCharactor(std::string name)override;
     Camera* GetCamera(float id = 0)override;
     CameraController* GetCameraController(CameraController::Priority p)override;
     int GetCameraCount()override;

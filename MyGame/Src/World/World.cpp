@@ -116,6 +116,11 @@ void World::AddActor(Actor* actor)
     actorManager_.AddActor(actor);
 }
 
+void World::AddCharactor(Charactor* charactor)
+{
+    actorManager_.AddCharactor(charactor);
+}
+
 void World::AddField(FieldActor* field)
 {
     return fieldManager_.AddField(field);
@@ -131,9 +136,19 @@ Player* World::GetPlayer()
     return actorManager_.GetPlayer();
 }
 
+Actor* World::GetAllActor(std::string name)
+{
+    return actorManager_.GetAllActor(name);
+}
+
 Actor* World::GetActor(std::string name)
 {
     return actorManager_.GetActor(name);
+}
+
+Charactor* World::GetCharactor(std::string name)
+{
+    return actorManager_.GetCharactor(name);
 }
 
 ActorManager& World::GetActorManager()
@@ -234,7 +249,9 @@ void World::Debug(float deltaTime)
     if (InputSystem::DebugInput()) {
         isDebug_ = !isDebug_;
     }
-
+    ImGui::Begin("WorldGUI");
+    ImGui::Value("FPS", 60 / deltaTime);
+    ImGui::End();
     if (!isDebug_) return;
     actorManager_.Debug(deltaTime);
     cameraManager_.Debug();

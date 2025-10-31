@@ -11,10 +11,12 @@ public:
         //[MAP]
         DefaultMap,
         MapCollide,
+        //[Charactor]
         Enemy,
         //[Debug]
         PathObject,
         EditObject,
+        DefaultCharactor
     };
 };
 #endif

@@ -122,7 +122,7 @@ void TimeLineEditor::Edit()
             ImGui::Checkbox("Smooth", &camKey->view.isSmooth);
             if (camKey->isTargetActor) {
                 //ƒvƒŒƒCƒ„[‚Ìî•ñ‚ð“n‚·
-                camKey->targetActor = world_->GetActor(ActorName::Player);
+                camKey->targetActor = world_->GetAllActor(ActorName::Player);
                 std::string targetName;
                 if (camKey->targetActor) targetName = camKey->targetActor->GetName();
                 else targetName = "NotFound";

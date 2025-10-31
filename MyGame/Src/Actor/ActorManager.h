@@ -6,6 +6,7 @@
 #include <string>
 
 class Actor;
+class Charactor;
 class Player;
 
 class ActorManager
@@ -16,6 +17,7 @@ public:
 
     void AddPlayer(Player* player);
     void AddActor(Actor* actor);
+    void AddCharactor(Charactor* charactor);
 
     void Update(float deltaTime);
     void LateUpdate(float deltaTime);
@@ -30,8 +32,10 @@ public:
     ActorManager& operator=(const ActorManager& other) = delete;
 
     Player* GetPlayer();
+    Actor* GetAllActor(std::string name);
     Actor* GetActor(int index);
-    Actor* GetActor(std::string string);
+    Actor* GetActor(std::string name);
+    Charactor* GetCharactor(std::string name);
 
     void Debug(float deltaTime);
 private:
@@ -41,10 +45,18 @@ private:
     void ActorListUpdate(float deltaTime, std::vector<Actor*>& actors);
     void ActorListLateUpdate(float deltaTime, std::vector<Actor*>& actors);
     void ActorListDraw(std::vector<Actor*> actors, bool isShadow = false)const;
+
+    void CharactorListUpdate(float deltaTime, std::vector<Charactor*>& actors);
+    void CharactorListLateUpdate(float deltaTime, std::vector<Charactor*>& actors);
+    void CharactorListDraw(std::vector<Charactor*> actors, bool isShadow = false)const;
+
     void ActorCollide(Actor& player, Actor& other);
+
+    
 
     Player* player_{ nullptr };
     std::vector<Actor*>actors_;
+    std::vector<Charactor*>charactors_;
 };
 
 #endif

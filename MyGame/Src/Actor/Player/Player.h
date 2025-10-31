@@ -3,38 +3,29 @@
 
 #include <vector>
 #include <GStransform.h>
-#include "../Actor.h"
+#include "../Charactor.h"
 #include "../Model.h"
 #include "../../State/StateMachine.h"
 
 class GUI;
 class CameraController;
 
-class Player : public Actor
+class Player : public Charactor
 {
 public:
     //コンストラクタ
-    Player(IWorld* world = nullptr, GSuint mesh = Model::Player);
-    Player(IWorld* world, GSuint mesh,const GSvector3& position);
+    Player(IWorld* world = nullptr,const GSvector3& position = {0, 0, 0}, GSuint mesh = Model::Player);
     //デストラクタ
     ~Player()override;
 
     //更新
-    virtual void Update(float deltaTime)override;
-    virtual void LateUpdate(float deltaTime)override;
+    void Update(float deltaTime)override;
+    void LateUpdate(float deltaTime)override;
     //描画
     void Draw()const override;
     //接触判定
     void React(Actor& other)override;
-    
-    void ChangeState(int state);
-    int CurrentState();
     void MovePosition(float deltaTime);
-    
-    void IsAttack(bool isAttack);
-    bool IsAttack();
-
-    IWorld* World();
     void Debug(float deltaTime)override;
 private:
     GSvector3 GetCameraDirection();
@@ -42,7 +33,6 @@ private:
     GStransform& CameraTransform();
     void MoveCamera(float deltaTime);
     void AttackCollide();
-    StateMachine states_;
     CameraController* camera_{ nullptr };
 
     //カメラの角度

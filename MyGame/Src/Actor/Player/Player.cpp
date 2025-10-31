@@ -11,10 +11,11 @@
 #include "State/PlayerMove.h"
 #include "State/PlayerAttack.h"
 #include "State/PlayerUltimateSkill.h"
-Player::Player(IWorld* world, GSuint mesh)
-    :Actor(mesh)
+
+Player::Player(IWorld* world, const GSvector3& position, GSuint mesh)
+    :Charactor(world, position, mesh)
 {
-    world_ = world;
+    
     name_ = ActorName::Player;
     //ステートの追加
     states_.AddState(PlayerState::Idle, new PlayerIdle(this));
@@ -23,19 +24,13 @@ Player::Player(IWorld* world, GSuint mesh)
     states_.AddState(PlayerState::Ultimate, new PlayerUltimateSkill(this));
     states_.ChangeState(PlayerState::Idle);
 
-    mesh_->AddEvent(2, 60, [=] {AttackCollide(); });
+    //スキル
+    mesh_->AddEvent(6, 60, [=] {AttackCollide(); });
 
     colliderOffset_ = { 0.0f,1.0f,0.0f };
     camera_ = new CameraController(CameraController::Player);
     world_->AddCameraController(camera_);
     camera_->SetSmooth(true);
-}
-
-Player::Player(IWorld* world, GSuint mesh, const GSvector3& position)
-    :Player{ world, mesh }
-{
-    //初期座標設定
-    transform_.position(position);
 }
 Player::~Player()
 {
@@ -43,13 +38,12 @@ Player::~Player()
 
 void Player::Update(float deltaTime)
 {
-    Actor::Update(deltaTime);
-    states_.Update(deltaTime);
+    Charactor::Update(deltaTime);
     collider_.Position(transform_.position() + colliderOffset_);
 
     if (!IsAttack() && InputSystem::ButtonTrigger(InputSystem::Button::B)) {
         states_.ChangeState(PlayerState::Attack);
-        camera_->SetShakeValues(180.0f, 1.0f, 160.0f, 1.0f, 20.0f, { 0.1f,0.1f }, 0.0f);
+        camera_->SetShakeValues(30.0f, 1.0f, 160.0f, 1.0f, 20.0f, { 0.1f,0.1f }, 0.0f);
     }
     if (!IsAttack() && InputSystem::ButtonTrigger(InputSystem::Button::A)) {
         states_.ChangeState(PlayerState::Ultimate);
@@ -58,36 +52,18 @@ void Player::Update(float deltaTime)
 }
 void Player::LateUpdate(float deltaTime)
 {
-    Actor::LateUpdate(deltaTime);
+    Charactor::LateUpdate(deltaTime);
 }
 //描画
 void Player::Draw()const
 {
-    Actor::Draw();
+    Charactor::Draw();
     collider_.Draw();
 }
 
 void Player::React(Actor& other)
 {
 
-}
-
-void Player::ChangeState(int state)
-{
-    states_.ChangeState(state);
-}
-
-int Player::CurrentState()
-{
-    return states_.CurrentState();
-}
-void Player::IsAttack(bool isAttack)
-{
-    isAttack_ = isAttack;
-}
-bool Player::IsAttack()
-{
-    return isAttack_;
 }
 
 void Player::MovePosition(float deltaTime)
@@ -167,11 +143,6 @@ float Player::GetCameraHorizontalRadian()
 GStransform& Player::CameraTransform()
 {
     return world_->GetCamera()->Transform();
-}
-
-IWorld* Player::World()
-{
-    return world_;
 }
 
 void Player::Debug(float deltaTime)

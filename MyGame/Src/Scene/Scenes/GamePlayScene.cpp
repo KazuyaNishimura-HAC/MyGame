@@ -18,9 +18,9 @@ void GamePlayScene::Start() {
     gsLoadSkinMesh(Model::Enemy, "Assets/Model/Charactor/Enemy/Enemy1.mshb");
     gsLoadMesh(Model::DefaultMap,"Assets/Model/Stage/Stage1.mshb");
     gsLoadMesh(Model::MapCollide, "Assets/Model/Stage/StageCollider.mshb");
-    
+
     world_.AddPlayer(new Player(&world_));
-    world_.AddActor(new DefaultEnemy(&world_,Model::Enemy,{15,0,0}));
+    world_.AddCharactor(new DefaultEnemy(&world_, { 15,0,0 }));
     world_.AddCamera(new Camera(&world_));
     
     

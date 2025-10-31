@@ -247,7 +247,7 @@ void TimeLine::LoadView(std::vector<IKeyData*>& data, std::string key)
     if (loadFile_[key]["Camera"]["targetType"] == "Actor") {
         std::string actorName = loadFile_[key]["Camera"].value("targetName", "");
         camera->isTargetActor = true;
-        camera->targetActor = world_->GetActor(actorName);
+        camera->targetActor = world_->GetAllActor(actorName);
     }
     data.push_back(camera);
 }

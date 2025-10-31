@@ -1,5 +1,6 @@
 ﻿#include "ActorManager.h"
 #include "Actor.h"
+#include "Charactor.h"
 #include "Player/Player.h"
 
 ActorManager::ActorManager()
@@ -15,6 +16,8 @@ void ActorManager::AddPlayer(Player* player)
 {
     delete player_;
     player_ = player;
+    //プレイヤー処理を優先したい為先頭に配置
+    charactors_.insert(charactors_.begin(),player_);
 }
 
 void ActorManager::AddActor(Actor* actor)
@@ -22,30 +25,47 @@ void ActorManager::AddActor(Actor* actor)
     actors_.push_back(actor);
 }
 
+void ActorManager::AddCharactor(Charactor* charactor)
+{
+    charactors_.push_back(charactor);
+}
+
 void ActorManager::Update(float deltaTime)
 {
-    ActorUpdate(deltaTime, *player_);
+    //ActorUpdate(deltaTime, *player_);
     ActorListUpdate(deltaTime, actors_);
+    CharactorListUpdate(deltaTime, charactors_);
 }
 
 void ActorManager::LateUpdate(float deltaTime)
 {
-    ActorLateUpdate(deltaTime, *player_);
+    //ActorLateUpdate(deltaTime, *player_);
     ActorListLateUpdate(deltaTime, actors_);
+    CharactorListLateUpdate(deltaTime, charactors_);
 }
 
 void ActorManager::Draw() const
 {
-    ActorDraw(*player_);
+    //ActorDraw(*player_);
     ActorListDraw(actors_);
+    CharactorListDraw(charactors_);
 }
 
 //プレイヤーとの衝突判定実行
 void ActorManager::Collide()
 {
-    //キャラの当たり判定
-    for (auto actor : actors_) {
-        ActorCollide(*player_, *actor);
+    
+    for (auto charactor = charactors_.begin(); charactor != charactors_.end(); ++charactor)
+    {
+        //オブジェクトとの当たり判定
+        for (auto actor : actors_) {
+            ActorCollide(**charactor, *actor);
+        }
+        //キャラ同士の当たり判定
+        for (auto nextChara = std::next(charactor); nextChara != charactors_.end(); ++nextChara)
+        {
+            ActorCollide(**charactor, **nextChara);
+        }
     }
 }
 
@@ -60,18 +80,32 @@ void ActorManager::Remove()
         }
         else ++i;
     }
+
+    for (auto i = charactors_.begin(); i != charactors_.end();)
+    {
+        if ((*i)->IsDead())
+        {
+            delete* i;
+            i = charactors_.erase(i);
+        }
+        else ++i;
+    }
 }
 
 void ActorManager::Clear()
 {
-    delete player_;
-    player_ = nullptr;
-
     for (auto actor : actors_)
     {
         delete actor;
     }
     actors_.clear();
+
+    for (auto charactor : charactors_)
+    {
+        delete charactor;
+    }
+    player_ = nullptr;
+    charactors_.clear();
 }
 
 void ActorManager::ActorEnable(bool enable)
@@ -87,16 +121,38 @@ Player* ActorManager::GetPlayer()
     return player_;
 }
 
+Actor* ActorManager::GetAllActor(std::string name)
+{
+    Actor* findActor;
+    findActor = GetActor(name);
+    if (findActor) return findActor;
+
+    Actor* findCharactor;
+    findCharactor = GetCharactor(name);
+    if (findCharactor) return findCharactor;
+
+    return nullptr;
+}
+
 Actor* ActorManager::GetActor(int index)
 {
     return actors_[index];
 }
 
-Actor* ActorManager::GetActor(std::string string)
+Actor* ActorManager::GetActor(std::string name)
 {
-    if (player_->GetName() == string) return player_;
+    //その他オブジェクト検索
     for (int i = 0; i < actors_.size();i++) {
-        if (actors_[i]->GetName() == string) return actors_[i];
+        if (actors_[i]->GetName() == name) return actors_[i];
+    }
+    return nullptr;
+}
+
+Charactor* ActorManager::GetCharactor(std::string name)
+{
+    //キャラクター検索
+    for (int i = 0; i < charactors_.size(); i++) {
+        if (charactors_[i]->GetName() == name) return charactors_[i];
     }
     return nullptr;
 }
@@ -142,6 +198,30 @@ void ActorManager::ActorListDraw(std::vector<Actor*> actors, bool isShadow) cons
     for (auto actor : actors)
     {
         actor->Draw();
+    }
+}
+
+void ActorManager::CharactorListUpdate(float deltaTime, std::vector<Charactor*>& actors)
+{
+    for (auto charactor : actors)
+    {
+        charactor->Update(deltaTime);
+    }
+}
+
+void ActorManager::CharactorListLateUpdate(float deltaTime, std::vector<Charactor*>& actors)
+{
+    for (auto charactor : actors)
+    {
+        charactor->LateUpdate(deltaTime);
+    }
+}
+
+void ActorManager::CharactorListDraw(std::vector<Charactor*> actors, bool isShadow) const
+{
+    for (auto charactor : actors)
+    {
+        charactor->Draw();
     }
 }
 

@@ -4,8 +4,6 @@
 #include <vector>
 #include <GStransform.h>
 #include "../Charactor.h"
-#include "../Model.h"
-#include "../../State/StateMachine.h"
 
 class GUI;
 class CameraController;

@@ -1,11 +1,8 @@
 #include "Player.h"
 #include <imgui/imgui.h>
-#include "../../Actor/Model.h"
 #include "../../World/IWorld.h"
 #include "../../GameSystem/Camera/Camera.h"
 #include "../../GameSystem/InputSystem/InputSystem.h"
-#include "../../GameSystem/Field/FieldManager.h"
-#include "../../GameSystem/Field/Ray.h"
 //ステートヘッダー
 #include "State/PlayerIdle.h"
 #include "State/PlayerMove.h"

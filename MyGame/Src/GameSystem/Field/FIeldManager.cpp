@@ -27,10 +27,12 @@ void FieldManager::Update(float delta_time)
 
 void FieldManager::Draw(Camera* camera) const
 {
+#if _DEBUG
     for (auto field : fields_)
     {
         field->Draw();
     }
+#endif
     for (auto field : fieldActor_)
     {
         if (camera != nullptr && camera->IsVisible(field->Transform().position())) {

@@ -38,6 +38,7 @@ void Field::Draw() const
         glutSolidCube(1.0f);  // 1辺=1の立方体をスケーリングして長方形にする
         //初期化
         glColor4f(1,1,1,1);
+        // ライティング有効化
         glEnable(GL_LIGHTING);
     glPopMatrix();
 }

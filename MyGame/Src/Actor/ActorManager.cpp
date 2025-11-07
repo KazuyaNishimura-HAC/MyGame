@@ -3,6 +3,8 @@
 #include "Charactor.h"
 #include "Player/Player.h"
 
+#include "../World/IWorld.h"
+
 ActorManager::ActorManager()
 {
 }
@@ -54,7 +56,7 @@ void ActorManager::Draw() const
 //プレイヤーとの衝突判定実行
 void ActorManager::Collide()
 {
-    
+
     for (auto charactor = charactors_.begin(); charactor != charactors_.end(); ++charactor)
     {
         //オブジェクトとの当たり判定
@@ -65,6 +67,16 @@ void ActorManager::Collide()
         for (auto nextChara = std::next(charactor); nextChara != charactors_.end(); ++nextChara)
         {
             ActorCollide(**charactor, **nextChara);
+        }
+    }
+    //仮で敵を倒し切ったら遷移
+    int testEnemyCount = 0;
+    for (auto chara : charactors_) {
+        if (chara->GetTag() == NameTag::Actor::Enemy) testEnemyCount++;
+    }
+    for (auto chara : charactors_) {
+        if (chara->GetTag() == NameTag::Actor::Player && testEnemyCount == 0) {
+            chara->World()->IsEnd(true);
         }
     }
 }
@@ -159,7 +171,10 @@ Charactor* ActorManager::GetCharactor(std::string name)
 
 void ActorManager::Debug(float deltaTime)
 {
-    player_->Debug(deltaTime);
+    //キャラクターのデバック
+    for (auto actor : charactors_) {
+        actor->Debug(deltaTime);
+    }
 }
 
 void ActorManager::ActorUpdate(float deltaTime, Actor& actor)
@@ -225,27 +240,24 @@ void ActorManager::CharactorListDraw(std::vector<Charactor*> actors, bool isShad
     }
 }
 
-void ActorManager::ActorCollide(Actor& player, Actor& other)
+void ActorManager::ActorCollide(Actor& other1, Actor& other2)
 {
-    if (!(player.GetEnable() && other.GetEnable()))return;
-
-    bool enableCollider = player.Collider().Enable() && other.Collider().Enable();
+    if (!(other1.GetEnable() && other2.GetEnable()))return;
+    bool enableCollider = other1.Collider().Enable() && other2.Collider().Enable();
     if (!enableCollider)return;
-    float test = player.Collider().Radius();
-    float collideDistance = player.Collider().Radius() + other.Collider().Radius();
-    GSvector3 collideVector = player.Transform().position() - other.Collider().Position();
+    float collideDistance = other1.Collider().Radius() + other2.Collider().Radius();
+    GSvector3 collideVector = other1.Transform().position() - other2.Collider().Position();
     collideDistance -= collideVector.magnitude();
     if (collideDistance <= 0)return;
-
-    other.React(player);
-    player.React(other);
+    other2.React(other1);
+    other1.React(other2);
     collideDistance = MAX(collideDistance - 0.5f, 0);
     collideVector.y = 0;
-
+    
     //どちらかのTriggerがtrueならすり抜け
-    bool collideTrigger = other.Collider().Trigger() || player.Collider().Trigger();
+    bool collideTrigger = other2.Collider().Trigger() || other1.Collider().Trigger();
     if (collideTrigger) return;
     //player(動いているオブジェクトを止める)
-    player.Transform().translate(collideVector.normalized() * collideDistance, GStransform::Space::World);
+    other1.Transform().translate(collideVector.normalized() * collideDistance, GStransform::Space::World);
 }
 

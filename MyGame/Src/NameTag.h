@@ -20,7 +20,11 @@ namespace NameTag {
 		static constexpr const char* None = "None";
 		static constexpr const char* Player = "Player";
 		static constexpr const char* Enemy = "Enemy";
+		static constexpr const char* DefaultEnemy = "DefaultEnemy";
 		static constexpr const char* Object = "Object";
+		static constexpr const char* ATKCollide = "ATKCollide";
+		static constexpr const char* PlayerATKCollide = "PlayerATKCollide";
+		static constexpr const char* EnemyATKCollide = "EnemyATKCollide";
 	};
 	struct PostEffect {
 		static constexpr const char* Bloom = "Bloom";

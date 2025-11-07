@@ -13,17 +13,20 @@ Actor::~Actor()
 
 void Actor::Update(float deltaTime)
 {
+    if (!mesh_) return;
     mesh_->Update(deltaTime);
 }
 
 void Actor::LateUpdate(float deltaTime)
 {
+    if (!mesh_) return;
     //現在座標をメッシュに反映
     mesh_->Transform(transform_.localToWorldMatrix());
 }
 
 void Actor::Draw() const
 {
+    if (!mesh_) return;
     mesh_->Draw();
 }
 
@@ -91,6 +94,7 @@ const BoundingSphere& Actor::Collider() const
 
 void Actor::ChangeMotion(int motion, bool loop, float motionSpeed, float motionTime , float lerpTime , bool forceChange)
 {
+    if (!mesh_) return;
     mesh_->ChangeMotion(motion, loop, motionSpeed, motionTime, lerpTime, forceChange);
 }
 

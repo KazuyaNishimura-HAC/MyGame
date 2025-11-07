@@ -50,7 +50,7 @@ private:
     void CharactorListLateUpdate(float deltaTime, std::vector<Charactor*>& actors);
     void CharactorListDraw(std::vector<Charactor*> actors, bool isShadow = false)const;
 
-    void ActorCollide(Actor& player, Actor& other);
+    void ActorCollide(Actor& other1, Actor& other2);
 
     
 

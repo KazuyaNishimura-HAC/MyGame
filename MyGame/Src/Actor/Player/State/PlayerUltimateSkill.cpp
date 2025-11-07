@@ -19,15 +19,17 @@ void PlayerUltimateSkill::Update(float deltaTime)
 
 void PlayerUltimateSkill::Enter()
 {
-	owner_->IsAttack(true);
-	owner_->ChangeMotion(6, false);
+	owner_->SetAttack(true);
+	owner_->SetInvincible(true);
+	owner_->ChangeMotion(Player::UltSkill, false);
 	//ƒCƒxƒ“ƒg”­‰Î
 	skillEvent_->SetInvoke(true);
 }
 
 void PlayerUltimateSkill::Exit()
 {
-	owner_->IsAttack(false);
+	owner_->SetAttack(false);
+	owner_->SetInvincible(false);
 }
 
 void PlayerUltimateSkill::SetID(int id)

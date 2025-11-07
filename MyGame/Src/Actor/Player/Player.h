@@ -4,13 +4,28 @@
 #include <vector>
 #include <GStransform.h>
 #include "../Charactor.h"
-
 class GUI;
+class PlayerUI;
 class CameraController;
-
 class Player : public Charactor
 {
 public:
+    enum Motion {
+        Idle,
+        Run,
+        Attack,
+        Combo2,
+        Combo3,
+        Attack2,
+        SkillCoolTime,
+        AttackSkill,
+        UltSkill,
+        Parry,
+        Hit,
+        Death,
+        Death2,
+        Death3
+    };
     //コンストラクタ
     Player(IWorld* world = nullptr,const GSvector3& position = {0, 0, 0}, GSuint mesh = Model::Player);
     //デストラクタ
@@ -23,6 +38,7 @@ public:
     void Draw()const override;
     //接触判定
     void React(Actor& other)override;
+    void TakeDamage(float damage)override;
     void MovePosition(float deltaTime);
     void Debug(float deltaTime)override;
 private:
@@ -30,7 +46,8 @@ private:
     float GetCameraHorizontalRadian();
     GStransform& CameraTransform();
     void MoveCamera(float deltaTime);
-    void AttackCollide();
+    void MoveAttackCollide();
+    void TestAttack();
     CameraController* camera_{ nullptr };
 
     //カメラの角度
@@ -45,5 +62,7 @@ private:
     //以下プレイヤー動作値
     float moveSpeed_{ 1.5f };
     bool isAttack_{ false };
+
+    PlayerUI* ui_ = nullptr;
 };
 #endif

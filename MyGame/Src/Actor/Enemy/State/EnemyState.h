@@ -11,6 +11,8 @@ public:
 		Move,
 		Stan,
 		Attack,
+		Damage,
+		Dead
 	};
 	EnemyState(Enemy* owner) : owner_{ owner } {};
 	virtual void Update(float deltaTime)override {};

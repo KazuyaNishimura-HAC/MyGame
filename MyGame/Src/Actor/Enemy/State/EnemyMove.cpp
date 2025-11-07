@@ -8,11 +8,12 @@ EnemyMove::EnemyMove(Enemy* owner)
 void EnemyMove::Update(float deltaTime)
 {
 	owner_->Transform().position();
+	owner_->MovePosition(deltaTime);
 }
 
 void EnemyMove::Enter()
 {
-	owner_->ChangeMotion(1);
+	owner_->ChangeMotion(Enemy::Run);
 }
 
 void EnemyMove::Exit()

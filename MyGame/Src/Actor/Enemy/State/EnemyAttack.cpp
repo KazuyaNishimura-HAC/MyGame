@@ -9,19 +9,18 @@ void EnemyAttack::Update(float deltaTime)
 {
 	if (owner_->GetMesh()->IsEndMotion()) {
 		owner_->ChangeState(EnemyState::Idle);
-		return;
 	}
 }
 
 void EnemyAttack::Enter()
 {
-	owner_->IsAttack(true);
-	owner_->ChangeMotion(6, false);
+	owner_->SetAttack(true);
+	owner_->ChangeMotion(Enemy::Attack, false);
 }
 
 void EnemyAttack::Exit()
 {
-	owner_->IsAttack(false);
+	owner_->SetAttack(false);
 }
 
 void EnemyAttack::SetID(int id)

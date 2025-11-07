@@ -9,6 +9,22 @@ class GUI;
 class Enemy : public Charactor
 {
 public:
+    enum Motion {
+        Idle,
+        Run,
+        Attack,
+        Combo2,
+        Combo3,
+        Attack2,
+        SkillCoolTime,
+        AttackSkill,
+        UltSkill,
+        Parry,
+        Hit,
+        Death,
+        Death2,
+        Death3
+    };
     //コンストラクタ
     Enemy(IWorld* world = nullptr, const GSvector3& position = {0, 0, 0}, GSuint mesh = Model::Enemy);
     //デストラクタ
@@ -23,9 +39,13 @@ public:
     virtual void React(Actor& other)override;
 
     virtual void MovePosition(float deltaTime);
+    virtual void MoveAttackCollide();
+    virtual void SetCoolTime(float time);
+    virtual float GetCoolTime();
     virtual void Debug(float deltaTime)override;
 protected:
-
-    bool isAttack_{ false };
+    //ターゲットとなるアクター(Player)を持っておく
+    Charactor* player_{ nullptr };
+    float damageCoolTime_ = { 0.0f };
 };
 #endif

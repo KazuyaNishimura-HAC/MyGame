@@ -10,16 +10,18 @@ EnemyIdle::EnemyIdle(Enemy* owner)
 
 void EnemyIdle::Update(float deltaTime)
 {
-
+	if (player_->IsDying()) return;
 	float dist = GSvector3::distance(owner_->Transform().position(), player_->Transform().position());
-	if (dist < 5) {
+	motionCoolTime_ -= deltaTime / 60.0f;
+	if (dist < 5 && motionCoolTime_ <= 0) {
 		owner_->ChangeState(State::Move);
 	}
 }
 
 void EnemyIdle::Enter()
 {
-	owner_->ChangeMotion(0, true);
+	owner_->ChangeMotion(Enemy::Idle, true);
+	motionCoolTime_ = owner_->GetCoolTime();
 }
 
 void EnemyIdle::Exit()

@@ -20,9 +20,10 @@ public:
     void LateUpdate(float deltaTime)override;
     //•`‰æ
     void Draw()const override;
-    //ÚG”»’è
     void React(Actor& other)override;
-
+    void TakeDamage(float damage)override;
     virtual void Debug(float deltaTime)override;
+private:
+    void TestAttack();
 };
 #endif

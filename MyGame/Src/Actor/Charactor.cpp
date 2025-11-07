@@ -6,6 +6,7 @@ Charactor::Charactor(IWorld* world, const GSvector3& position, GSuint mesh)
 	world_ = world;
 	//èâä˙ç¿ïWê›íË
 	transform_.position(position);
+	hp_ = maxHP_;
 }
 
 Charactor::~Charactor()
@@ -16,6 +17,7 @@ void Charactor::Update(float deltaTime)
 {
 	Actor::Update(deltaTime);
 	states_.Update(deltaTime);
+	collider_.Position(transform_.position() + colliderOffset_);
 }
 
 void Charactor::LateUpdate(float deltaTime)
@@ -28,11 +30,12 @@ void Charactor::Draw() const
 	Actor::Draw();
 }
 
-void Charactor::TakeDamage()
+void Charactor::TakeDamage(float damage)
 {
+	hp_ -= damage;
 }
 
-void Charactor::AddDamage()
+void Charactor::AddDamage(float damage)
 {
 }
 
@@ -46,7 +49,7 @@ int Charactor::CurrentState()
 	return states_.CurrentState();
 }
 
-void Charactor::IsAttack(bool isAttack)
+void Charactor::SetAttack(bool isAttack)
 {
 	isAttack_ = isAttack;
 }
@@ -54,6 +57,31 @@ void Charactor::IsAttack(bool isAttack)
 bool Charactor::IsAttack()
 {
 	return isAttack_;
+}
+
+void Charactor::SetInvincible(bool isInvincible)
+{
+	invincible_ = isInvincible;
+}
+
+bool Charactor::IsInvincible()
+{
+	return invincible_;
+}
+
+int Charactor::GetHealth()
+{
+	return hp_;
+}
+
+int Charactor::GetMaxHealth()
+{
+	return maxHP_;
+}
+
+bool Charactor::IsDying()
+{
+	return hp_ <= 0;
 }
 
 IWorld* Charactor::World()

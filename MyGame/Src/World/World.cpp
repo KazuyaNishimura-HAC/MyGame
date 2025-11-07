@@ -45,6 +45,7 @@ void World::Update(float deltaTime)
     //当たり判定
     actorManager_.Collide();
     if(GetPlayer())fieldManager_.CollideActor(GetPlayer()->Transform());
+    if(GetCamera())fieldManager_.CollideCamera(GetCamera()->Transform(), cameraManager_.GetActiveController()->GetViewTarget());
     eventManager_.Invoke();
 
     fieldManager_.Remove();

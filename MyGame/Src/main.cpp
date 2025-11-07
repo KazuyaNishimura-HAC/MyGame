@@ -36,7 +36,7 @@ private:
         sceneManager_.Add(SceneIndex::LoadScene, new LoadScene());
         sceneManager_.Add(SceneIndex::GamePlayScene, new GamePlayScene());
         sceneManager_.Add(SceneIndex::ResultScene, new ResultScene());
-        sceneManager_.Change(SceneIndex::GamePlayScene);
+        sceneManager_.Change(SceneIndex::TitleScene);
     }
 
     void update(float delta_time) override {

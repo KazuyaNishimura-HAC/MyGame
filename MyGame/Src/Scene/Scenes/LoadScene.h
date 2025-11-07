@@ -2,9 +2,12 @@
 #define LOAD_SCENE_H_
 
 #include "../IScene.h"
-#include "../../UI/Image.h"
+#include "../../UI/GUIManager.h"
 
 #include <vector>
+
+class Image;
+class SimpleHorizontalGauge;
 
 // GamePlaySceneのロードシーン
 class LoadScene : public IScene {
@@ -29,8 +32,13 @@ public:
 
 private:
     // 素材の読み込み関数
-    void Load();
-    bool sceneEnd_{ false };
+    void LoadAssets();
+    void LoadEnd();
+    int loadCount_{ 0 };
+    int totalAssetsCount_{ 6 };
+    SimpleHorizontalGauge* loadingGauge_;
+    GUIManager guiManager_;
+    Image* text_{ nullptr };
 };
 
 #endif

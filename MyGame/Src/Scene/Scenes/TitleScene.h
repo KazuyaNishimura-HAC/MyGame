@@ -3,7 +3,9 @@
 
 #include "../IScene.h"
 #include "../SceneManager.h"
+#include "../../UI/GUIManager.h"
 
+class Image;
 // タイトルシーン
 class TitleScene : public IScene {
 public:
@@ -26,7 +28,8 @@ public:
     virtual void Debug(float delta_time)override;
 
 private:
-    bool sceneEnd_{ false };
+    GUIManager guiManager_;
+    Image* text_{ nullptr };
 };
 
 #endif

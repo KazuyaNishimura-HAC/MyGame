@@ -33,6 +33,11 @@ public:
         MenuSliderBackGround,
         MenuSliderFill,
 
+        //Scene
+        TitleText,
+        LoadingText,
+        ResultText
+
 
     };
     static GSvector2 GetSize(int id)
@@ -69,6 +74,9 @@ public:
             {Name::SoundSE,{126,50}},
             {Name::MenuSliderBackGround,{256,42}},
             {Name::MenuSliderFill,{256,42}},
+            {Name::TitleText,{180,67}},
+            {Name::LoadingText,{257,69}},
+            {Name::ResultText,{109,68}}
 
         };
         return data[id].size_;

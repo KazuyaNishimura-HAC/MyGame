@@ -10,8 +10,8 @@
 #include "../State/EnemyDamage.h"
 #include "../State/EnemyDead.h"
 
-DefaultEnemy::DefaultEnemy(IWorld* world, const GSvector3& position, GSuint mesh)
-    :Enemy(world, position, mesh)
+DefaultEnemy::DefaultEnemy(IWorld* world, const GSvector3& position,Status status, GSuint mesh)
+    :Enemy(world, position, status, mesh)
 {
     name_ = ActorName::DefaultEnemy;
     //ステートの追加
@@ -62,7 +62,7 @@ void DefaultEnemy::TakeDamage(float damage)
     //死亡しているならreturn
     if (CurrentState() == EnemyState::Dead) return;
 
-    hp_ -= damage;
+    status_.hp -= damage;
     //hpが0なら死亡
     if(IsDying()) ChangeState(EnemyState::Dead);
     else ChangeState(EnemyState::Damage);
@@ -71,7 +71,9 @@ void DefaultEnemy::TakeDamage(float damage)
 void DefaultEnemy::Debug(float deltaTime)
 {
     ImGui::Begin("Enemystatus");
-    ImGui::Value("hp",hp_);
+    ImGui::Value("MaxHP", status_.maxHP);
+    ImGui::Value("HP", status_.hp);
+    ImGui::Value("ATK", status_.atk);
     ImGui::End();
 }
 

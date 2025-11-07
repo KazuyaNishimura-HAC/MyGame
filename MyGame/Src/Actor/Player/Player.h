@@ -27,7 +27,7 @@ public:
         Death3
     };
     //コンストラクタ
-    Player(IWorld* world = nullptr,const GSvector3& position = {0, 0, 0}, GSuint mesh = Model::Player);
+    Player(IWorld* world = nullptr,const GSvector3& position = {0, 0, 0},Status status = Status(), GSuint mesh = Model::Player);
     //デストラクタ
     ~Player()override;
 
@@ -61,7 +61,6 @@ private:
 
     //以下プレイヤー動作値
     float moveSpeed_{ 1.5f };
-    bool isAttack_{ false };
 
     PlayerUI* ui_ = nullptr;
 };

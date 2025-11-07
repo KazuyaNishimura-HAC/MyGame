@@ -8,8 +8,8 @@
 #include "State/EnemyIdle.h"
 #include "State/EnemyMove.h"
 #include "State/EnemyAttack.h"
-Enemy::Enemy(IWorld* world, const GSvector3& position, GSuint mesh)
-    :Charactor(world,position,mesh)
+Enemy::Enemy(IWorld* world, const GSvector3& position, Status status, GSuint mesh)
+    :Charactor(world,position,status,mesh)
 {
     player_ = world_->GetCharactor("Player");
     tag_ = ActorName::Enemy;

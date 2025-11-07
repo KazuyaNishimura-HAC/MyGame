@@ -1,12 +1,12 @@
 #include "Charactor.h"
 
-Charactor::Charactor(IWorld* world, const GSvector3& position, GSuint mesh)
+Charactor::Charactor(IWorld* world, const GSvector3& position,Status status, GSuint mesh)
 	:Actor(mesh)
 {
 	world_ = world;
 	//èâä˙ç¿ïWê›íË
 	transform_.position(position);
-	hp_ = maxHP_;
+	status_ = status;
 }
 
 Charactor::~Charactor()
@@ -32,7 +32,7 @@ void Charactor::Draw() const
 
 void Charactor::TakeDamage(float damage)
 {
-	hp_ -= damage;
+	status_.hp -= damage;
 }
 
 void Charactor::AddDamage(float damage)
@@ -49,11 +49,39 @@ int Charactor::CurrentState()
 	return states_.CurrentState();
 }
 
+void Charactor::SetStatus(Status status)
+{
+	status_ = status;
+}
+
+const Status& Charactor::GetStatus()
+{
+	return status_;
+}
+
+void Charactor::SetAttack(float attack)
+{
+	status_.atk = attack;
+}
+
+float Charactor::GetAttack()
+{
+	return status_.atk;
+}
+
+int Charactor::GetHealth()
+{
+	return status_.hp;
+}
+
+int Charactor::GetMaxHealth()
+{
+	return status_.maxHP;
+}
 void Charactor::SetAttack(bool isAttack)
 {
 	isAttack_ = isAttack;
 }
-
 bool Charactor::IsAttack()
 {
 	return isAttack_;
@@ -69,19 +97,11 @@ bool Charactor::IsInvincible()
 	return invincible_;
 }
 
-int Charactor::GetHealth()
-{
-	return hp_;
-}
 
-int Charactor::GetMaxHealth()
-{
-	return maxHP_;
-}
 
 bool Charactor::IsDying()
 {
-	return hp_ <= 0;
+	return status_.hp <= 0;
 }
 
 IWorld* Charactor::World()

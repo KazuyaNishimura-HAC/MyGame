@@ -14,8 +14,8 @@
 #include "State/PlayerAttack.h"
 #include "State/PlayerUltimateSkill.h"
 
-Player::Player(IWorld* world, const GSvector3& position, GSuint mesh)
-    :Charactor(world, position, mesh)
+Player::Player(IWorld* world, const GSvector3& position,Status status, GSuint mesh)
+    :Charactor(world, position, status, mesh)
 {
     tag_ = ActorName::Player;
     name_ = ActorName::Player;
@@ -89,7 +89,7 @@ void Player::TakeDamage(float damage)
 {
     //–³“G‚È‚çUŒ‚‚ðŽó‚¯‚È‚¢
     if (IsInvincible()) return;
-    hp_ -= damage;
+    status_.hp -= damage;
     //hp‚ª0‚È‚çŽ€–S
     if (IsDying()) ChangeState(PlayerState::Dead);
     else ChangeState(PlayerState::Damage);
@@ -111,9 +111,9 @@ void Player::MovePosition(float deltaTime)
     GSvector3 moveDirection = (forward * input.y) + (right * input.x);
     moveDirection.normalize();
     //“ü—Íraw‚ðˆÚ“®‚Ì‹­‚³‚É‚·‚é
-    float magnitude = input.magnitude();
+    //float magnitude = input.magnitude();
 
-    GSvector3 moveVector = moveDirection * magnitude * moveSpeed_ * deltaTime;
+    GSvector3 moveVector = moveDirection * 0.1f * moveSpeed_ * deltaTime;
 
     //ƒvƒŒƒCƒ„[‚ðŠŠ‚ç‚©‚É‰ñ“]
     if (input != GSvector2::zero())
@@ -185,6 +185,8 @@ void Player::Debug(float deltaTime)
 {
     mesh_->Debug();
     ImGui::Begin("Playerstatus");
-    ImGui::Value("hp", hp_);
+    ImGui::Value("MaxHP", status_.maxHP);
+    ImGui::Value("HP", status_.hp);
+    ImGui::Value("ATK", status_.atk);
     ImGui::End();
 }

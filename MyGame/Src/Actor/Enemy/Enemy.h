@@ -26,7 +26,7 @@ public:
         Death3
     };
     //コンストラクタ
-    Enemy(IWorld* world = nullptr, const GSvector3& position = {0, 0, 0}, GSuint mesh = Model::Enemy);
+    Enemy(IWorld* world = nullptr, const GSvector3& position = {0, 0, 0}, Status status = Status(), GSuint mesh = Model::Enemy);
     //デストラクタ
     ~Enemy()override;
 

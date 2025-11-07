@@ -21,6 +21,13 @@ public:
     void Color(GSvector3 color);
     void Edit(bool edit);
 public:
+    enum state{
+        None,
+        Enter,
+        Triggers,
+        Exit
+    };
+    int state{ None };
     float radius{ 1 };
     GSvector3 position;
     bool enable_{ true };

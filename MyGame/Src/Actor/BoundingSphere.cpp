@@ -28,22 +28,14 @@ void BoundingSphere::Draw() const
     //リリース時はコメント
 #if _DEBUG
     glPushMatrix();          
-        if (edit_) {
-            // ライティング無効化
-            glDisable(GL_LIGHTING);
-            glTranslatef(position.x, position.y, position.z);
-            glColor3f(0.0f, 1.0f, 0.0f);
-            glutWireSphere(radius, 16, 16);
-            glColor3f(defColor_.x, defColor_.y, defColor_.z);
-            // ライティングを戻す（必要なら）
-            glEnable(GL_LIGHTING);
-        }
-        else {
-            glTranslatef(position.x, position.y, position.z);
-            glutWireSphere(radius, 16, 16);
-
-        }
-        
+        // ライティング無効化
+        glDisable(GL_LIGHTING);
+        glTranslatef(position.x, position.y, position.z);
+        if(enable_) glColor3f(0.0f, 1.0f, 0.0f);
+        glutWireSphere(radius, 16, 16);
+        glColor3f(defColor_.x, defColor_.y, defColor_.z);
+        // ライティングを戻す（必要なら）
+        glEnable(GL_LIGHTING);
     glPopMatrix();
 #endif
 }

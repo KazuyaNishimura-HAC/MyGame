@@ -12,10 +12,10 @@
 #include "../../UI/Image.h"
 // 開始
 void GamePlayScene::Start() {
-    world_.AddPlayer(new Player(&world_,{-50,0,0}));
+    world_.AddPlayer(new Player(&world_,{-50,0,0},Status(60, 10)));
     world_.AddCharactor(new DefaultEnemy(&world_, { 15,0,5 }));
     world_.AddCharactor(new DefaultEnemy(&world_, { 15,0,-5 }));
-    world_.AddCharactor(new DefaultEnemy(&world_, { 5,0,0 }));
+    world_.AddCharactor(new DefaultEnemy(&world_, { 5,0,0 },Status(120, 30)));
     world_.AddCamera(new Camera(&world_));
     world_.AddField(new FieldActor({0,0,0},Model::DefaultMap,Model::MapCollide));
     /*world_.AddField(new Field({ -20,0,6 },{ 120,10,1 }));

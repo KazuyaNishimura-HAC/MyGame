@@ -1,4 +1,4 @@
-#include "TimeLine.h"
+ï»¿#include "TimeLine.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -17,15 +17,15 @@ TimeLine::~TimeLine()
 void TimeLine::Update(float deltaTime)
 {
     if (runningEvent_ == nullptr) return;
-    //ƒ^ƒCƒ}[XV
+    //ã‚¿ã‚¤ãƒãƒ¼æ›´æ–°
     if (endTime_ <= eventTimer_) {
         EndTimeLine();
         return;
     }
 
-    //¬”“_Ø‚èÌ‚Ä
+    //å°æ•°ç‚¹åˆ‡ã‚Šæ¨ã¦
     int frame = std::trunc(eventTimer_ * 60.0f);
-    //Œ»İ‚ÌƒtƒŒ[ƒ€‚ÉƒCƒxƒ“ƒg‚ª‘¶İ‚µ‚Ä‚¢‚½‚ç
+    //ç¾åœ¨ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã«ã‚¤ãƒ™ãƒ³ãƒˆãŒå­˜åœ¨ã—ã¦ã„ãŸã‚‰
     auto ev = runningEvent_->frameEvent.find(frame);
     if (ev != runningEvent_->frameEvent.end()) {
         std::vector<IKeyData*>& keys = ev->second;
@@ -40,7 +40,7 @@ void TimeLine::Update(float deltaTime)
 
             case IKeyData::Effect: {
                 EffectKey* effKey = static_cast<EffectKey*>(key);
-                // effKey->effect ‚È‚Ç‚ÉƒAƒNƒZƒX
+                // effKey->effect ãªã©ã«ã‚¢ã‚¯ã‚»ã‚¹
                 SetEffect(effKey);
             } break;
 
@@ -49,7 +49,7 @@ void TimeLine::Update(float deltaTime)
             }
         }
     }
-    //ƒ^ƒCƒ}[XV
+    //ã‚¿ã‚¤ãƒãƒ¼æ›´æ–°
     eventTimer_ += deltaTime / 60.0f;
 }
 
@@ -70,28 +70,28 @@ void TimeLine::EndTimeLine()
 
 void TimeLine::LoadFile()
 {
-    //Preview’†‹­§XV
+    //Previewä¸­å¼·åˆ¶æ›´æ–°
     runningEvent_ = nullptr;
-    //”O‚Ì‚½‚ßˆê‰ñƒNƒŠƒA‚·‚é
+    //å¿µã®ãŸã‚ä¸€å›ã‚¯ãƒªã‚¢ã™ã‚‹
     KeyDataClear();
     std::ifstream ifs("Src/TimeLineData/test.json");
     if (ifs.is_open() && ifs.good())
     {
         ifs >> loadFile_;
-        //ƒCƒxƒ“ƒg–¼
+        //ã‚¤ãƒ™ãƒ³ãƒˆå
         std::string eventName = loadFile_.value("EventName", "NONE");
-        //ƒtƒŒ[ƒ€ƒL[¶¬
+        //ãƒ•ãƒ¬ãƒ¼ãƒ ã‚­ãƒ¼ç”Ÿæˆ
         data_[eventName] = new TimeLineData();
         data_[eventName]->playTime = loadFile_.value("EventTime", 0.0f);
-        //ƒL[‘”æ“¾
+        //ã‚­ãƒ¼ç·æ•°å–å¾—
         int keyCount = loadFile_.value("KeyCount", 0);
         
         for (int keyNum = 0; keyNum < keyCount; ++keyNum) {
-            //key”Ô†(stringŒ^)
+            //keyç•ªå·(stringå‹)
             std::string CurrentKey = "key" + std::to_string(keyNum);
-            //ƒtƒŒ[ƒ€æ“¾
+            //ãƒ•ãƒ¬ãƒ¼ãƒ å–å¾—
             int frame = loadFile_[CurrentKey].value("frame",0);
-            //w’èƒL[‚ª‘¶İ‚µ‚½‚çLoad
+            //æŒ‡å®šã‚­ãƒ¼ãŒå­˜åœ¨ã—ãŸã‚‰Load
             if (loadFile_[CurrentKey].contains("Camera")) LoadView(data_[eventName]->frameEvent[frame], CurrentKey);
             if (loadFile_[CurrentKey].contains("Effect")) LoadEffect(data_[eventName]->frameEvent[frame], CurrentKey);
         }
@@ -143,7 +143,7 @@ void TimeLine::AddKey(std::string name, int frame, IKeyData* data)
 {
     TimeLineData* datas = KeyDatas(name);
     if (!datas) return;
-    //V‚µ‚¢ƒtƒŒ[ƒ€‚Ì¶¬
+    //æ–°ã—ã„ãƒ•ãƒ¬ãƒ¼ãƒ ã®ç”Ÿæˆ
     datas->frameEvent[frame].push_back(data);
 }
 
@@ -152,11 +152,11 @@ void TimeLine::DeleteKey(std::string name, int frame, IKeyData::KeyType type)
     TimeLineData* datas = KeyDatas(name);
     if (!datas) return;
 
-    // ƒtƒŒ[ƒ€‚ª‘¶İ‚µ‚È‚¯‚ê‚Î‰½‚à‚µ‚È‚¢
+    // ãƒ•ãƒ¬ãƒ¼ãƒ ãŒå­˜åœ¨ã—ãªã‘ã‚Œã°ä½•ã‚‚ã—ãªã„
     auto it = datas->frameEvent.find(frame);
     if (it == datas->frameEvent.end()) return;
     auto& frameKeys = it->second;
-    //ƒL[‚ğíœ
+    //ã‚­ãƒ¼ã‚’å‰Šé™¤
     for (auto key = frameKeys.begin(); key != frameKeys.end(); ) {
         if ((*key)->type == type) {
             delete* key;
@@ -166,7 +166,7 @@ void TimeLine::DeleteKey(std::string name, int frame, IKeyData::KeyType type)
             ++key;
         }
     }
-    //ƒtƒŒ[ƒ€‚ÉƒCƒxƒ“ƒg‚ª‚È‚¢‚È‚çíœ
+    //ãƒ•ãƒ¬ãƒ¼ãƒ ã«ã‚¤ãƒ™ãƒ³ãƒˆãŒãªã„ãªã‚‰å‰Šé™¤
     if (frameKeys.empty()) {
         datas->frameEvent.erase(frame);
     }
@@ -176,14 +176,14 @@ void TimeLine::MoveKey(std::string name, int oldFrame, int newFrame, IKeyData* d
 {
     TimeLineData* datas = KeyDatas(name);
     if (!datas) return;
-    //V‚µ‚¢ƒtƒŒ[ƒ€ƒL[‚Ì¶¬
+    //æ–°ã—ã„ãƒ•ãƒ¬ãƒ¼ãƒ ã‚­ãƒ¼ã®ç”Ÿæˆ
     datas->frameEvent[newFrame].push_back(data);
 
-    // ƒtƒŒ[ƒ€‚ª‘¶İ‚µ‚È‚¯‚ê‚Î‰½‚à‚µ‚È‚¢
+    // ãƒ•ãƒ¬ãƒ¼ãƒ ãŒå­˜åœ¨ã—ãªã‘ã‚Œã°ä½•ã‚‚ã—ãªã„
     auto it = datas->frameEvent.find(oldFrame);
     if (it == datas->frameEvent.end()) return;
     auto& frameKeys = it->second;
-    //ƒL[‚ğíœ
+    //ã‚­ãƒ¼ã‚’å‰Šé™¤
     for (auto key = frameKeys.begin(); key != frameKeys.end(); ) {
         if ((*key)->type == data->type) {
             key = frameKeys.erase(key);
@@ -192,7 +192,7 @@ void TimeLine::MoveKey(std::string name, int oldFrame, int newFrame, IKeyData* d
             ++key;
         }
     }
-    //ƒtƒŒ[ƒ€‚ÉƒCƒxƒ“ƒg‚ª‚È‚¢‚È‚çíœ
+    //ãƒ•ãƒ¬ãƒ¼ãƒ ã«ã‚¤ãƒ™ãƒ³ãƒˆãŒãªã„ãªã‚‰å‰Šé™¤
     if (frameKeys.empty()) {
         datas->frameEvent.erase(oldFrame);
     }
@@ -210,17 +210,17 @@ void TimeLine::KeyDataClear()
 {
     runningEvent_ = nullptr;
     for (auto& pair : data_) {
-        // --- ŠeƒtƒŒ[ƒ€‚²‚Æ‚ÌƒCƒxƒ“ƒg‚ğíœ ---
+        // --- å„ãƒ•ãƒ¬ãƒ¼ãƒ ã”ã¨ã®ã‚¤ãƒ™ãƒ³ãƒˆã‚’å‰Šé™¤ ---
         for (auto& framePair : pair.second->frameEvent) {
             auto& keyEvents = framePair.second;
             for (auto* keyData : keyEvents) {
-                delete keyData; // IKeyData‚ğ‰ğ•ú
+                delete keyData; // IKeyDataã‚’è§£æ”¾
             }
             keyEvents.clear();
         }
-        //IKeyData”z—ñ
+        //IKeyDataé…åˆ—
         pair.second->frameEvent.clear();
-        //TimeLineData”z—ñíœ
+        //TimeLineDataé…åˆ—å‰Šé™¤
         delete pair.second;
     }
     data_.clear();
@@ -235,7 +235,7 @@ void TimeLine::AllClear()
 
 void TimeLine::LoadView(std::vector<IKeyData*>& data, std::string key)
 {
-    //Cameraİ’è‚ğ“o˜^‚µ’Ç‰Á
+    //Cameraè¨­å®šã‚’ç™»éŒ²ã—è¿½åŠ 
     CameraKey* camera = new CameraKey();
     std::vector<float> viewPos = loadFile_[key]["Camera"]["position"];
     std::vector<float> viewTar = loadFile_[key]["Camera"]["target"];
@@ -254,7 +254,7 @@ void TimeLine::LoadView(std::vector<IKeyData*>& data, std::string key)
 
 void TimeLine::LoadEffect(std::vector<IKeyData*>& data, std::string key)
 {
-    //Effectİ’è‚ğ“o˜^‚µ’Ç‰Á
+    //Effectè¨­å®šã‚’ç™»éŒ²ã—è¿½åŠ 
     EffectKey* testEffect = new EffectKey();
     testEffect->effect.affected = loadFile_[key]["Effect"]["affected"];
     data.push_back(testEffect);
@@ -264,13 +264,13 @@ void TimeLine::SetView(CameraKey* key)
 {
     View view;
     if (key->isTargetActor) {
-        //ƒ^[ƒQƒbƒg‚©‚ç‚ÌOffset’l‚ğİ’è
+        //ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‹ã‚‰ã®Offsetå€¤ã‚’è¨­å®š
         GStransform actorTransform = key->targetActor->Transform();
         view.tar = actorTransform.position() + key->view.tar;
         view.pos = view.tar + (actorTransform.forward() * key->view.pos.x)
             + (actorTransform.up() * key->view.pos.y)
             + (actorTransform.right() * key->view.pos.z);
-        //fov,smooth‚Í‚»‚Ì‚Ü‚Ü
+        //fov,smoothã¯ãã®ã¾ã¾
         view.fov = key->view.fov;
         view.isSmooth = key->view.isSmooth;
     }

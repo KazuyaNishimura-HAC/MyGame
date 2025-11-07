@@ -1,4 +1,4 @@
-#ifndef PLAYER_ATTACK_H_
+﻿#ifndef PLAYER_ATTACK_H_
 #define PLAYER_ATTACK_H_
 #include "PlayerState.h"
 

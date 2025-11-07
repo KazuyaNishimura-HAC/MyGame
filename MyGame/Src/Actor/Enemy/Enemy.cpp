@@ -1,4 +1,4 @@
-#include "Enemy.h"
+ï»¿#include "Enemy.h"
 #include <imgui/imgui.h>
 #include "../../World/IWorld.h"
 #include "../../GameSystem/InputSystem/InputSystem.h"
@@ -48,27 +48,27 @@ void Enemy::React(Actor& other)
 
 void Enemy::MovePosition(float deltaTime)
 {
-    //ƒvƒŒƒCƒ„[‚¢‚È‚¢E‚à‚µ‚­‚ÍŽ€‚ñ‚Å‚¢‚é‚È‚çreturn
+    //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã„ãªã„ãƒ»ã‚‚ã—ãã¯æ­»ã‚“ã§ã„ã‚‹ãªã‚‰return
     if (!player_ || player_->IsDying()) return;
-    // ƒ^[ƒQƒbƒg•ûŒü‚ÌƒxƒNƒgƒ‹‚ð‹‚ß‚é
+    // ã‚¿ãƒ¼ã‚²ãƒƒãƒˆæ–¹å‘ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ±‚ã‚ã‚‹
     GSvector3 target = player_->Transform().position() - transform_.position();
-    // ‘OŒü‚«•ûŒü‚ÌƒxƒNƒgƒ‹‚ðŽæ“¾
+    // å‰å‘ãæ–¹å‘ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–å¾—
     GSvector3 forward = transform_.forward();
-    // ƒxƒNƒgƒ‹‚Ìy¬•ª‚ð–³Œø‚É‚·‚é
+    // ãƒ™ã‚¯ãƒˆãƒ«ã®yæˆåˆ†ã‚’ç„¡åŠ¹ã«ã™ã‚‹
     forward.y = 0.0f;
     target.y = 0.0f;
-    // ‘OŒü‚«•ûŒü‚ÌƒxƒNƒgƒ‹‚Æƒ^[ƒQƒbƒg•ûŒü‚ÌƒxƒNƒgƒ‹‚ÌŠp“x·‚ð‹‚ß‚é
+    // å‰å‘ãæ–¹å‘ã®ãƒ™ã‚¯ãƒˆãƒ«ã¨ã‚¿ãƒ¼ã‚²ãƒƒãƒˆæ–¹å‘ã®ãƒ™ã‚¯ãƒˆãƒ«ã®è§’åº¦å·®ã‚’æ±‚ã‚ã‚‹
     float angle = GSvector3::signedAngle(forward, target);
-    // ƒ^[ƒQƒbƒg•ûŒü‚ðŒü‚­
+    // ã‚¿ãƒ¼ã‚²ãƒƒãƒˆæ–¹å‘ã‚’å‘ã
     transform_.rotate(0.0f, angle * deltaTime, 0.0f);
-    // ‘Oi‚·‚éiƒ[ƒJƒ‹À•WŠî€j
+    // å‰é€²ã™ã‚‹ï¼ˆãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™åŸºæº–ï¼‰
     transform_.translate(0.0f, 0.0f, 0.1f * deltaTime);
 }
 
 void Enemy::MoveAttackCollide()
 {
     GSvector3 forward = transform_.forward() * 0.8f;
-    //UŒ‚”»’è‚ð’Ç]
+    //æ”»æ’ƒåˆ¤å®šã‚’è¿½å¾“
     attackCollider_->Transform().position(transform_.position() + forward);
 }
 

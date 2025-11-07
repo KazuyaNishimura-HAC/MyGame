@@ -1,4 +1,4 @@
-#ifndef ENEMY_STATE_H_
+﻿#ifndef ENEMY_STATE_H_
 #define ENEMY_STATE_H_
 
 #include "../../../State/IState.h"

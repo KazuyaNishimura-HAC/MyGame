@@ -1,4 +1,4 @@
-#ifndef TIMELINE_DATA_H_
+ï»¿#ifndef TIMELINE_DATA_H_
 #define TIMELINE_DATA_H_
 #include "../../../GameSystem/Camera/CameraController.h"
 class Actor;
@@ -7,23 +7,23 @@ struct TestEffect {
 	float affected{ 0.0f };
 };
 
-//‘½í—Ş‚ÌƒCƒxƒ“ƒg“à—e‚ğˆêŠ‡ŠÇ—
+//å¤šç¨®é¡ã®ã‚¤ãƒ™ãƒ³ãƒˆå†…å®¹ã‚’ä¸€æ‹¬ç®¡ç†
 struct IKeyData {
 	virtual ~IKeyData() = default;
-	//ƒL[í—Ş
+	//ã‚­ãƒ¼ç¨®é¡
 	enum KeyType {
 		Camera,
 		Effect,
 		Shake,
-		//enum—v‘f”
+		//enumè¦ç´ æ•°
 		TypeCount
 	};
 	KeyType type;
-	// Actor’Ç]—p
+	// Actorè¿½å¾“ç”¨
 	bool isTargetActor = false;
 	Actor* targetActor = nullptr;
 };
-//ƒL[‚²‚Æ‚Ìî•ñ(‚±‚±‚ÉƒL[î•ñ’Ç‰Á)
+//ã‚­ãƒ¼ã”ã¨ã®æƒ…å ±(ã“ã“ã«ã‚­ãƒ¼æƒ…å ±è¿½åŠ )
 struct CameraKey : IKeyData {
 	CameraKey() { type = Camera; }
 	View view{};

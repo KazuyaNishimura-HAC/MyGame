@@ -1,4 +1,4 @@
-#ifndef PLAYER_ULTIMATE_SKILL_H_
+﻿#ifndef PLAYER_ULTIMATE_SKILL_H_
 #define PLAYER_ULTIMATE_SKILL_H_
 #include "PlayerState.h"
 

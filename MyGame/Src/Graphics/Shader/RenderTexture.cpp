@@ -1,4 +1,4 @@
-#include "RenderTexture.h"
+﻿#include "RenderTexture.h"
 #include <GSgame.h>
 void RenderTexture::CreateRenderTarget(int id, GSvector2 size, GSboolean colorBuf, GSboolean depthBuf, GSboolean formatFloat)
 {

@@ -1,4 +1,4 @@
-#include "Player.h"
+ï»¿#include "Player.h"
 #include <imgui/imgui.h>
 #include "../../World/IWorld.h"
 #include "../../GameSystem/Camera/Camera.h"
@@ -6,7 +6,7 @@
 #include "../../Actor/AttackCollide.h"
 
 #include "../../UI/PlayerUI.h"
-//ƒXƒe[ƒgƒwƒbƒ_[
+//ã‚¹ãƒ†ãƒ¼ãƒˆãƒ˜ãƒƒãƒ€ãƒ¼
 #include "State/PlayerIdle.h"
 #include "State/PlayerMove.h"
 #include "State/PlayerDamage.h"
@@ -19,7 +19,7 @@ Player::Player(IWorld* world, const GSvector3& position,Status status, GSuint me
 {
     tag_ = ActorName::Player;
     name_ = ActorName::Player;
-    //ƒXƒe[ƒg‚Ì’Ç‰Á
+    //ã‚¹ãƒ†ãƒ¼ãƒˆã®è¿½åŠ 
     states_.AddState(PlayerState::Idle, new PlayerIdle(this));
     states_.AddState(PlayerState::Move, new PlayerMove(this));
     states_.AddState(PlayerState::Damage, new PlayerDamage(this));
@@ -36,7 +36,7 @@ Player::Player(IWorld* world, const GSvector3& position,Status status, GSuint me
     world_->AddActor(attackCollider_);
     ui_ = new PlayerUI(this);
     world_->AddGUI(ui_);
-    //ƒCƒxƒ“ƒg‚Ì’Ç‰Á
+    //ã‚¤ãƒ™ãƒ³ãƒˆã®è¿½åŠ 
     mesh_->AddEvent(Motion::Attack, 30, [=] {TestAttack(); });
     mesh_->AddEvent(Motion::Combo2, 30, [=] {TestAttack(); });
     mesh_->AddEvent(Motion::Combo3, 30, [=] {TestAttack(); camera_->SetShakeValues(30.0f, 5.0f, 160.0f, 1.0f, 20.0f, { 0.1f,0.1f }, 0.0f); });
@@ -74,7 +74,7 @@ void Player::LateUpdate(float deltaTime)
 {
     Charactor::LateUpdate(deltaTime);
 }
-//•`‰æ
+//æç”»
 void Player::Draw()const
 {
     Charactor::Draw();
@@ -87,10 +87,10 @@ void Player::React(Actor& other)
 
 void Player::TakeDamage(float damage)
 {
-    //–³“G‚È‚çUŒ‚‚ğó‚¯‚È‚¢
+    //ç„¡æ•µãªã‚‰æ”»æ’ƒã‚’å—ã‘ãªã„
     if (IsInvincible()) return;
     status_.hp -= damage;
-    //hp‚ª0‚È‚ç€–S
+    //hpãŒ0ãªã‚‰æ­»äº¡
     if (IsDying()) ChangeState(PlayerState::Dead);
     else ChangeState(PlayerState::Damage);
 }
@@ -101,24 +101,24 @@ void Player::MovePosition(float deltaTime)
 
     GSvector3 forward = CameraTransform().forward();
     GSvector3 right = CameraTransform().right();
-    // Y¬•ª‚Í–³‹‚µ‚ÄXZ•½–Ê‚É“Š‰e
+    // Yæˆåˆ†ã¯ç„¡è¦–ã—ã¦XZå¹³é¢ã«æŠ•å½±
     forward.y = 0;
     right.y = 0;
     forward.normalize();
     right.normalize();
 
-    // “ü—Í‚ğƒJƒƒ‰•ûŒü‚É•ÏŠ·
+    // å…¥åŠ›ã‚’ã‚«ãƒ¡ãƒ©æ–¹å‘ã«å¤‰æ›
     GSvector3 moveDirection = (forward * input.y) + (right * input.x);
     moveDirection.normalize();
-    //“ü—Íraw‚ğˆÚ“®‚Ì‹­‚³‚É‚·‚é
+    //å…¥åŠ›rawã‚’ç§»å‹•ã®å¼·ã•ã«ã™ã‚‹
     //float magnitude = input.magnitude();
 
     GSvector3 moveVector = moveDirection * 0.1f * moveSpeed_ * deltaTime;
 
-    //ƒvƒŒƒCƒ„[‚ğŠŠ‚ç‚©‚É‰ñ“]
+    //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’æ»‘ã‚‰ã‹ã«å›è»¢
     if (input != GSvector2::zero())
     {
-        //Œü‚«‚Ì•âŠÔ
+        //å‘ãã®è£œé–“
         GSquaternion rotation =
             GSquaternion::rotateTowards(
                 transform_.rotation(),
@@ -126,7 +126,7 @@ void Player::MovePosition(float deltaTime)
         transform_.rotation(rotation);
     }
 
-    // •½sˆÚ“®‚·‚éiƒ[ƒ‹ƒhŠî€j
+    // å¹³è¡Œç§»å‹•ã™ã‚‹ï¼ˆãƒ¯ãƒ¼ãƒ«ãƒ‰åŸºæº–ï¼‰
     transform_.translate(moveVector, GStransform::Space::World);
 }
 
@@ -156,7 +156,7 @@ void Player::MoveCamera(float deltaTime)
 void Player::MoveAttackCollide()
 {
     GSvector3 forward = transform_.forward() * 1.0f;
-    //UŒ‚”»’è‚ğ’Ç]
+    //æ”»æ’ƒåˆ¤å®šã‚’è¿½å¾“
     attackCollider_->Transform().position(transform_.position()+ forward);
 }
 
@@ -165,7 +165,7 @@ void Player::TestAttack()
     attackCollider_->IsAttack(0.01f,20);
 }
 
-//Œ»İ‚ÌƒJƒƒ‰‚Ì•ûŒü‚ğæ“¾
+//ç¾åœ¨ã®ã‚«ãƒ¡ãƒ©ã®æ–¹å‘ã‚’å–å¾—
 GSvector3 Player::GetCameraDirection()
 {
     return GSvector3(sin(DEG_TO_RAD(cameraRotation_.y)), sin(DEG_TO_RAD(cameraRotation_.x)), cos(DEG_TO_RAD(cameraRotation_.y))).normalized();

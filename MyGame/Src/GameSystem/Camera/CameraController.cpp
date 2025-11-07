@@ -1,4 +1,4 @@
-#include "CameraController.h"
+﻿#include "CameraController.h"
 #include "../../NameTag.h"
 
 CameraController::CameraController(Priority priority, int id, const GSvector3& position, const GSvector3& target)

@@ -1,4 +1,4 @@
-#ifndef DEFAULT_ENEMY_H_
+ï»¿#ifndef DEFAULT_ENEMY_H_
 #define DEFAULT_ENEMY_H_
 
 #include <vector>
@@ -10,15 +10,15 @@ class GUI;
 class DefaultEnemy : public Enemy
 {
 public:
-    //ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+    //ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     DefaultEnemy(IWorld* world = nullptr, const GSvector3& position = {0, 0, 0}, Status status = Status(), GSuint mesh = Model::Enemy);
-    //ƒfƒXƒgƒ‰ƒNƒ^
+    //ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     ~DefaultEnemy()override;
 
-    //XV
+    //æ›´æ–°
     void Update(float deltaTime)override;
     void LateUpdate(float deltaTime)override;
-    //•`‰æ
+    //æç”»
     void Draw()const override;
     void React(Actor& other)override;
     void TakeDamage(float damage)override;

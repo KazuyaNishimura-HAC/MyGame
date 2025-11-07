@@ -1,4 +1,4 @@
-#include "EnemyDamage.h"
+﻿#include "EnemyDamage.h"
 #include "../../../World/IWorld.h"
 #include "../../../GameSystem/InputSystem/InputSystem.h"
 EnemyDamage::EnemyDamage(Enemy* owner)

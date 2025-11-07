@@ -1,4 +1,4 @@
-#ifndef CAMERA_CONTROLLER_H_
+ï»¿#ifndef CAMERA_CONTROLLER_H_
 #define CAMERA_CONTROLLER_H_
 #include <GStransform.h>
 #include <string>
@@ -13,20 +13,20 @@ struct View {
 struct CameraShake {
 	float timer;
 	float strength;
-	//Œ¸ŠŠÔ
+	//æ¸›è¡°æ™‚é–“
 	float decayTime;
-	//Œ¸Š‘¬“x
+	//æ¸›è¡°é€Ÿåº¦
 	float decaySpeed;
-	//ü”g”i‰½‰ñ—h‚ê‚é‚©j
+	//å‘¨æ³¢æ•°ï¼ˆä½•å›æºã‚Œã‚‹ã‹ï¼‰
 	float hz;
-	//—h‚ê‚Ì‰e‹¿“x
+	//æºã‚Œã®å½±éŸ¿åº¦
 	GSvector2 affectVector;
 	float affectFov;
 	
 	CameraShake(float time, float strength, float decayTime, float decaySpeed, float hz, GSvector2 vectorAffect, float fovAffect)
 		:timer{ time }, strength{ strength }, decayTime{ decayTime }, decaySpeed{ decaySpeed }, hz{ hz }, affectVector{ vectorAffect }, affectFov{ fovAffect }
 	{};
-	//¶¬A‰Šú’lİ’è
+	//ç”Ÿæˆæ™‚ã€åˆæœŸå€¤è¨­å®š
 	CameraShake() :CameraShake(0.0f, 2.0f, 30.0f, 1.0f, 20.0f, { 1.0f,1.0f }, 5.0f) {};
 
 	void Update(float deltaTime) {
@@ -35,7 +35,7 @@ struct CameraShake {
 		randValue += { gsRandf(-r, r), gsRandf(-r, r), gsRandf(-r, r) };
 		timer = MAX(timer - deltaTime * decaySpeed, 0);
 	}
-	//ƒVƒFƒCƒNŒã‚Ì’l‚ğ•Ô‹p
+	//ã‚·ã‚§ã‚¤ã‚¯å¾Œã®å€¤ã‚’è¿”å´
 	View ShakeView(View view) {
 		if (timer <= 0.0f || strength <= 0.0f) return view;
 		float pow = sinf(strength * timer * hz * 3.141f / 60 + randValue.z) * MIN(timer / decayTime, 1);
@@ -51,9 +51,9 @@ struct CameraShake {
 		return view;
 	};
 private:
-	//—h‚ê‚Ìƒ‰ƒ“ƒ_ƒ€’l
+	//æºã‚Œã®ãƒ©ãƒ³ãƒ€ãƒ å€¤
 	GSvector3 randValue{ 0.0f,0.0f,0.0f };
-	//ƒ‰ƒ“ƒ_ƒ€—h‚ê‚Ì‰e‹¿“x
+	//ãƒ©ãƒ³ãƒ€ãƒ æºã‚Œã®å½±éŸ¿åº¦
 	float affectRand{ 5.0f };
 };
 
@@ -61,35 +61,35 @@ class CameraController
 {
 public:
 	enum Priority {
-		Disable,  //–³Œø
-		Player,   //ƒvƒŒƒCƒ„[
-		Event,    //ƒCƒxƒ“ƒg
-		Debug     //ƒfƒoƒbƒN—p
+		Disable,  //ç„¡åŠ¹
+		Player,   //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
+		Event,    //ã‚¤ãƒ™ãƒ³ãƒˆ
+		Debug     //ãƒ‡ãƒãƒƒã‚¯ç”¨
 	};
 	CameraController(Priority p = Priority::Disable,int id = 0,const GSvector3& position = { 0,0,0 }, const GSvector3& target = { 0,0,0 });
 	void Update(float deltaTime);
-	//À•Wİ’èEæ“¾
+	//åº§æ¨™è¨­å®šãƒ»å–å¾—
 	void SetPosition(const GSvector3& pos);
 	GSvector3 GetPosition() const;
-	//’‹“_İ’èEæ“¾
+	//æ³¨è¦–ç‚¹è¨­å®šãƒ»å–å¾—
 	void SetViewTarget(const GSvector3& tar);
 	GSvector3 GetViewTarget() const;
-	//—Dæ“xİ’èEæ“¾
+	//å„ªå…ˆåº¦è¨­å®šãƒ»å–å¾—
 	void SetPriority(Priority p,bool preMove = false);
 	Priority GetPriority() const;
-	//—Dæ“x–¼‚ğæ“¾
+	//å„ªå…ˆåº¦åã‚’å–å¾—
 	std::string GetPriorityName() const;
-	//À•WE’‹“_İ’è
+	//åº§æ¨™ãƒ»æ³¨è¦–ç‚¹è¨­å®š
 	void SetView(const GSvector3& pos,const GSvector3& tar);
-	//View\‘¢‘Ìæ“¾
+	//Viewæ§‹é€ ä½“å–å¾—
 	View& GetView();
-	//ƒJƒƒ‰ID‚Ìæ“¾Eİ’è
+	//ã‚«ãƒ¡ãƒ©IDã®å–å¾—ãƒ»è¨­å®š
 	void SetID(int id);
 	int GetID() const;
-	//‹–ìŠpİ’èEæ“¾
+	//è¦–é‡è§’è¨­å®šãƒ»å–å¾—
 	void SetFov(float fov);
 	float GetFov() const;
-	//Lerpİ’èEæ“¾
+	//Lerpè¨­å®šãƒ»å–å¾—
 	void SetSmooth(bool smooth);
 	bool IsSmooth() const;
 
@@ -99,11 +99,11 @@ public:
 	void Die();
 	bool IsDead()const;
 
-	//======ƒVƒFƒCƒNˆ—=======
+	//======ã‚·ã‚§ã‚¤ã‚¯å‡¦ç†=======
 
-	//ƒVƒFƒCƒNŒãƒrƒ…[
+	//ã‚·ã‚§ã‚¤ã‚¯å¾Œãƒ“ãƒ¥ãƒ¼
 	View GetAffectedView();
-	//ƒVƒFƒCƒN’l‚ğİ’è
+	//ã‚·ã‚§ã‚¤ã‚¯å€¤ã‚’è¨­å®š
 	void SetShakeValues(float timer = 0, float strength = 2, float decayTime = 30, float decaySpeed = 1, float hz = 20, GSvector2 vectorAffect = { 1,1 }, float fovAffect = 5);
 	void SetShake(const CameraShake& shake);
 
@@ -117,7 +117,7 @@ private:
 	CameraShake shake_{};
 	int id_{ 0 };
 	bool isDead_{ false };
-	//Ø‘Ö‘O‚ÌƒJƒƒ‰‚©‚çˆÚ“®‚·‚é‚©
+	//åˆ‡æ›¿å‰ã®ã‚«ãƒ¡ãƒ©ã‹ã‚‰ç§»å‹•ã™ã‚‹ã‹
 	bool preMove_{ false };
 };
 

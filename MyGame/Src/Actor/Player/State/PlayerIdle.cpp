@@ -1,4 +1,4 @@
-#include "PlayerIdle.h"
+﻿#include "PlayerIdle.h"
 #include "../../../GameSystem/InputSystem/InputSystem.h"
 PlayerIdle::PlayerIdle(Player* owner)
 	:PlayerState::PlayerState(owner)

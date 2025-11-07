@@ -1,4 +1,4 @@
-#include "DebugCamera.h"
+ï»¿#include "DebugCamera.h"
 #include "../../GameSystem/InputSystem/InputSystem.h"
 #include "CameraController.h"
 #include "../../World/IWorld.h"
@@ -62,14 +62,14 @@ void DebugCamera::DrawImGui()
 
 void DebugCamera::FreeMode(float deltaTime)
 {
-    //‰EƒNƒŠƒbƒN‚µ‚È‚ª‚çƒJƒƒ‰‰ñ“]
+    //å³ã‚¯ãƒªãƒƒã‚¯ã—ãªãŒã‚‰ã‚«ãƒ¡ãƒ©å›è»¢
     if (gsGetMouseButtonState(GMOUSE_BUTTON_2)) {
         int mouseX = 0;
         int mouseY = 0;
         GSvector3 mouseVelocity = InputSystem::DebugMouseDelta();
         transform_.rotate(mouseVelocity.y, -mouseVelocity.x,0.0f);
     }
-    //‘OŒã¶‰EˆÚ“®
+    //å‰å¾Œå·¦å³ç§»å‹•
     GSvector3 posVelocity{ 0,0,0 };
     if (gsGetKeyState(GKEY_W)) posVelocity.z = 0.25f * deltaTime;
     if (gsGetKeyState(GKEY_S)) posVelocity.z = -0.25f * deltaTime;

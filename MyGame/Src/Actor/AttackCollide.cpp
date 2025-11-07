@@ -1,11 +1,11 @@
-#include "AttackCollide.h"
+ï»¿#include "AttackCollide.h"
 #include "../Actor/Charactor.h"
 
 AttackCollide::AttackCollide(Charactor* owner, float radius, const GSvector3& pos, const GSvector3& offset)
 {
 	owner_ = owner;
 	tag_ = ActorName::ATKCollide;
-	//UŒ‚å‚Ì–¼‘O‚ğ“o˜^
+	//æ”»æ’ƒä¸»ã®åå‰ã‚’ç™»éŒ²
 	name_ = owner_->GetTag() + tag_;
 	collider_ = BoundingSphere(radius,pos);
 	
@@ -38,7 +38,7 @@ void AttackCollide::Update(float deltaTime)
 void AttackCollide::Draw() const
 {
 #if _DEBUG
-	//ƒfƒoƒbƒN—p
+	//ãƒ‡ãƒãƒƒã‚¯ç”¨
 	collider_.Draw();
 #endif
 
@@ -46,7 +46,7 @@ void AttackCollide::Draw() const
 void AttackCollide::React(Actor& other)
 {
 	Charactor* chara = dynamic_cast<Charactor*>(&other);
-	// CharactorˆÈŠO‚à‚µ‚­‚ÍUŒ‚å‚È‚çreturn
+	// Charactorä»¥å¤–ã‚‚ã—ãã¯æ”»æ’ƒä¸»ãªã‚‰return
 	if (!chara || owner_ == chara) return;
 	chara->TakeDamage(attack_);
 }

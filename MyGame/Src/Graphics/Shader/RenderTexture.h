@@ -1,4 +1,4 @@
-#ifndef RENDER_TEXTURE_H_
+﻿#ifndef RENDER_TEXTURE_H_
 #define RENDER_TEXTURE_H_
 #include <GStransform.h>
 class RenderTexture

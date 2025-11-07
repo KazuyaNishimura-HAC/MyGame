@@ -1,4 +1,4 @@
-#ifndef DEBUG_CAMERA_H_
+﻿#ifndef DEBUG_CAMERA_H_
 #define	DEBUG_CAMERA_H_
 
 #include <GStransform.h>

@@ -1,4 +1,4 @@
-#ifndef CHARACTOR_H_
+ï»¿#ifndef CHARACTOR_H_
 #define CHARACTOR_H_
 #include "Actor.h"
 #include "../Actor/Model.h"
@@ -22,10 +22,10 @@ public:
 	virtual void Draw() const override;
 	virtual void TakeDamage(float damage);
 	virtual void AddDamage(float damage);
-	//ƒXƒe[ƒgİ’èEæ“¾
+	//ã‚¹ãƒ†ãƒ¼ãƒˆè¨­å®šãƒ»å–å¾—
 	void ChangeState(int state);
 	int CurrentState();
-	//====================ŠeƒXƒe[ƒ^ƒX====================
+	//====================å„ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹====================
 	void SetStatus(Status status);
 	const Status& GetStatus();
 	void SetAttack(float attack);
@@ -33,7 +33,7 @@ public:
 	int GetHealth();
 	int GetMaxHealth();
 
-	//====================Šeó‘Ôƒtƒ‰ƒO====================
+	//====================å„çŠ¶æ…‹ãƒ•ãƒ©ã‚°====================
 	void SetAttack(bool isAttack);
 	bool IsAttack();
 	void SetInvincible(bool isInvincible);

@@ -1,4 +1,4 @@
-#include "TimeLineEditor.h"
+ï»¿#include "TimeLineEditor.h"
 #include <nlohmann/json.hpp>
 #include <iostream>
 #include <fstream>
@@ -25,9 +25,9 @@ void TimeLineEditor::Update(float deltaTime)
 void TimeLineEditor::DrawEditUI()
 {
     ImGui::Begin("TimeLineTest");
-    //ƒ}ƒEƒXˆÊ’u‚ğæ“¾
+    //ãƒã‚¦ã‚¹ä½ç½®ã‚’å–å¾—
     mousePos = ImGui::GetIO().MousePos;
-    //TimeLineEditor‚ÌCanvas“àÀ•W
+    //TimeLineEditorã®Canvaså†…åº§æ¨™
     mousePosInCanvas_ = GSvector2{ mousePos.x - canvasPos.x, mousePos.y - canvasPos.y };
     if (ImGui::Button("LoadData")) LoadKeyData();
     PreView();
@@ -40,7 +40,7 @@ void TimeLineEditor::DrawEditUI()
 void TimeLineEditor::Clear()
 {
     ClearSelectedKey();
-    //QÆŒ³‚ÍTimeLine‚Ådelete
+    //å‚ç…§å…ƒã¯TimeLineã§delete
     editKeyData_.clear();
 }
 
@@ -60,7 +60,7 @@ void TimeLineEditor::AddKey()
         keyData.selected = false;
         editKeyData_[IKeyData::Camera].push_back(keyData);
     }
-    //‘I‘ğ’†‚ÌƒL[‚ğƒNƒŠƒA‚µ‚Ä‚©‚ç¶¬ƒL[‚ğ‘I‘ğ
+    //é¸æŠä¸­ã®ã‚­ãƒ¼ã‚’ã‚¯ãƒªã‚¢ã—ã¦ã‹ã‚‰ç”Ÿæˆã‚­ãƒ¼ã‚’é¸æŠ
     ClearSelectedKey();
     timeLine_.AddKey(selectedEventName_, keyData.frame,keyData.data);
 }
@@ -70,12 +70,12 @@ void TimeLineEditor::DeleteKey()
     if (!selectedKey_) return;
     int frame = selectedKey_->frame;
     IKeyData::KeyType type = selectedKey_->data->type;
-    //‘I‘ğƒL[‰ğœ
+    //é¸æŠã‚­ãƒ¼è§£é™¤
     selectedKey_ = nullptr;
-    //editKeyData“à‚Ì‘I‘ğƒL[íœ
+    //editKeyDataå†…ã®é¸æŠã‚­ãƒ¼å‰Šé™¤
     for (int index = 0; index < IKeyData::TypeCount; ++index) {
         auto eventIndex = editKeyData_.find(index);
-        //‘¶İ‚µ‚È‚¯‚ê‚ÎƒXƒLƒbƒv
+        //å­˜åœ¨ã—ãªã‘ã‚Œã°ã‚¹ã‚­ãƒƒãƒ—
         if (eventIndex == editKeyData_.end()) continue;
         auto& keyDatas = eventIndex->second;
         for (auto key = keyDatas.begin(); key != keyDatas.end(); ) {
@@ -88,7 +88,7 @@ void TimeLineEditor::DeleteKey()
             }
         }
     }
-    //Š®‘S‚Éíœ
+    //å®Œå…¨ã«å‰Šé™¤
     timeLine_.DeleteKey(selectedEventName_, frame, type);
 }
 
@@ -106,14 +106,14 @@ void TimeLineEditor::Edit()
     ImGui::InputFloat("EventTime", &eventTime_);
     timeLine_.SetEventTime(selectedEventName_, eventTime_);
     
-    //ƒL[‘I‘ğ‚ª‚³‚ê‚Ä‚È‚¢‚È‚çreturn;
+    //ã‚­ãƒ¼é¸æŠãŒã•ã‚Œã¦ãªã„ãªã‚‰return;
     if (!selectedKey_) return;
     int displayFrame = selectedKey_->pos.x / timeFillScale_;
     ImGui::Value("Frame", displayFrame);
     switch (selectedKey_->data->type) {
         case IKeyData::Camera:
         {
-            //data‚ğCameraKey‚Åˆµ‚¤
+            //dataã‚’CameraKeyã§æ‰±ã†
             CameraKey* camKey = SAs<CameraKey>(selectedKey_->data);
             ImGui::Checkbox("TargetActor", &camKey->isTargetActor);
             ImGui::InputFloat3("Position", camKey->view.pos);
@@ -121,7 +121,7 @@ void TimeLineEditor::Edit()
             ImGui::InputFloat("Fov", &camKey->view.fov);
             ImGui::Checkbox("Smooth", &camKey->view.isSmooth);
             if (camKey->isTargetActor) {
-                //ƒvƒŒƒCƒ„[‚Ìî•ñ‚ğ“n‚·
+                //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æƒ…å ±ã‚’æ¸¡ã™
                 camKey->targetActor = world_->GetAllActor(ActorName::Player);
                 std::string targetName;
                 if (camKey->targetActor) targetName = camKey->targetActor->GetName();
@@ -135,7 +135,7 @@ void TimeLineEditor::Edit()
         }
         case IKeyData::Effect:
         {
-            //data‚ğEffectKeyŒ^‚Åˆµ‚¤
+            //dataã‚’EffectKeyå‹ã§æ‰±ã†
             EffectKey* effKey = SAs<EffectKey>(selectedKey_->data);
             ImGui::Checkbox("TargetActor", &effKey->isTargetActor);
             ImGui::Value("Affected", effKey->effect.affected);
@@ -145,51 +145,51 @@ void TimeLineEditor::Edit()
     }
 }
 
-//ƒL[•ÒW
+//ã‚­ãƒ¼ç·¨é›†
 void TimeLineEditor::KeyEdit()
 {
     
     bool isMouseInside = IsInsideRect(canvasPos, fillSize, mousePos);
-    //•ÒW‰Â”\‚ÈêŠ‚©‚ÂƒNƒŠƒbƒN
+    //ç·¨é›†å¯èƒ½ãªå ´æ‰€ã‹ã¤ã‚¯ãƒªãƒƒã‚¯æ™‚
     if (gsGetMouseButtonTrigger(GMOUSE_BUTTON_1) && isMouseInside) {
         for (int index = 0; index < IKeyData::TypeCount; ++index) {
-            //ƒL[‘I‘ğ‚ğ‰ğœ
+            //ã‚­ãƒ¼é¸æŠã‚’è§£é™¤
             ClearSelectedKey();
-            //map—v‘f‚ª‚È‚¢‚È‚çˆø‚«•Ô‚µ
+            //mapè¦ç´ ãŒãªã„ãªã‚‰å¼•ãè¿”ã—
             if (editKeyData_.find(index) == editKeyData_.end()) continue;
             for (auto& key : editKeyData_[index]) {
                 float dist = gsVector2Distance(&key.pos, &mousePosInCanvas_);
-                //ƒNƒŠƒbƒN’n“_‚ÉƒL[‚ª‘¶İ‚µ‚½‚çƒL[æ“¾
+                //ã‚¯ãƒªãƒƒã‚¯åœ°ç‚¹ã«ã‚­ãƒ¼ãŒå­˜åœ¨ã—ãŸã‚‰ã‚­ãƒ¼å–å¾—
                 if (dist < circleSize_) {
                     selectedKey_ = &key;
                     selectedKey_->selected = true;
                     break;
                 }
             }
-            //ƒL[‘I‘ğ‚ªo—ˆ‚½‚çbreak
+            //ã‚­ãƒ¼é¸æŠãŒå‡ºæ¥ãŸã‚‰break
             if (selectedKey_) break;
         }
         mouseClickPos_ = ImVecToGSVec(mousePos);
     }
-    //‘I‘ğ’†‚ÌƒL[‚Ì‰¡²ˆÚ“®
+    //é¸æŠä¸­ã®ã‚­ãƒ¼ã®æ¨ªè»¸ç§»å‹•
     if (gsGetMouseButtonState(GMOUSE_BUTTON_1) &&  selectedKey_ && isMouseInside) {
         selectedKey_->pos = { mousePosInCanvas_.x,selectedKey_->pos.y };
-        //Å‘åƒtƒŒ[ƒ€‹ó‚Å‚È‚¢‚æ‚¤‚ÉƒNƒ‰ƒ“ƒv
+        //æœ€å¤§ãƒ•ãƒ¬ãƒ¼ãƒ ç©ºã§ãªã„ã‚ˆã†ã«ã‚¯ãƒ©ãƒ³ãƒ—
         selectedKey_->pos.x = CLAMP(selectedKey_->pos.x,0,eventTime_ * 60.0f * timeFillScale_);
     }
-    //ƒL[‘I‘ğ‰ğœ
+    //ã‚­ãƒ¼é¸æŠè§£é™¤
     if (gsGetMouseButtonDetach(GMOUSE_BUTTON_1) && selectedKey_) {
-        //ƒL[‚ÌXV
+        //ã‚­ãƒ¼ã®æ›´æ–°
         UpdateKeyFrame(selectedKey_);
     }
 
-    //ƒL[’Ç‰Á
+    //ã‚­ãƒ¼è¿½åŠ 
     if (gsGetMouseButtonTrigger(GMOUSE_BUTTON_2)) {
         ClearSelectedKey();
         AddKey();
     }
     //if (ImGui::Button("Delete Key")) {
-    //    ImGui::OpenPopup("ConfirmDelete"); // ƒ‚[ƒ_ƒ‹‚ğŠJ‚­
+    //    ImGui::OpenPopup("ConfirmDelete"); // ãƒ¢ãƒ¼ãƒ€ãƒ«ã‚’é–‹ã
     //}
 
     //if (ImGui::BeginPopupModal("ConfirmDelete")) {
@@ -202,7 +202,7 @@ void TimeLineEditor::KeyEdit()
 
 void TimeLineEditor::PreView()
 {
-    //w’è‚ÌƒCƒxƒ“ƒg‚ğÀs
+    //æŒ‡å®šã®ã‚¤ãƒ™ãƒ³ãƒˆã‚’å®Ÿè¡Œ
     if (ImGui::Button("PreView")) {
         timeLine_.StartTimeLine(selectedEventName_);
     }
@@ -217,17 +217,17 @@ void TimeLineEditor::LoadKeyData(std::string name)
 
     ClearSelectedKey();
     editKeyData_.clear();
-    //ƒL[í—Ş’Ç‰Á(‹ó” ‚ğì‚é)
+    //ã‚­ãƒ¼ç¨®é¡è¿½åŠ (ç©ºç®±ã‚’ä½œã‚‹)
     for (int keyType = 0; keyType < IKeyData::TypeCount; ++keyType) {
         editKeyData_[keyType];
     }
-    //TimeLine‘S‚Ä‚ÌƒL[‚ğæ“¾
+    //TimeLineå…¨ã¦ã®ã‚­ãƒ¼ã‚’å–å¾—
     TimeLineData* timeLineData = timeLine_.KeyDatas(selectedEventName_);
-    //ƒtƒŒ[ƒ€‚²‚Æ‚É‘¶İƒCƒxƒ“ƒg‚Ì’Ç‰Á
+    //ãƒ•ãƒ¬ãƒ¼ãƒ ã”ã¨ã«å­˜åœ¨ã‚¤ãƒ™ãƒ³ãƒˆã®è¿½åŠ 
     for (auto data : timeLineData->frameEvent) {
-        //ˆê‚Â‚ÌƒtƒŒ[ƒ€‚É‘¶İ‚·‚éKey‚ğæ“¾
+        //ä¸€ã¤ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã«å­˜åœ¨ã™ã‚‹Keyã‚’å–å¾—
         for (auto key : data.second) {
-            //ƒL[‚²‚Æ‚Ìî•ñ‚ğŠi”[
+            //ã‚­ãƒ¼ã”ã¨ã®æƒ…å ±ã‚’æ ¼ç´
             EditKeyData keyData;
             keyData.frame = data.first;
             keyData.pos = { timeFillScale_ * keyData.frame , ((int)key->type * 60) + 30.0f };
@@ -235,19 +235,19 @@ void TimeLineEditor::LoadKeyData(std::string name)
             editKeyData_[key->type].push_back(keyData);
         }
     }
-    //’Ç‰ÁŒã‹ó‚ÌƒCƒxƒ“ƒg”z—ñ‚ğíœ
+    //è¿½åŠ å¾Œç©ºã®ã‚¤ãƒ™ãƒ³ãƒˆé…åˆ—ã‚’å‰Šé™¤
     for (int keyType = 0; keyType < IKeyData::TypeCount; ++keyType) {
         if (editKeyData_[keyType].empty()) editKeyData_.erase(keyType);
     }
     if (ImGui::IsItemActive()) {
-        // i‰Ÿ‚³‚ê‚Äƒhƒ‰ƒbƒO’†‚È‚Çj‚Ì‚Æ‚«
+        // ï¼ˆæŠ¼ã•ã‚Œã¦ãƒ‰ãƒ©ãƒƒã‚°ä¸­ãªã©ï¼‰ã®ã¨ã
     }
 
     if (ImGui::IsItemHovered()) {
-        // ’¼‘O‚Ì "Key" ƒ{ƒ^ƒ“‚Éƒ}ƒEƒX‚ªæ‚Á‚Ä‚¢‚é
+        // ç›´å‰ã® "Key" ãƒœã‚¿ãƒ³ã«ãƒã‚¦ã‚¹ãŒä¹—ã£ã¦ã„ã‚‹
     }
 
-    //’læ“¾iƒJƒƒ‰ƒL[‚Ì‚İj
+    //å€¤å–å¾—ï¼ˆã‚«ãƒ¡ãƒ©ã‚­ãƒ¼ã®ã¿ï¼‰
     /*for (const auto& key : editKeyData_[IKeyData::Camera]) {
         CameraKey* camKey = SAs<CameraKey>(key.data);
         View a = camKey->view;
@@ -269,7 +269,7 @@ void TimeLineEditor::Save()
         std::string keyNum = "key" + std::to_string(frameCount);
         int frame = frameData.first;
         saveFile[keyNum]["frame"] = frame;
-        //IKeyî•ñ‚ğ“ü—Í
+        //IKeyæƒ…å ±ã‚’å…¥åŠ›
         for (const auto& key : frameData.second) {
             if (auto cam = DAs<CameraKey>(key)) {
                 std::string targetType = cam->isTargetActor ? "Actor" : "World";
@@ -288,13 +288,13 @@ void TimeLineEditor::Save()
         }
         frameCount++;
     }
-    // ƒtƒ@ƒCƒ‹‚ÉJSONƒf[ƒ^‚ğ‘‚«‚Ş
+    // ãƒ•ã‚¡ã‚¤ãƒ«ã«JSONãƒ‡ãƒ¼ã‚¿ã‚’æ›¸ãè¾¼ã‚€
     std::ofstream of("Src/TimeLineData/test.json");
     of << saveFile.dump(4);
     of.close();
-    //XVŒãƒf[ƒ^“Ç‚İ‚İ
+    //æ›´æ–°å¾Œãƒ‡ãƒ¼ã‚¿èª­ã¿è¾¼ã¿
     timeLine_.LoadFile();
-    //Edit—p”z—ñ‚ğXV
+    //Editç”¨é…åˆ—ã‚’æ›´æ–°
     LoadKeyData();
 }
 
@@ -306,17 +306,17 @@ void TimeLineEditor::DrawUI()
     if (eventTime_ <= 0.0f) return;
     fillSize = ImVec2(canvasPos.x + (60.0f * eventTime_ * timeFillScale_), canvasPos.y + canvasSize.y);
     fillSize2 = ImVec2(canvasPos.x + (60.0f * eventTime_ * timeFillScale_), canvasPos.y + 60);
-    // ”wŒi
+    // èƒŒæ™¯
     drawList->AddRectFilled(canvasPos, fillSize, IM_COL32(50, 50, 50, 255));
 
     drawList->AddRectFilled(canvasPos, fillSize2, IM_COL32(70, 70, 70, 100));
 
-    //ƒJ[ƒ\ƒ‹ˆÊ’u‚Éü•`‰æ
+    //ã‚«ãƒ¼ã‚½ãƒ«ä½ç½®ã«â—¯æç”»
     if (IsInsideRect(canvasPos, fillSize, mousePos))drawList->AddCircleFilled(mousePos, 5, IM_COL32(0, 100, 180, 90), 12);
 
     drawList->AddCircleFilled({mouseClickPos_.x,mouseClickPos_.y}, 5, IM_COL32(0, 100, 180, 90), 12);
 
-    //ƒƒ‚jkeyPos‚©‚çtimelineScale‚ğˆø‚­‚ÆƒtƒŒ[ƒ€”‚ª‘‚¯‚é‚¼‚¢(keyPos.x / timelineScale = frame)
+    //ãƒ¡ãƒ¢ï¼‰keyPosã‹ã‚‰timelineScaleã‚’å¼•ãã¨ãƒ•ãƒ¬ãƒ¼ãƒ æ•°ãŒæ›¸ã‘ã‚‹ãã„(keyPos.x / timelineScale = frame)
     for (int index = 0; index < IKeyData::TypeCount;++index) {
         for (const auto& key : editKeyData_[index]) {
             ImVec2 keyPos = {canvasPos.x + key.pos.x,canvasPos.y + key.pos.y};
@@ -329,7 +329,7 @@ void TimeLineEditor::DrawUI()
         }
     }
     
-    // ŠÔ²
+    // æ™‚é–“è»¸
     for (int t = 0; t <= 60 * eventTime_; t++) {
         float x = 0;
         if (t % 10 == 0) {
@@ -342,15 +342,15 @@ void TimeLineEditor::DrawUI()
             drawList->AddText(ImVec2(x + 2, canvasPos.y), IM_COL32_WHITE, std::to_string(t).c_str());
         }
     }
-    //Preview—pƒ‰ƒCƒ“•`‰æ
+    //Previewç”¨ãƒ©ã‚¤ãƒ³æç”»
     if (timeLine_.IsRunning()) {
         float x = canvasPos.x + (timeLine_.EventTimer() * 60.0f * timeFillScale_) - timeFillOffset_;
         drawList->AddLine(ImVec2(x, canvasPos.y), ImVec2(x, canvasPos.y + canvasSize.y), IM_COL32(200, 200, 200, 255));
     }
-    //ƒL[‘€ì—p‚Ì“§–¾”wŒi(ƒ^ƒCƒ€ƒ‰ƒCƒ“ã‚ÍƒEƒBƒ“ƒhƒE‘€ì–³Œø)
+    //ã‚­ãƒ¼æ“ä½œç”¨ã®é€æ˜èƒŒæ™¯(ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³ä¸Šã¯ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦æ“ä½œç„¡åŠ¹)
     ImVec2 invisibleFill = { fillSize.x - canvasPos.x,fillSize.y - canvasPos.y };
     ImGui::InvisibleButton("my_rect_block", invisibleFill);
-    // ƒeƒLƒXƒg‚ğ‹éŒ`‚Ì‰º‚É”z’u
+    // ãƒ†ã‚­ã‚¹ãƒˆã‚’çŸ©å½¢ã®ä¸‹ã«é…ç½®
     ImGui::SetCursorScreenPos(ImVec2(canvasPos.x, fillSize.y + 5));
     
 }
@@ -359,12 +359,12 @@ void TimeLineEditor::UpdateKeyFrame(EditKeyData* key)
     int oldFrame = selectedKey_->frame;
     int newFrame = selectedKey_->pos.x / timeFillScale_;
     if (oldFrame == newFrame) return;
-    //ƒL[XV
+    //ã‚­ãƒ¼æ›´æ–°
     selectedKey_->frame = newFrame;
 
     timeLine_.MoveKey(selectedEventName_, oldFrame,newFrame, selectedKey_->data);
 }
-//ImVec‚ğGSVecŒ^‚É•ÏŠ·
+//ImVecã‚’GSVecå‹ã«å¤‰æ›
 GSvector2 TimeLineEditor::ImVecToGSVec(ImVec2 vec)
 {
     return GSvector2(vec.x,vec.y);
@@ -386,16 +386,16 @@ void TimeLineEditor::ClearSelectedKey()
 TimeLineEditor::EditKeyData* TimeLineEditor::GetSelectedKey()
 {
     for (int index = 0; index < IKeyData::TypeCount; ++index) {
-        //map—v‘f‚ª‚È‚¢‚È‚çˆø‚«•Ô‚µ
+        //mapè¦ç´ ãŒãªã„ãªã‚‰å¼•ãè¿”ã—
         if (editKeyData_.find(index) == editKeyData_.end()) continue;
         for (auto& key : editKeyData_[index]) {
-            //‘I‘ğ’†‚ÌƒL[‚ğ•Ô‹p
+            //é¸æŠä¸­ã®ã‚­ãƒ¼ã‚’è¿”å´
             if (key.selected) return &key;
         }
     }
     return nullptr;
 }
-//UI”ÍˆÍilŠpŒ`j“à‚Éposition‚ª‘¶İ‚·‚é‚©H
+//UIç¯„å›²ï¼ˆå››è§’å½¢ï¼‰å†…ã«positionãŒå­˜åœ¨ã™ã‚‹ã‹ï¼Ÿ
 bool TimeLineEditor::IsInsideRect(const ImVec2& rectMin, const ImVec2& rectMax, const ImVec2& pos)
 {
     return (pos.x >= rectMin.x && pos.x <= rectMax.x &&

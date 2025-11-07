@@ -1,25 +1,25 @@
-#ifndef LINE_H_
+ï»¿#ifndef LINE_H_
 #define LINE_H_
 
 #include <gslib.h>
 #include <GStransform.h>
-// ü•ªƒNƒ‰ƒX
+// ç·šåˆ†ã‚¯ãƒ©ã‚¹
 class Line {
 public:
-    // ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
+    // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     Line() = default;
-    // ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+    // ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     Line(const GSvector3& start, const GSvector3& end) :
         start{ start }, end{ end } {
     };
-    //ü•ª‚Ì•ûŒüæ“¾
+    //ç·šåˆ†ã®æ–¹å‘å–å¾—
     GSvector3 DirectionVec() { return (end - start).normalized(); };
-    //ü•ª’·‚³æ“¾
+    //ç·šåˆ†é•·ã•å–å¾—
     float DirectionLength() { (end - start).magnitude(); };
 public:
-    // n“_
+    // å§‹ç‚¹
     GSvector3 start{ 0.0f, 0.0f, 0.0f };
-    // I“_
+    // çµ‚ç‚¹
     GSvector3 end{ 0.0f, 0.0f, 0.0f };
 };
 

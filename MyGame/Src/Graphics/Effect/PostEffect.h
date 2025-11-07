@@ -1,4 +1,4 @@
-#ifndef POSTEFFECT_H_
+п»ї#ifndef POSTEFFECT_H_
 #define POSTEFFECT_H_
 #include "../../Screen.h"
 class PostEffect
@@ -22,39 +22,39 @@ private:
 
     void bloomExtract(GSuint n, GScolor col);
     void bloomCombine(GSuint n);
-    // ѓKѓEѓVѓAѓ“ѓuѓ‰Ѓ[
-    // source : Њі‰ж‘њ‚МѓЊѓ“ѓ_Ѓ[ѓ^Ѓ[ѓQѓbѓg
-    // size   : ЏkЏ¬ѓoѓbѓtѓ@‚МѓTѓCѓY
-    // blur_h : ђ…•Ѕ•ыЊьѓuѓ‰Ѓ[—p‚МѓЊѓ“ѓ_Ѓ[ѓ^Ѓ[ѓQѓbѓg
-    // blur_v : ђ‚’ј•ыЊьѓuѓ‰Ѓ[—p‚МѓЊѓ“ѓ_Ѓ[ѓ^Ѓ[ѓQѓbѓg
+    // г‚¬г‚¦г‚·г‚ўгѓігѓ–гѓ©гѓј
+    // source : е…ѓз”»еѓЏгЃ®гѓ¬гѓігѓЂгѓјг‚їгѓјг‚Ігѓѓгѓ€
+    // size   : зё®е°Џгѓђгѓѓгѓ•г‚ЎгЃ®г‚µг‚¤г‚є
+    // blur_h : ж°ґе№іж–№еђ‘гѓ–гѓ©гѓјз”ЁгЃ®гѓ¬гѓігѓЂгѓјг‚їгѓјг‚Ігѓѓгѓ€
+    // blur_v : ећ‚з›ґж–№еђ‘гѓ–гѓ©гѓјз”ЁгЃ®гѓ¬гѓігѓЂгѓјг‚їгѓјг‚Ігѓѓгѓ€
     void gaussianBlur(GSuint source, GSvector2 size, GSuint blur_h, GSuint blur_v);
 
     GSvector4 zBufferParams(float near, float far);
 
-    // ѓeѓNѓZѓ‹‚Ми‡’l
+    // гѓ†г‚Їг‚»гѓ«гЃ®й–ѕеЂ¤
     float bloomThreshold_{ 0.01f };
-    // ѓGѓtѓFѓNѓg‚М‹­‚і
+    // г‚Ёгѓ•г‚§г‚Їгѓ€гЃ®еј·гЃ•
     float bloomIntencity_{ 0.35f };
-    // ѓGѓtѓFѓNѓgѓJѓ‰Ѓ[
+    // г‚Ёгѓ•г‚§г‚Їгѓ€г‚«гѓ©гѓј
     GScolor bloomColor_{ 1.0f,1.0f,1.0f,1.0f };
-    // ѓtѓHѓO‚МѓJѓ‰Ѓ[
+    // гѓ•г‚©г‚°гЃ®г‚«гѓ©гѓј
     GScolor fogColor_{ 1.0f, 1.0f, 1.0f, 1.0f };
-    // ѓtѓHѓO‚МЉJЋn€К’u
+    // гѓ•г‚©г‚°гЃ®й–‹е§‹дЅЌзЅ®
     float fogStart_{ 500.0f };
-    // ѓtѓHѓO‚МЏI—№€К’u
+    // гѓ•г‚©г‚°гЃ®зµ‚дє†дЅЌзЅ®
     float fogEnd_{ 1500.0f };
 
-    // UVЌА•W‚Мѓ^ѓCѓЉѓ“ѓO
+    // UVеє§жЁ™гЃ®г‚їг‚¤гѓЄгѓіг‚°
     GSvector2 tilling_{ 1.0f, 1.0f };
-    // UVЌА•W‚МѓIѓtѓZѓbѓg
+    // UVеє§жЁ™гЃ®г‚Єгѓ•г‚»гѓѓгѓ€
     GSvector2 offset_{ 0.0f, 0.0f };
-    // ѓfѓBѓ]ѓ‹ѓu‚·‚й‚µ‚«‚ў’l
+    // гѓ‡г‚Јг‚ѕгѓ«гѓ–гЃ™г‚‹гЃ—гЃЌгЃ„еЂ¤
     float threshold_{ 0.0f };
-    // ѓGѓbѓW‚М•ќ
+    // г‚Ёгѓѓг‚ёгЃ®е№…
     float edge_width_{ 0.0f };
-    // ѓGѓbѓW‚МѓJѓ‰Ѓ[
+    // г‚Ёгѓѓг‚ёгЃ®г‚«гѓ©гѓј
     GScolor edge_color_{ 1.0f, 1.0f, 1.0f, 1.0f };
-    // ѓGѓbѓW‚М‹P“x
+    // г‚Ёгѓѓг‚ёгЃ®ијќеє¦
     float edge_color_intensity_{ 1.0f };
 };
 

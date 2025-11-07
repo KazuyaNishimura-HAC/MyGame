@@ -1,4 +1,4 @@
-#ifndef ENEMY_H_
+ï»¿#ifndef ENEMY_H_
 #define ENEMY_H_
 
 #include <vector>
@@ -25,17 +25,17 @@ public:
         Death2,
         Death3
     };
-    //ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+    //ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     Enemy(IWorld* world = nullptr, const GSvector3& position = {0, 0, 0}, Status status = Status(), GSuint mesh = Model::Enemy);
-    //ƒfƒXƒgƒ‰ƒNƒ^
+    //ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     ~Enemy()override;
 
-    //XV
+    //æ›´æ–°
     virtual void Update(float deltaTime)override;
     virtual void LateUpdate(float deltaTime)override;
-    //•`‰æ
+    //æç”»
     virtual void Draw()const override;
-    //ÚG”»’è
+    //æ¥è§¦åˆ¤å®š
     virtual void React(Actor& other)override;
 
     virtual void MovePosition(float deltaTime);
@@ -44,7 +44,7 @@ public:
     virtual float GetCoolTime();
     virtual void Debug(float deltaTime)override;
 protected:
-    //ƒ^[ƒQƒbƒg‚Æ‚È‚éƒAƒNƒ^[(Player)‚ğ‚Á‚Ä‚¨‚­
+    //ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¨ãªã‚‹ã‚¢ã‚¯ã‚¿ãƒ¼(Player)ã‚’æŒã£ã¦ãŠã
     Charactor* player_{ nullptr };
     float damageCoolTime_ = { 0.0f };
 };

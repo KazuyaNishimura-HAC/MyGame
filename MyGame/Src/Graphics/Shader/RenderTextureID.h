@@ -1,20 +1,20 @@
-#ifndef RENDER_TEXTURE_ID_H_
+ï»¿#ifndef RENDER_TEXTURE_ID_H_
 #define RENDER_TEXTURE_ID_H_
-// ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg
+// ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆ
 struct Rt {
     enum Name {
-        BaseScene,   // ƒV[ƒ“
-        FinalScene,  // ÅI‰æ–Ê
-        BloomExtract,// ‚‹P“xƒeƒNƒZƒ‹’Šo
-        BlurH1,	    // …•½•ûŒüƒuƒ‰[(1/4k¬ƒoƒbƒtƒ@)
-        BlurV1,	    // ‚’¼•ûŒüƒuƒ‰[(1/4k¬ƒoƒbƒtƒ@)
-        BlurH2,	    // …•½•ûŒüƒuƒ‰[(1/8k¬ƒoƒbƒtƒ@)
-        BlurV2,	    // ‚’¼•ûŒüƒuƒ‰[(1/8k¬ƒoƒbƒtƒ@)
-        BlurH3,	    // …•½•ûŒüƒuƒ‰[(1/16k¬ƒoƒbƒtƒ@)
-        BlurV3,	    // ‚’¼•ûŒüƒuƒ‰[(1/16k¬ƒoƒbƒtƒ@)
-        BlurH4,	    // …•½•ûŒüƒuƒ‰[(1/32k¬ƒoƒbƒtƒ@)
-        BlurV4,	    // ‚’¼•ûŒüƒuƒ‰[(1/32k¬ƒoƒbƒtƒ@)
-        BloomCombine,// ƒuƒ‹[ƒ€ƒGƒtƒFƒNƒg‡¬
+        BaseScene,   // ã‚·ãƒ¼ãƒ³
+        FinalScene,  // æœ€çµ‚ç”»é¢
+        BloomExtract,// é«˜è¼åº¦ãƒ†ã‚¯ã‚»ãƒ«æŠ½å‡º
+        BlurH1,	    // æ°´å¹³æ–¹å‘ãƒ–ãƒ©ãƒ¼(1/4ç¸®å°ãƒãƒƒãƒ•ã‚¡)
+        BlurV1,	    // åž‚ç›´æ–¹å‘ãƒ–ãƒ©ãƒ¼(1/4ç¸®å°ãƒãƒƒãƒ•ã‚¡)
+        BlurH2,	    // æ°´å¹³æ–¹å‘ãƒ–ãƒ©ãƒ¼(1/8ç¸®å°ãƒãƒƒãƒ•ã‚¡)
+        BlurV2,	    // åž‚ç›´æ–¹å‘ãƒ–ãƒ©ãƒ¼(1/8ç¸®å°ãƒãƒƒãƒ•ã‚¡)
+        BlurH3,	    // æ°´å¹³æ–¹å‘ãƒ–ãƒ©ãƒ¼(1/16ç¸®å°ãƒãƒƒãƒ•ã‚¡)
+        BlurV3,	    // åž‚ç›´æ–¹å‘ãƒ–ãƒ©ãƒ¼(1/16ç¸®å°ãƒãƒƒãƒ•ã‚¡)
+        BlurH4,	    // æ°´å¹³æ–¹å‘ãƒ–ãƒ©ãƒ¼(1/32ç¸®å°ãƒãƒƒãƒ•ã‚¡)
+        BlurV4,	    // åž‚ç›´æ–¹å‘ãƒ–ãƒ©ãƒ¼(1/32ç¸®å°ãƒãƒƒãƒ•ã‚¡)
+        BloomCombine,// ãƒ–ãƒ«ãƒ¼ãƒ ã‚¨ãƒ•ã‚§ã‚¯ãƒˆåˆæˆ
     };
 };
 

@@ -1,10 +1,10 @@
-#include "Charactor.h"
+ï»¿#include "Charactor.h"
 
 Charactor::Charactor(IWorld* world, const GSvector3& position,Status status, GSuint mesh)
 	:Actor(mesh)
 {
 	world_ = world;
-	//‰ŠúÀ•Wİ’è
+	//åˆæœŸåº§æ¨™è¨­å®š
 	transform_.position(position);
 	status_ = status;
 }

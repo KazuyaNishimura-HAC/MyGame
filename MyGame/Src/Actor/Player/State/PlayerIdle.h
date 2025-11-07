@@ -1,4 +1,4 @@
-#ifndef PLAYER_IDLE_H_
+﻿#ifndef PLAYER_IDLE_H_
 #define PLAYER_IDLE_H_
 #include "PlayerState.h"
 

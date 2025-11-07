@@ -1,14 +1,14 @@
-#ifndef SHADER_ID_H_
+ï»¿#ifndef SHADER_ID_H_
 #define SHADER_ID_H_
-// ƒVƒF[ƒ_[
+// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
 struct Sh {
     enum Name {
-        Player,          // ƒvƒŒƒCƒ„[
-        BloomExtract,    // ‚‹P“xƒsƒNƒZƒ‹’Šo
-        GaussianBlur,    // ƒKƒEƒVƒAƒ“ƒuƒ‰[
-        BloomCombine,    // ƒuƒ‹[ƒ€ƒGƒtƒFƒNƒg‡¬
-        Fog,             // ƒtƒHƒO
-        Dissolve,        //ƒfƒBƒ]ƒ‹ƒu
+        Player,          // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
+        BloomExtract,    // é«˜è¼åº¦ãƒ”ã‚¯ã‚»ãƒ«æŠ½å‡º
+        GaussianBlur,    // ã‚¬ã‚¦ã‚·ã‚¢ãƒ³ãƒ–ãƒ©ãƒ¼
+        BloomCombine,    // ãƒ–ãƒ«ãƒ¼ãƒ ã‚¨ãƒ•ã‚§ã‚¯ãƒˆåˆæˆ
+        Fog,             // ãƒ•ã‚©ã‚°
+        Dissolve,        //ãƒ‡ã‚£ã‚¾ãƒ«ãƒ–
     };
 };
 #endif

@@ -1,4 +1,4 @@
-#ifndef NAME_TAG_
+ï»¿#ifndef NAME_TAG_
 #define	NAME_TAG_
 
 namespace NameTag {
@@ -31,7 +31,7 @@ namespace NameTag {
 	};
 }
 
-//ŒÄ‚Ño‚µŠÈ—ª‰»
+//å‘¼ã³å‡ºã—ç°¡ç•¥åŒ–
 using SceneName = NameTag::Scene;
 using PriorityName = NameTag::Priority;
 using ActorName = NameTag::Actor;

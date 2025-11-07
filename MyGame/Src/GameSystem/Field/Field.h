@@ -1,11 +1,11 @@
-#ifndef FIELD_H_
+ï»¿#ifndef FIELD_H_
 #define FIELD_H_
 #include <GStransform.h>
 #include "Line.h"
 class Field
 {
 public:
-	//FieldŠe–Ê
+	//Fieldå„é¢
 	struct FieldSurface
 	{
 		GSvector3 pos;
@@ -15,7 +15,7 @@ public:
 	};
 	Field(const GSvector3& position, const GSvector3& size, bool cameraCollide = true);
 	GSvector3 ClampPosition(const GSvector3& actorPosition, float radius);
-	//Õ“Ë‚µ‚Ä‚È‚©‚Á‚½‚çŒ‹‰Ê‚Ìƒm[ƒ}ƒ‹‚ª0‚Å“n‚³‚ê‚é
+	//è¡çªã—ã¦ãªã‹ã£ãŸã‚‰çµæœã®ãƒãƒ¼ãƒãƒ«ãŒ0ã§æ¸¡ã•ã‚Œã‚‹
 	FieldSurface ClampCameraPosition(Line camera, float radius = 0.5f);
 	void Draw()const;
 	void Enable(bool enable);

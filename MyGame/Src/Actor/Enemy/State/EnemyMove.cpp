@@ -1,4 +1,4 @@
-#include "EnemyMove.h"
+﻿#include "EnemyMove.h"
 #include "../../../GameSystem/InputSystem/InputSystem.h"
 EnemyMove::EnemyMove(Enemy* owner)
 	:EnemyState::EnemyState(owner)

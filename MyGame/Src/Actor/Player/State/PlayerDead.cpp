@@ -1,4 +1,4 @@
-#include "PlayerDead.h"
+ï»¿#include "PlayerDead.h"
 #include "../../../World/IWorld.h"
 #include "../../../GameSystem/InputSystem/InputSystem.h"
 PlayerDead::PlayerDead(Player* owner)
@@ -16,7 +16,7 @@ void PlayerDead::Update(float deltaTime)
 void PlayerDead::Enter()
 {
 	owner_->ChangeMotion(Player::Death2, false);
-	//“–‚½‚è”»’è‚ğ–³Œø‰»
+	//å½“ãŸã‚Šåˆ¤å®šã‚’ç„¡åŠ¹åŒ–
 	owner_->SetEnable(false);
 }
 

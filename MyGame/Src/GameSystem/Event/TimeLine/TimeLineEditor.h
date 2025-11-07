@@ -1,4 +1,4 @@
-#ifndef TIME_LINE_EDITOR_H_
+ï»¿#ifndef TIME_LINE_EDITOR_H_
 #define TIME_LINE_EDITOR_H_
 #include <vector>
 #include <imgui/imgui.h>
@@ -13,7 +13,7 @@ public:
 	void Update(float deltaTime);
 	void DrawEditUI();
 private:
-	//ƒtƒŒ[ƒ€ƒL[UI‚ÌˆÚ“®
+	//ãƒ•ãƒ¬ãƒ¼ãƒ ã‚­ãƒ¼UIã®ç§»å‹•
 	struct EditKeyData {
 		bool selected{ false };
 		int frame{ 0 };
@@ -41,12 +41,12 @@ private:
 
 	std::unordered_map<int, std::vector<EditKeyData>> editKeyData_;
 	const float circleSize_{ 5.0f };
-	// 1ƒtƒŒ[ƒ€•
+	// 1ãƒ•ãƒ¬ãƒ¼ãƒ å¹…
 	float timeFillScale_ = 2.5f;
 	float timeFillOffset_ = 0.0f;
-	//ƒ^ƒCƒ€ƒ‰ƒCƒ“Å‘åŠÔ
+	//ã‚¿ã‚¤ãƒ ãƒ©ã‚¤ãƒ³æœ€å¤§æ™‚é–“
 	float eventTime_{ 5.0f };
-	//ImGui•`‰æ—Ìˆæ
+	//ImGuiæç”»é ˜åŸŸ
 	ImVec2 canvasPos;
 	ImVec2 canvasSize;
 	std::vector<ImVec2> truckFillSize_;
@@ -55,7 +55,7 @@ private:
 	ImVec2 mousePos;
 	GSvector2 mouseClickPos_{ 0.0f,0.0f };
 	GSvector2 mousePosInCanvas_{ 0.0f,0.0f };
-	//‘I‘ğ’†ƒL[
+	//é¸æŠä¸­ã‚­ãƒ¼
 	EditKeyData* selectedKey_{ nullptr };
 	std::string selectedEventName_{""};
 	TimeLine& timeLine_;

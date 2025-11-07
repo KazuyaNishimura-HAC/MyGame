@@ -1,4 +1,4 @@
-#ifndef ULTIMATE_ANIM__EVENT_H_
+ï»¿#ifndef ULTIMATE_ANIM__EVENT_H_
 #define ULTIMATE_ANIM__EVENT_H_
 #include "Event.h"
 
@@ -17,9 +17,9 @@ private:
 
     Player* player_{ nullptr };
 
-    float distanceBack = 0.0f;  // ƒvƒŒƒCƒ„[‚Ì”wŒã‚É‰º‚ª‚é‹——£
-    float distanceSide = 0.0f; //ƒvƒŒƒCƒ„[‚Ì¶‰E‚É‚³‚ª‚é‹——£
-    float height = 0.0f;  // ƒvƒŒƒCƒ„[‚Ìã•ûŒü‚Ì‚‚³
+    float distanceBack = 0.0f;  // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®èƒŒå¾Œã«ä¸‹ãŒã‚‹è·é›¢
+    float distanceSide = 0.0f; //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å·¦å³ã«ã•ãŒã‚‹è·é›¢
+    float height = 0.0f;  // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ä¸Šæ–¹å‘ã®é«˜ã•
     float intensity = 0.35f;
 };
 

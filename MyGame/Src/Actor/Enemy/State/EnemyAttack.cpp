@@ -1,4 +1,4 @@
-#include "EnemyAttack.h"
+﻿#include "EnemyAttack.h"
 #include "../../../GameSystem/InputSystem/InputSystem.h"
 EnemyAttack::EnemyAttack(Enemy* owner)
 	:EnemyState::EnemyState(owner)

@@ -1,4 +1,4 @@
-#ifndef ISTATE_H_
+﻿#ifndef ISTATE_H_
 #define ISTATE_H_
 
 class IState {

@@ -1,4 +1,4 @@
-#ifndef PLAYER_DAMAGE_H_
+﻿#ifndef PLAYER_DAMAGE_H_
 #define PLAYER_DAMAGE_H_
 #include "PlayerState.h"
 

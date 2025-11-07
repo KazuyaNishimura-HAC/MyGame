@@ -1,4 +1,4 @@
-#include "DefaultEnemy.h"
+ï»¿#include "DefaultEnemy.h"
 #include <imgui/imgui.h>
 #include "../../../World/IWorld.h"
 #include "../../../GameSystem/InputSystem/InputSystem.h"
@@ -14,7 +14,7 @@ DefaultEnemy::DefaultEnemy(IWorld* world, const GSvector3& position,Status statu
     :Enemy(world, position, status, mesh)
 {
     name_ = ActorName::DefaultEnemy;
-    //ƒXƒe[ƒg‚Ì’Ç‰Á
+    //ã‚¹ãƒ†ãƒ¼ãƒˆã®è¿½åŠ 
     states_.AddState(EnemyState::Idle, new EnemyIdle(this));
     states_.AddState(EnemyState::Move, new EnemyMove(this));
     states_.AddState(EnemyState::Attack, new EnemyAttack(this));
@@ -22,7 +22,7 @@ DefaultEnemy::DefaultEnemy(IWorld* world, const GSvector3& position,Status statu
     states_.AddState(EnemyState::Dead, new EnemyDead(this));
     states_.ChangeState(EnemyState::Idle);
     collider_ = BoundingSphere(1);
-    //UŒ‚ˆ—
+    //æ”»æ’ƒå‡¦ç†
     mesh_->AddEvent(2, 30, [=] {TestAttack(); });
 }
 
@@ -34,7 +34,7 @@ DefaultEnemy::~DefaultEnemy()
 void DefaultEnemy::Update(float deltaTime)
 {
     Enemy::Update(deltaTime);
-    //Šî’êƒNƒ‰ƒX‚Ìˆ—‚ğÀs
+    //åŸºåº•ã‚¯ãƒ©ã‚¹ã®å‡¦ç†ã‚’å®Ÿè¡Œ
     MoveAttackCollide();
     if(GetCoolTime() <= 0)
     damageCoolTime_ -= deltaTime / 60.0f;
@@ -59,11 +59,11 @@ void DefaultEnemy::React(Actor& other)
 
 void DefaultEnemy::TakeDamage(float damage)
 {
-    //€–S‚µ‚Ä‚¢‚é‚È‚çreturn
+    //æ­»äº¡ã—ã¦ã„ã‚‹ãªã‚‰return
     if (CurrentState() == EnemyState::Dead) return;
 
     status_.hp -= damage;
-    //hp‚ª0‚È‚ç€–S
+    //hpãŒ0ãªã‚‰æ­»äº¡
     if(IsDying()) ChangeState(EnemyState::Dead);
     else ChangeState(EnemyState::Damage);
 }

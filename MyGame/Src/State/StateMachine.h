@@ -1,4 +1,4 @@
-#ifndef STATE_MACHINE_H_
+ï»¿#ifndef STATE_MACHINE_H_
 #define STATE_MACHINE_H_
 
 #include "IState.h"
@@ -12,10 +12,10 @@ public:
 	void Update(float deltaTime);
 	void AddState(int stateName,IState* state);
 	void ChangeState(int nextStateName);
-	//ƒXƒe[ƒg‚Ìæ“¾
+	//ã‚¹ãƒ†ãƒ¼ãƒˆã®å–å¾—
 	int CurrentState();
 	int PrevState();
-	//ˆø”‚Æ“¯‚¶ƒXƒe[ƒg‚©H
+	//å¼•æ•°ã¨åŒã˜ã‚¹ãƒ†ãƒ¼ãƒˆã‹ï¼Ÿ
 	bool IsCurrentState(int stateName);
 	bool IsPrevState(int stateName);
 

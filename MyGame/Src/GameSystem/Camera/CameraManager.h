@@ -1,4 +1,4 @@
-#ifndef CAMERA_MANAGER_H_
+Ôªø#ifndef CAMERA_MANAGER_H_
 #define CAMERA_MANAGER_H_
 #include <vector>
 class Camera;
@@ -22,7 +22,7 @@ public:
 
 	void AddController(CameraController* controller);
 	CameraController* GetActiveController();
-	// ÉRÉsÅ[ã÷é~
+	// „Ç≥„Éî„ÉºÁ¶ÅÊ≠¢
 	CameraManager(const CameraManager& other) = delete;
 	CameraManager& operator=(const CameraManager& other) = delete;
 private:

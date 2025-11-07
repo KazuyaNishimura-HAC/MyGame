@@ -1,4 +1,4 @@
-#ifndef PLAYER_STATE_H_
+﻿#ifndef PLAYER_STATE_H_
 #define PLAYER_STATE_H_
 
 #include "../../../State/IState.h"

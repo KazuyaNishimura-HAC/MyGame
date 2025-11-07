@@ -1,4 +1,4 @@
-#ifndef ENEMY_DEAD_H_
+﻿#ifndef ENEMY_DEAD_H_
 #define ENEMY_DEAD_H_
 #include "EnemyState.h"
 

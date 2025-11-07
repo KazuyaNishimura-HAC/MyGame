@@ -1,4 +1,4 @@
-#include "PlayerUltimateSkill.h"
+ï»¿#include "PlayerUltimateSkill.h"
 #include "../../../GameSystem/InputSystem/InputSystem.h"
 #include "../../../GameSystem/Event/UltimateAnimEvent.h"
 #include "../../../World/IWorld.h"
@@ -22,7 +22,7 @@ void PlayerUltimateSkill::Enter()
 	owner_->SetAttack(true);
 	owner_->SetInvincible(true);
 	owner_->ChangeMotion(Player::UltSkill, false);
-	//ƒCƒxƒ“ƒg”­‰Î
+	//ã‚¤ãƒ™ãƒ³ãƒˆç™ºç«
 	skillEvent_->SetInvoke(true);
 }
 

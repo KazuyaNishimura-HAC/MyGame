@@ -1,4 +1,4 @@
-#include "EnemyDead.h"
+ï»¿#include "EnemyDead.h"
 #include "../../../World/IWorld.h"
 #include "../../../GameSystem/InputSystem/InputSystem.h"
 EnemyDead::EnemyDead(Enemy* owner)
@@ -15,7 +15,7 @@ void EnemyDead::Update(float deltaTime)
 void EnemyDead::Enter()
 {
 	owner_->ChangeMotion(Enemy::Death,false);
-	//“–‚½‚è”»’è‚ğ–³Œø‰»
+	//å½“ãŸã‚Šåˆ¤å®šã‚’ç„¡åŠ¹åŒ–
 	owner_->SetEnable(false);
 }
 

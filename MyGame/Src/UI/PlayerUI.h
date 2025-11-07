@@ -1,4 +1,4 @@
-#ifndef PLAYER_UI_H_
+﻿#ifndef PLAYER_UI_H_
 #define PLAYER_UI_H_
 #include "GUI.h"
 class HorizontalGauge;

@@ -1,4 +1,4 @@
-#include "UltimateAnimEvent.h"
+ï»¿#include "UltimateAnimEvent.h"
 #include "../../GameSystem/Camera/CameraController.h"
 #include "../../Actor/Player/Player.h"
 #include "../../Graphics/Effect/PostEffect.h"
@@ -14,9 +14,9 @@ UltimateAnimEvent::UltimateAnimEvent(IWorld* world, int invokeType, const GSvect
 void UltimateAnimEvent::Update(float deltaTime)
 {
 	GSvector3 playerPos = player_->Transform().position();
-	GSvector3 forward = player_->Transform().forward();  // ƒvƒŒƒCƒ„[‚Ì³–Ê•ûŒüƒxƒNƒgƒ‹
+	GSvector3 forward = player_->Transform().forward();  // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ­£é¢æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
 	GSvector3 right = player_->Transform().right();
-	GSvector3 up = GSvector3(0, 1, 0);    // ã•ûŒüƒxƒNƒgƒ‹
+	GSvector3 up = GSvector3(0, 1, 0);    // ä¸Šæ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«
 	PostEffect::Instance().SetIntensity(intensity);
 	intensity -= deltaTime / 120.0f;
 	intensity = CLAMP(intensity,0.0f,1.0f);
@@ -59,12 +59,12 @@ void UltimateAnimEvent::Update(float deltaTime)
 		intensity = 0.8f;
 	}
 
-	// ƒJƒƒ‰ˆÊ’u‚ðŒvŽZ
+	// ã‚«ãƒ¡ãƒ©ä½ç½®ã‚’è¨ˆç®—
 	GSvector3 cameraPos = playerPos + (forward * -distanceBack) + (up * height) + (right * -distanceSide);
 	GSvector3 cameraTar = playerPos + GSvector3{ 0.0f,1.5f,0.0f };
 	camera_->SetView(cameraPos, cameraTar);
 
-	//timer_‚ªmaxTime‚É‚È‚Á‚½‚çˆÈ‰º‚ðŽÀs
+	//timer_ãŒmaxTimeã«ãªã£ãŸã‚‰ä»¥ä¸‹ã‚’å®Ÿè¡Œ
 	if (!EventWait(deltaTime))return;
 
 	EndEvent();
@@ -81,7 +81,7 @@ void UltimateAnimEvent::BeginEvent()
 	GSvector3 cameraPos = world_->GetCamera()->Transform().position();
 	GSvector3 cameraTar = cameraPos.forward();
 	camera_->SetView(cameraPos, cameraTar);
-	//ƒ‚[ƒVƒ‡ƒ“ŽžŠÔ‚ðƒCƒxƒ“ƒg‚ÌŽžŠÔ‚Æ“¯Šú‚³‚¹‚é
+	//ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³æ™‚é–“ã‚’ã‚¤ãƒ™ãƒ³ãƒˆã®æ™‚é–“ã¨åŒæœŸã•ã›ã‚‹
 	SetEventTime(player_->GetMesh()->MotionEndTime());
 }
 

@@ -1,4 +1,4 @@
-#include "CameraManager.h"
+ï»¿#include "CameraManager.h"
 #include "Camera.h"
 #include "CameraController.h"
 #include <imgui/imgui.h>
@@ -112,14 +112,14 @@ CameraController* CameraManager::GetActiveController()
     CameraController* activeController = nullptr;
 
     for (auto& ctrl : controller_) {
-        //ˆê”ÔÅ‰‚ÉÝ’è‚µ‚½ƒRƒ“ƒgƒ[ƒ‰‚ð—LŒø‰»
+        //ä¸€ç•ªæœ€åˆã«è¨­å®šã—ãŸã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ã‚’æœ‰åŠ¹åŒ–
         if (!activeController) {
             activeController = ctrl;
             continue;
         }
-        //—Dæ‡ˆÊ‚Ì‚‚¢•¨‚ð—LŒø‰»
+        //å„ªå…ˆé †ä½ã®é«˜ã„ç‰©ã‚’æœ‰åŠ¹åŒ–
         if (activeController->GetPriority() < ctrl->GetPriority()) {
-            //•ÏX‘O‚ÌƒJƒƒ‰ˆÊ’u‚ÉˆÚ“®‚·‚é‚©H
+            //å¤‰æ›´å‰ã®ã‚«ãƒ¡ãƒ©ä½ç½®ã«ç§»å‹•ã™ã‚‹ã‹ï¼Ÿ
             if (ctrl->IsMovePrevious()) {
                 View preView = activeController->GetView();
                 ctrl->SetView(preView.pos, preView.tar);

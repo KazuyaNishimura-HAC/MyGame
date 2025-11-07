@@ -1,4 +1,4 @@
-#ifndef ATTACK_COLLIDE_H_
+ï»¿#ifndef ATTACK_COLLIDE_H_
 #define ATTACK_COLLIDE_H_
 #include "../Actor/Actor.h"
 
@@ -17,7 +17,7 @@ private:
 	Charactor* owner_{ nullptr };
 	float attack_{ 1.0f };
 	bool isAttack{ false };
-	//UŒ‚‚Ì‘±ŠÔ
+	//æ”»æ’ƒã®æŒç¶šæ™‚é–“
 	float duration_{ 1.0f };
 };
 

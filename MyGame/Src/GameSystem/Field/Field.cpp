@@ -1,5 +1,5 @@
-#include "Field.h"
-//Debu•\¦—p
+ï»¿#include "Field.h"
+//Debuè¡¨ç¤ºç”¨
 #include <GL/glut.h>
 
 Field::Field(const GSvector3& position, const GSvector3& size, bool cameraCollide)
@@ -14,7 +14,7 @@ GSvector3 Field::ClampPosition(const GSvector3& actorPosition, float radius)
     GSvector3 clampedPosition = actorPosition;
     GSvector3 distance = transform_.position() - actorPosition;
     GSvector3 size = CollisionExtents(radius);
-    //XZ²“à‚È‚çƒNƒ‰ƒ“ƒv
+    //XZè»¸å†…ãªã‚‰ã‚¯ãƒ©ãƒ³ãƒ—
     if (IsInside(distance, size))
     {
         if (abs(distance.x) / size.x > abs(distance.z) / size.z)
@@ -28,7 +28,7 @@ GSvector3 Field::ClampPosition(const GSvector3& actorPosition, float radius)
 Field::FieldSurface Field::ClampCameraPosition(Line camera, float radius)
 {
     FieldSurface result;
-    //ƒvƒŒƒCƒ„[‚æ‚è‘O‚É‚ ‚é”»’è‚Í–³‹
+    //ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚ˆã‚Šå‰ã«ã‚ã‚‹åˆ¤å®šã¯ç„¡è¦–
     //if (GSvector3::dot(camera.Direction(), transform_.position() - camera.origin) <= 0)return result;
     Line adjusted;
     adjusted.start = camera.start;
@@ -38,9 +38,9 @@ Field::FieldSurface Field::ClampCameraPosition(Line camera, float radius)
         FieldSurface surface;
         surface.pos = transform_.position() + normal_[i] * CollisionSize(radius);
         surface.normal = normal_[i];
-        //— –ÊÕ“Ë‚Í–³‹
+        //è£é¢è¡çªã¯ç„¡è¦–
         if (GSvector3::dot(camera.DirectionVec(), surface.normal) >= 0)continue;
-        //ƒJƒƒ‰‚ª–Ê‚æ‚èè‘O‚¾‚Á‚½‚ç–³‹
+        //ã‚«ãƒ¡ãƒ©ãŒé¢ã‚ˆã‚Šæ‰‹å‰ã ã£ãŸã‚‰ç„¡è¦–
         if (GSvector3::dot(camera.end - surface.pos, surface.normal) >= 0)continue;
 
         float camSurfNormDot = GSvector3::dot(surface.normal, camera.start - surface.pos);
@@ -50,7 +50,7 @@ Field::FieldSurface Field::ClampCameraPosition(Line camera, float radius)
         surface.size = CollisionSize(radius) * (GSvector3::one() - normal_[i % 2]);
         surface.size.y = 0;
         GSvector3 invSize = surface.size * GSvector3{ -1,0,-1 };
-        //Õ“Ë‚µ‚Ä‚½‚çdot‚ªƒ}ƒCƒiƒX‚É‚È‚é‚Í‚¸
+        //è¡çªã—ã¦ãŸã‚‰dotãŒãƒã‚¤ãƒŠã‚¹ã«ãªã‚‹ã¯ãš
         GSvector3 collideOffsetBase = collidePos - surface.pos;
         collideOffsetBase.y = 0;
         float surfCollide = GSvector3::dot(collideOffsetBase + surface.size, collideOffsetBase + invSize);
@@ -68,15 +68,15 @@ void Field::Draw() const
     const GSvector3& pos = transform_.position();
     const GSvector3& size = transform_.localScale();
     glPushMatrix();
-        // ƒ‰ƒCƒeƒBƒ“ƒO–³Œø‰»
+        // ãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°ç„¡åŠ¹åŒ–
         glDisable(GL_LIGHTING);
         glTranslatef(pos.x, pos.y, pos.z);
-        glScalef(size.x, size.y, size.z);   // X, Y, Z²‚É‰ˆ‚Á‚ÄLk
+        glScalef(size.x, size.y, size.z);   // X, Y, Zè»¸ã«æ²¿ã£ã¦ä¼¸ç¸®
         glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-        glutSolidCube(1.0f);  // 1•Ó=1‚Ì—§•û‘Ì‚ğƒXƒP[ƒŠƒ“ƒO‚µ‚Ä’·•ûŒ`‚É‚·‚é
-        //‰Šú‰»
+        glutSolidCube(1.0f);  // 1è¾º=1ã®ç«‹æ–¹ä½“ã‚’ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°ã—ã¦é•·æ–¹å½¢ã«ã™ã‚‹
+        //åˆæœŸåŒ–
         glColor4f(1,1,1,1);
-        // ƒ‰ƒCƒeƒBƒ“ƒO—LŒø‰»
+        // ãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°æœ‰åŠ¹åŒ–
         glEnable(GL_LIGHTING);
     glPopMatrix();
 }
@@ -111,12 +111,12 @@ bool Field::CameraCollide() const
     return cameraCollide_;
 }
 
-//”»’èƒTƒCƒY‚ğActorCollide‚Ì”¼Œa•ªL‚°‚é
+//åˆ¤å®šã‚µã‚¤ã‚ºã‚’ActorCollideã®åŠå¾„åˆ†åºƒã’ã‚‹
 GSvector3 Field::CollisionExtents(float radius)
 {
     return transform_.localScale() / 2 + GSvector3::one() * radius;
 }
-//”ÍˆÍ“à‚©H
+//ç¯„å›²å†…ã‹ï¼Ÿ
 bool Field::IsInside(const GSvector3& dist, const GSvector3& size)
 {
     return abs(dist.x) < size.x && abs(dist.z) < size.z;

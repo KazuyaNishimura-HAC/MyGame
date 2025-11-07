@@ -1,4 +1,4 @@
-#ifndef TIME_LINE_H_
+ï»¿#ifndef TIME_LINE_H_
 #define TIME_LINE_H_
 #include <vector>
 #include <nlohmann/json.hpp>
@@ -6,14 +6,14 @@
 
 class IWorld;
 class Actor;
-//Às—pƒL[
+//å®Ÿè¡Œç”¨ã‚­ãƒ¼
 struct TimeLineData {
 	float playTime{ 0.0f };
-	//int‚ÍƒtƒŒ[ƒ€”
+	//intã¯ãƒ•ãƒ¬ãƒ¼ãƒ æ•°
 	std::map<int,std::vector<IKeyData*>> frameEvent{};
 };
 
-//IKey“à‚Ìí—Ş‚ğ”»•Ê‚·‚é
+//IKeyå†…ã®ç¨®é¡ã‚’åˆ¤åˆ¥ã™ã‚‹
 template<typename T>
 T* DAs(IKeyData* data) {
 	return dynamic_cast<T*>(data);
@@ -29,21 +29,21 @@ public:
 	TimeLine();
 	~TimeLine();
 	void Update(float deltaTime);
-	//ƒCƒxƒ“ƒgŠJn
+	//ã‚¤ãƒ™ãƒ³ãƒˆé–‹å§‹
 	void StartTimeLine(std::string name);
 	void EndTimeLine();
 	void LoadFile();
 	int TimeLineCount() const;
 	float EventTimer();
 	bool IsRunning();
-	//ƒtƒŒ[ƒ€‚²‚Æ‚ÌƒL[ƒJƒEƒ“ƒg
+	//ãƒ•ãƒ¬ãƒ¼ãƒ ã”ã¨ã®ã‚­ãƒ¼ã‚«ã‚¦ãƒ³ãƒˆ
 	int FrameKeyCount(std::string name) const;
-    //ƒCƒxƒ“ƒgŠÔ
+    //ã‚¤ãƒ™ãƒ³ãƒˆæ™‚é–“
 	float EventTime(std::string name) const;
 	void SetEventTime(std::string name,float time);
-	//ƒL[ƒf[ƒ^‘Sæ“¾
+	//ã‚­ãƒ¼ãƒ‡ãƒ¼ã‚¿å…¨å–å¾—
 	TimeLineData* KeyDatas(std::string name) const;
-	//ƒL[‚Ì’Ç‰ÁEíœ
+	//ã‚­ãƒ¼ã®è¿½åŠ ãƒ»å‰Šé™¤
 	void AddKey(std::string name,int frame, IKeyData* data);
 	void DeleteKey(std::string name, int frame, IKeyData::KeyType type);
 	void MoveKey(std::string name, int oldFrame,int newFrame, IKeyData* data);
@@ -57,11 +57,11 @@ private:
 	void SetView(CameraKey* key);
 	void SetEffect(EffectKey* key);
 	void SetShake(CameraShakeKey* key);
-	//ƒtƒ@ƒCƒ‹“Ç‚İ‚İ
+	//ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿
 	nlohmann::ordered_json loadFile_;
-	//ƒtƒŒ[ƒ€‚²‚Æ‚É‚ ‚éƒCƒxƒ“ƒgƒf[ƒ^iÄ¶—pj
+	//ãƒ•ãƒ¬ãƒ¼ãƒ ã”ã¨ã«ã‚ã‚‹ã‚¤ãƒ™ãƒ³ãƒˆãƒ‡ãƒ¼ã‚¿ï¼ˆå†ç”Ÿç”¨ï¼‰
 	std::unordered_map<std::string, TimeLineData*> data_;
-	//’Ç‰Áƒgƒ‰ƒbƒN‚İ‚Ì‡”Ô
+	//è¿½åŠ ãƒˆãƒ©ãƒƒã‚¯è¾¼ã¿ã®é †ç•ª
 	std::vector<int> addOrderData_;
 	float eventTimer_{ 0.0f };
 	float endTime_{ 0.0f };

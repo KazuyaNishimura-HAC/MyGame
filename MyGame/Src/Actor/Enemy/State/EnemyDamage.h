@@ -1,4 +1,4 @@
-#ifndef ENEMY_DAMAGE_H_
+﻿#ifndef ENEMY_DAMAGE_H_
 #define ENEMY_DAMAGE_H_
 #include "EnemyState.h"
 

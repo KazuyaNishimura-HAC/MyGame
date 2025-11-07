@@ -1,4 +1,4 @@
-#ifndef ENEMY_MOVE_H_
+﻿#ifndef ENEMY_MOVE_H_
 #define ENEMY_MOVE_H_
 #include "EnemyState.h"
 

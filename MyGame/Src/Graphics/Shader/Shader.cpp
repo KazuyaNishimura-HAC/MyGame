@@ -1,4 +1,4 @@
-#include "Shader.h"
+﻿#include "Shader.h"
 #include <gslib.h>
 
 void Shader::BeginShader(int id)

@@ -1,4 +1,4 @@
-#ifndef PLAYER_MOVE_H_
+﻿#ifndef PLAYER_MOVE_H_
 #define PLAYER_MOVE_H_
 #include "PlayerState.h"
 

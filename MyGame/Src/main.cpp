@@ -1,4 +1,4 @@
-#include <GSgame.h>
+ï»¿#include <GSgame.h>
 #include <imgui/imgui.h>
 #include <GSstandard_shader.h>
 #include <GSeffect.h>
@@ -13,7 +13,7 @@
 #include "Scene/Scenes/GamePlayScene.h"
 #include "Scene/Scenes/ResultScene.h"
 
-// ƒQ[ƒ€ƒNƒ‰ƒX
+// ã‚²ãƒ¼ãƒ ã‚¯ãƒ©ã‚¹
 class MyGame : public gslib::Game {
 public:
     MyGame() :gslib::Game{ Screen::ScreenWidth, Screen::ScreenHeight, Screen::fullScreen }{};
@@ -26,11 +26,11 @@ private:
 #if !_DEBUG
         gsHideMouseCursor();
 #endif
-        //ƒVƒF[ƒ_[‚Ì‰Šú‰»iâ‘Î‚É“ü‚ê‚È‚³‚¢‚æj
+        //ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®åˆæœŸåŒ–ï¼ˆçµ¶å¯¾ã«å…¥ã‚Œãªã•ã„ã‚ˆï¼‰
         gsInitDefaultShader();
-        // ƒGƒtƒFƒNƒg‚Ì‰Šú‰»
+        // ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®åˆæœŸåŒ–
         gsInitEffect();
-        //ƒCƒ“ƒvƒbƒgƒVƒXƒeƒ€‹N“®
+        //ã‚¤ãƒ³ãƒ—ãƒƒãƒˆã‚·ã‚¹ãƒ†ãƒ èµ·å‹•
         InputSystem::Initialize(&gamePad_);
         sceneManager_.Add(SceneIndex::TitleScene, new TitleScene());
         sceneManager_.Add(SceneIndex::LoadScene, new LoadScene());
@@ -52,7 +52,7 @@ private:
         sceneManager_.Draw();
     }
 
-    //‹­§I—¹ˆ—
+    //å¼·åˆ¶çµ‚äº†å‡¦ç†
     bool is_running()override {
         return !InputSystem::ForceQuit();
     }

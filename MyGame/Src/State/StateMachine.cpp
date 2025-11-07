@@ -1,8 +1,8 @@
-#include "StateMachine.h"
+ï»¿#include "StateMachine.h"
 #include "StateNull.h"
 #include <imGui/imgui.h>
 
-//ƒXƒe[ƒg‚ª–³‚¢‚Ì‹óƒXƒe[ƒg
+//ã‚¹ãƒ†ãƒ¼ãƒˆãŒç„¡ã„æ™‚ã®ç©ºã‚¹ãƒ†ãƒ¼ãƒˆ
 static StateNull nullState;
 
 StateMachine::StateMachine()
@@ -30,13 +30,13 @@ void StateMachine::Update(float deltaTime)
 void StateMachine::AddState(int stateName, IState* state)
 {
 	auto success = states_.insert({stateName,state});
-	//’Ç‰Áo—ˆ‚½‚çID‚ğ“o˜^
+	//è¿½åŠ å‡ºæ¥ãŸã‚‰IDã‚’ç™»éŒ²
 	if(success.second) state->SetID(stateName);
 }
 
 void StateMachine::ChangeState(int stateName)
 {
-	//‘JˆÚ—v‘f‚ª–³‚¯‚ê‚Îreturn
+	//é·ç§»è¦ç´ ãŒç„¡ã‘ã‚Œã°return
 	if (states_.count(stateName) == 0) return;
 	IState* nextState = states_[stateName];
 	prevState_ = currentState_;

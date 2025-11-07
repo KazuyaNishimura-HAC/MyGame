@@ -1,4 +1,4 @@
-#ifndef PLAYER_H_
+ï»¿#ifndef PLAYER_H_
 #define PLAYER_H_
 
 #include <vector>
@@ -26,17 +26,17 @@ public:
         Death2,
         Death3
     };
-    //ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+    //ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     Player(IWorld* world = nullptr,const GSvector3& position = {0, 0, 0},Status status = Status(), GSuint mesh = Model::Player);
-    //ƒfƒXƒgƒ‰ƒNƒ^
+    //ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
     ~Player()override;
 
-    //XV
+    //æ›´æ–°
     void Update(float deltaTime)override;
     void LateUpdate(float deltaTime)override;
-    //•`‰æ
+    //æç”»
     void Draw()const override;
-    //ÚG”»’è
+    //æ¥è§¦åˆ¤å®š
     void React(Actor& other)override;
     void TakeDamage(float damage)override;
     void MovePosition(float deltaTime);
@@ -50,16 +50,16 @@ private:
     void TestAttack();
     CameraController* camera_{ nullptr };
 
-    //ƒJƒƒ‰‚ÌŠp“x
+    //ã‚«ãƒ¡ãƒ©ã®è§’åº¦
     GSvector3 cameraRotation_{ 0,0,0 };
-    //ƒJƒƒ‰‰ŠúÀ•W
+    //ã‚«ãƒ¡ãƒ©åˆæœŸåº§æ¨™
     GSvector3 cameraOffset_{ 0,2.0f,0 };
-    //’‹“_Offset
+    //æ³¨è¦–ç‚¹Offset
     GSvector3 cameraFocusOffset_{ 0,1.5f,0 };
-    //’‹“_‚Ü‚Å‚Ì‹——£
+    //æ³¨è¦–ç‚¹ã¾ã§ã®è·é›¢
     float cameraDepth_{ 5.5f };
 
-    //ˆÈ‰ºƒvƒŒƒCƒ„[“®ì’l
+    //ä»¥ä¸‹ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼å‹•ä½œå€¤
     float moveSpeed_{ 1.5f };
 
     PlayerUI* ui_ = nullptr;

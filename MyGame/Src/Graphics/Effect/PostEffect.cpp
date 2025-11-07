@@ -1,4 +1,4 @@
-#include "PostEffect.h"
+ï»¿#include "PostEffect.h"
 #include "../Shader/Shader.h"
 #include "../Shader/RenderTexture.h"
 #include "../../AssetID/Graphics.h"
@@ -26,103 +26,103 @@ void PostEffect::Load()
 
 void PostEffect::Bloom(GSuint n ,GScolor col)
 {
-    // ‹P“x‚Ì‚‚¢•”•ª‚ğæ‚èo‚·
+    // è¼åº¦ã®é«˜ã„éƒ¨åˆ†ã‚’å–ã‚Šå‡ºã™
     bloomExtract(n, col);
-    // ƒKƒEƒVƒAƒ“ƒuƒ‰[‚Å‚Ú‚©‚·
+    // ã‚¬ã‚¦ã‚·ã‚¢ãƒ³ãƒ–ãƒ©ãƒ¼ã§ã¼ã‹ã™
     gaussianBlur(Rt::BloomExtract, { width_ / 4.0f, height_ / 4.0f }, Rt::BlurH1, Rt::BlurV1);
     gaussianBlur(Rt::BlurV1, { width_ / 8.0f, height_ / 8.0f }, Rt::BlurH2, Rt::BlurV2);
     gaussianBlur(Rt::BlurV2, { width_ / 16.0f, height_ / 16.0f }, Rt::BlurH3, Rt::BlurV3);
     gaussianBlur(Rt::BlurV3, { width_ / 32.0f, height_ / 32.0f }, Rt::BlurH4, Rt::BlurV4);
-    // ƒuƒ‹[ƒ€‚Ì‡¬
+    // ãƒ–ãƒ«ãƒ¼ãƒ ã®åˆæˆ
     bloomCombine(n);
-    // ‡¬Œã‚ÌŒ‹‰Ê‚ğ•\¦
+    // åˆæˆå¾Œã®çµæœã‚’è¡¨ç¤º
     RenderTexture::BindRenderTextureEx(Rt::BloomCombine, 0, 0);
-    // ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg•`‰æ
+    // ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆæç”»
     RenderTexture::DrawRender(Rt::BloomCombine);
 }
 
 void PostEffect::SetIntensity(float intensity)
 {
-    // ƒuƒ‹[ƒ€‚Ì‹­‚³‚ğİ’è
+    // ãƒ–ãƒ«ãƒ¼ãƒ ã®å¼·ã•ã‚’è¨­å®š
     bloomIntencity_ = intensity;
 }
 
 void PostEffect::Fog(GSuint n, GScolor col)
 {
-    // ƒVƒF[ƒ_[‚ğ—LŒø‚É‚·‚é
+    // ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’æœ‰åŠ¹ã«ã™ã‚‹
     gsBeginShader(Sh::Fog);
     gsBeginRenderTarget(n);
-    // Œ³‰æ‘œƒeƒNƒXƒ`ƒƒ‚Ìİ’è
+    // å…ƒç”»åƒãƒ†ã‚¯ã‚¹ãƒãƒ£ã®è¨­å®š
     gsSetShaderParamTexture("u_RenderTexture", 0);
     gsBindRenderTargetTextureEx(Rt::BloomCombine, 0, 0);
-    // ƒfƒvƒXƒoƒbƒtƒ@ƒeƒNƒXƒ`ƒƒ‚Ìİ’è
+    // ãƒ‡ãƒ—ã‚¹ãƒãƒƒãƒ•ã‚¡ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®è¨­å®š
     gsSetShaderParamTexture("u_DepthTexture", 1);
     gsBindRenderTargetDepthEx(n, 1);
-    // zƒoƒbƒtƒ@ƒpƒ‰ƒ[ƒ^‚Ìİ’è
+    // zãƒãƒƒãƒ•ã‚¡ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®è¨­å®š
     GSvector4 zparams = zBufferParams(0.3f, 1000.0f);
     gsSetShaderParam4f("u_ZBufferParams", &zparams);
-    // ƒtƒHƒO‚ÌƒJƒ‰[‚Ìİ’è
+    // ãƒ•ã‚©ã‚°ã®ã‚«ãƒ©ãƒ¼ã®è¨­å®š
     gsSetShaderParam4f("u_FogColor", &col);
-    // ƒtƒHƒO‚ÌŠJnˆÊ’u‚Ìİ’è
+    // ãƒ•ã‚©ã‚°ã®é–‹å§‹ä½ç½®ã®è¨­å®š
     gsSetShaderParam1f("u_FogStart", fogStart_);
-    // ƒtƒHƒO‚ÌI—¹ˆÊ’u‚Ìİ’è
+    // ãƒ•ã‚©ã‚°ã®çµ‚äº†ä½ç½®ã®è¨­å®š
     gsSetShaderParam1f("u_FogEnd", fogEnd_);
-    // ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚ğ•`‰æ
+    // ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’æç”»
     gsDrawRenderTargetEx(n);
     gsEndRenderTarget();
-    // ƒeƒNƒXƒ`ƒƒ‚ÌƒoƒCƒ“ƒh‰ğœ
+    // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒã‚¤ãƒ³ãƒ‰è§£é™¤
     gsUnbindRenderTargetTextureEx(n, 0, 0);
     gsUnbindRenderTargetDepthEx(n, 1);
-    // ƒVƒF[ƒ_[‚ğ–³Œø‚É‚·‚é
+    // ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’ç„¡åŠ¹ã«ã™ã‚‹
     gsEndShader();
 }
 
 void PostEffect::Dissolve(GSuint n, GSuint m)
 {
-    // ƒVƒF[ƒ_[—LŒø‚É
+    // ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼æœ‰åŠ¹ã«
     gsBeginShader(Sh::Dissolve);
-    // Œ³‰æ‘œ
+    // å…ƒç”»åƒ
     gsSetShaderParamTexture("u_RenderTexture", 0);
     gsBindRenderTargetTextureEx(n, 0, 0);
-    // ƒ}ƒXƒNƒeƒNƒXƒ`ƒƒ‚Ìİ’è
+    // ãƒã‚¹ã‚¯ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®è¨­å®š
     gsSetShaderParamTexture("u_MaskTexture", 1);
     gsBindTextureEx(m, 1);
-    // UVÀ•W‚Ìƒ^ƒCƒŠƒ“ƒO
+    // UVåº§æ¨™ã®ã‚¿ã‚¤ãƒªãƒ³ã‚°
     gsSetShaderParam2f("u_Tilling", &tilling_);
-    // UVÀ•W‚ÌƒIƒtƒZƒbƒg
+    // UVåº§æ¨™ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ
     gsSetShaderParam2f("u_Offset", &offset_);
-    // ƒfƒBƒ]ƒ‹ƒu‚·‚é‚µ‚«‚¢’l
+    // ãƒ‡ã‚£ã‚¾ãƒ«ãƒ–ã™ã‚‹ã—ãã„å€¤
     gsSetShaderParam1f("u_Threshold", threshold_);
-    // ƒGƒbƒW‚Ì•
+    // ã‚¨ãƒƒã‚¸ã®å¹…
     gsSetShaderParam1f("u_EdgeWidth", edge_width_);
-    // ƒGƒbƒW‚ÌƒJƒ‰[
+    // ã‚¨ãƒƒã‚¸ã®ã‚«ãƒ©ãƒ¼
     gsSetShaderParam4f("u_EdgeColor", &edge_color_);
-    // ƒGƒbƒW‚Ì‹P“x
+    // ã‚¨ãƒƒã‚¸ã®è¼åº¦
     gsSetShaderParam1f("u_EdgeColorIntensity", edge_color_intensity_);
-    // ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚ğ•`‰æ
+    // ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’æç”»
     gsDrawRenderTargetEx(n);
-    // ƒeƒNƒXƒ`ƒƒ‚ÌƒoƒCƒ“ƒh‰ğœ
+    // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒã‚¤ãƒ³ãƒ‰è§£é™¤
     gsUnbindRenderTargetTextureEx(n, 0, 0);
     gsUnbindTextureEx(m, 1);
-    // ƒVƒF[ƒ_[‚ğ–³Œø‚É‚·‚é
+    // ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’ç„¡åŠ¹ã«ã™ã‚‹
     gsEndShader();
 }
 
 void PostEffect::MargeShader(GSuint n, GSuint m)
 {
-    // Œ³‰æ‘œƒeƒNƒXƒ`ƒƒ‚Ìİ’è
+    // å…ƒç”»åƒãƒ†ã‚¯ã‚¹ãƒãƒ£ã®è¨­å®š
     gsSetShaderParamTexture("u_RenderTexture", 0);
     gsBindRenderTargetTextureEx(n, 0, 0);
-    // ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚ğ•`‰æ
+    // ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’æç”»
     gsDrawRenderTargetEx(m);
-    // ƒeƒNƒXƒ`ƒƒ‚ÌƒoƒCƒ“ƒh‰ğœ
+    // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒã‚¤ãƒ³ãƒ‰è§£é™¤
     gsUnbindRenderTargetTextureEx(m, 0, 0);
     gsUnbindRenderTargetDepthEx(m, 1);
 }
 
 void PostEffect::Clear()
 {
-    //’l‚ğ‰Šú‰»
+    //å€¤ã‚’åˆæœŸåŒ–
     bloomThreshold_ = { 0.01f };
     bloomIntencity_ = { 0.35f };
    bloomColor_={ 1.0f,1.0f,1.0f,1.0f };
@@ -139,11 +139,11 @@ void PostEffect::Clear()
 
 void PostEffect::CreateRender()
 {
-    // Œ³ƒV[ƒ“—p‚ÌƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚Ìì¬
+    // å…ƒã‚·ãƒ¼ãƒ³ç”¨ã®ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ä½œæˆ
     RenderTexture::CreateRenderTarget(Rt::BaseScene, { width_,height_ }, GS_TRUE, GS_TRUE, GS_TRUE);
-    // ‚‹P“x’ŠoƒVƒF[ƒ_[—p‚ÌƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚Ìì¬
+    // é«˜è¼åº¦æŠ½å‡ºã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ç”¨ã®ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ä½œæˆ
     RenderTexture::CreateRenderTarget(Rt::BloomExtract, { width_ / 4,height_ / 4 }, GS_TRUE, GS_FALSE, GS_TRUE);
-    // ƒKƒEƒVƒAƒ“ƒuƒ‰[—p‚Ìk¬ƒoƒbƒtƒ@‚ğì¬
+    // ã‚¬ã‚¦ã‚·ã‚¢ãƒ³ãƒ–ãƒ©ãƒ¼ç”¨ã®ç¸®å°ãƒãƒƒãƒ•ã‚¡ã‚’ä½œæˆ
     RenderTexture::CreateRenderTarget(Rt::BlurH1, { width_ / 4,height_ / 4 }, GS_TRUE, GS_FALSE, GS_TRUE);
     RenderTexture::CreateRenderTarget(Rt::BlurV1, { width_ / 4,height_ / 4 }, GS_TRUE, GS_FALSE, GS_TRUE);
     RenderTexture::CreateRenderTarget(Rt::BlurH2, { width_ / 8,height_ / 8 }, GS_TRUE, GS_FALSE, GS_TRUE);
@@ -153,7 +153,7 @@ void PostEffect::CreateRender()
     RenderTexture::CreateRenderTarget(Rt::BlurH4, { width_ / 32,height_ / 32 }, GS_TRUE, GS_FALSE, GS_TRUE);
     RenderTexture::CreateRenderTarget(Rt::BlurV4, { width_ / 32,height_ / 32 }, GS_TRUE, GS_FALSE, GS_TRUE);
 
-    // ƒuƒ‹[ƒ€‡¬ƒVƒF[ƒ_[—p‚ÌƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚Ìì¬
+    // ãƒ–ãƒ«ãƒ¼ãƒ åˆæˆã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ç”¨ã®ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ä½œæˆ
     RenderTexture::CreateRenderTarget(Rt::BloomCombine, { width_,height_ }, GS_TRUE, GS_FALSE, GS_TRUE);
     RenderTexture::CreateRenderTarget(Rt::FinalScene, { width_,height_ }, GS_TRUE, GS_FALSE, GS_TRUE);
 
@@ -161,7 +161,7 @@ void PostEffect::CreateRender()
 
 void PostEffect::LoadShader()
 {
-    // ƒVƒF[ƒ_[‚Ì“Ç‚İ‚İ
+    // ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®èª­ã¿è¾¼ã¿
     gsLoadShader(Sh::BloomExtract, "Assets/Shader/RenderTexture.vert", "Assets/Shader/BloomExtract.frag");
     gsLoadShader(Sh::GaussianBlur, "Assets/Shader/RenderTexture.vert", "Assets/Shader/GaussianBlur.frag");
     gsLoadShader(Sh::BloomCombine, "Assets/Shader/RenderTexture.vert", "Assets/Shader/BloomCombine.frag");
@@ -172,32 +172,32 @@ void PostEffect::LoadShader()
 
 void PostEffect::bloomExtract(GSuint n, GScolor col)
 {
-    // ‚‹P“xƒsƒNƒZƒ‹’ŠoƒVƒF[ƒ_[‚ğ—LŒø‚É‚·‚é
+    // é«˜è¼åº¦ãƒ”ã‚¯ã‚»ãƒ«æŠ½å‡ºã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’æœ‰åŠ¹ã«ã™ã‚‹
     gsBeginShader(Sh::BloomExtract);
-    // ƒuƒ‹[ƒ€‚Ì‘ÎÛ‚É‚·‚éƒsƒNƒZƒ‹‚Ì‹P“x‚ğİ’è
+    // ãƒ–ãƒ«ãƒ¼ãƒ ã®å¯¾è±¡ã«ã™ã‚‹ãƒ”ã‚¯ã‚»ãƒ«ã®è¼åº¦ã‚’è¨­å®š
     gsSetShaderParam1f("u_BloomThreshold", bloomThreshold_);
-    // ƒuƒ‹[ƒ€‚ÌƒJƒ‰[‚ğİ’è
+    // ãƒ–ãƒ«ãƒ¼ãƒ ã®ã‚«ãƒ©ãƒ¼ã‚’è¨­å®š
     gsSetShaderParam4f("u_BloomColor", &col);
-    // ƒeƒNƒXƒ`ƒƒ‚Ìİ’è
+    // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®è¨­å®š
     gsSetShaderParamTexture("u_RenderTexture", 0);
-    // ‹P“x’Šo—p‚ÌƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚ğƒoƒCƒ“ƒh‚·‚é
+    // è¼åº¦æŠ½å‡ºç”¨ã®ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’ãƒã‚¤ãƒ³ãƒ‰ã™ã‚‹
     gsBeginRenderTarget(Rt::BloomExtract);
-    // ƒoƒCƒ“ƒh
+    // ãƒã‚¤ãƒ³ãƒ‰
     gsBindRenderTargetTextureEx(n, 0, 0);
 
-    // ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚Ì•`‰æ
+    // ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®æç”»
     gsDrawRenderTargetEx(Rt::BloomExtract);
-    // Œ³ƒV[ƒ“‰æ‘œ—p‚ÌƒeƒNƒXƒ`ƒƒ‚ÌƒoƒCƒ“ƒh‰ğœ
+    // å…ƒã‚·ãƒ¼ãƒ³ç”»åƒç”¨ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒã‚¤ãƒ³ãƒ‰è§£é™¤
     gsUnbindRenderTargetTextureEx(n, 0, 0);
-    // ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚Ì‰ğœ
+    // ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®è§£é™¤
     gsEndRenderTarget();
-    // ƒVƒF[ƒ_[‚ğ–³Œø‚É‚·‚é
+    // ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’ç„¡åŠ¹ã«ã™ã‚‹
     gsEndShader();
 }
 
 void PostEffect::bloomCombine(GSuint n)
 {
-    // ƒuƒ‹[ƒ€‡¬—pƒVƒF[ƒ_[‚ğ—LŒø‚É‚·‚é
+    // ãƒ–ãƒ«ãƒ¼ãƒ åˆæˆç”¨ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’æœ‰åŠ¹ã«ã™ã‚‹
     gsBeginShader(Sh::BloomCombine);
     gsSetShaderParamTexture("u_BaseTexture", 0);
     gsSetShaderParamTexture("u_BlurTexture1", 1);
@@ -205,70 +205,70 @@ void PostEffect::bloomCombine(GSuint n)
     gsSetShaderParamTexture("u_BlurTexture3", 3);
     //gsSetShaderParamTexture("u_BlurTexture4", 4);
     gsSetShaderParam1f("u_BloomIntensity", bloomIntencity_);
-    // ƒuƒ‹[ƒ€‡¬—pƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚ğ•`‰ææ‚É‚·‚é
+    // ãƒ–ãƒ«ãƒ¼ãƒ åˆæˆç”¨ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’æç”»å…ˆã«ã™ã‚‹
     gsBeginRenderTarget(Rt::BloomCombine);
-    // ƒoƒCƒ“ƒh
+    // ãƒã‚¤ãƒ³ãƒ‰
     gsBindRenderTargetTextureEx(n, 0, 0);
-    // ƒuƒ‰[ƒeƒNƒXƒ`ƒƒ‚ğƒoƒCƒ“ƒh
+    // ãƒ–ãƒ©ãƒ¼ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ãƒã‚¤ãƒ³ãƒ‰
     gsBindRenderTargetTextureEx(Rt::BlurV1, 0, 1);
     gsBindRenderTargetTextureEx(Rt::BlurV2, 0, 2);
     gsBindRenderTargetTextureEx(Rt::BlurV3, 0, 3);
     //gsBindRenderTargetTextureEx(Rt_BlurV4, 0, 4);
-    // ƒuƒ‹[ƒ€‡¬—pƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚ğ•`‰æ
+    // ãƒ–ãƒ«ãƒ¼ãƒ åˆæˆç”¨ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’æç”»
     gsDrawRenderTargetEx(Rt::BloomCombine);
-    // ƒoƒCƒ“ƒh‰ğœ
+    // ãƒã‚¤ãƒ³ãƒ‰è§£é™¤
     gsUnbindRenderTargetTextureEx(n, 0, 0);
-    // ƒuƒ‰[ƒeƒNƒXƒ`ƒƒ‚ğƒoƒCƒ“ƒh‰ğœ
+    // ãƒ–ãƒ©ãƒ¼ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ãƒã‚¤ãƒ³ãƒ‰è§£é™¤
     gsUnbindRenderTargetTextureEx(Rt::BlurV1, 0, 1);
     gsUnbindRenderTargetTextureEx(Rt::BlurV2, 0, 2);
     gsUnbindRenderTargetTextureEx(Rt::BlurV3, 0, 3);
     //gsUnbindRenderTargetTextureEx(Rt_BlurV4, 0, 4);
-    // ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚Ì‰ğœ@
+    // ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®è§£é™¤ã€€
     gsEndRenderTarget();
-    // ƒVƒF[ƒ_[‚ğ–³Œø‚É‚·‚é
+    // ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’ç„¡åŠ¹ã«ã™ã‚‹
     gsEndShader();
 }
 
 void PostEffect::gaussianBlur(GSuint source, GSvector2 size, GSuint blur_h, GSuint blur_v)
 {
-    // ƒuƒ‰[ƒeƒNƒXƒ`ƒƒ‚ÌƒeƒNƒZƒ‹ƒTƒCƒY
+    // ãƒ–ãƒ©ãƒ¼ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒ†ã‚¯ã‚»ãƒ«ã‚µã‚¤ã‚º
     GSvector2 blur_texel_size{ 1.0f / size.x, 1.0f / size.y };
-    // …•½ƒuƒ‰[‚Ì•ûŒü
+    // æ°´å¹³ãƒ–ãƒ©ãƒ¼ã®æ–¹å‘
     GSvector2 blur_h_direction{ 1.0f, 0.0f };
-    // ‚’¼ƒuƒ‰[‚Ì•ûŒü
+    // å‚ç›´ãƒ–ãƒ©ãƒ¼ã®æ–¹å‘
     GSvector2 blur_v_direction{ 0.0f, 1.0f };
-    // ƒKƒEƒVƒAƒ“ƒuƒ‰[—pƒVƒF[ƒ_[‚ğ—LŒø‚É‚·‚é
+    // ã‚¬ã‚¦ã‚·ã‚¢ãƒ³ãƒ–ãƒ©ãƒ¼ç”¨ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’æœ‰åŠ¹ã«ã™ã‚‹
     gsBeginShader(Sh::GaussianBlur);
-    // ƒeƒNƒZƒ‹ƒTƒCƒY‚Ìİ’è
+    // ãƒ†ã‚¯ã‚»ãƒ«ã‚µã‚¤ã‚ºã®è¨­å®š
     gsSetShaderParam2f("u_TexelSize", &blur_texel_size);
-    // ƒuƒ‰[‚Ì•ûŒü‚ğ…•½•ûŒü‚É‚·‚é
+    // ãƒ–ãƒ©ãƒ¼ã®æ–¹å‘ã‚’æ°´å¹³æ–¹å‘ã«ã™ã‚‹
     gsSetShaderParam2f("u_Direction", &blur_h_direction);
-    // ƒeƒNƒXƒ`ƒƒ‚Ìİ’è
+    // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®è¨­å®š
     gsSetShaderParamTexture("u_RenderTexture", 0);
-    // …•½•ûŒüƒuƒ‰[—p‚ÌƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚ğ•`‰ææ‚É‚·‚é
+    // æ°´å¹³æ–¹å‘ãƒ–ãƒ©ãƒ¼ç”¨ã®ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’æç”»å…ˆã«ã™ã‚‹
     gsBeginRenderTarget(blur_h);
-    // Œ³‰æ‘œ‚ÌƒeƒNƒXƒ`ƒƒ‚ğƒoƒCƒ“ƒh
+    // å…ƒç”»åƒã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ãƒã‚¤ãƒ³ãƒ‰
     gsBindRenderTargetTextureEx(source, 0, 0);
-    // ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚ğ•`‰æ
+    // ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’æç”»
     gsDrawRenderTargetEx(blur_h);
-    // ƒeƒNƒXƒ`ƒƒ‚Ì‰ğœ
+    // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®è§£é™¤
     gsUnbindRenderTargetTextureEx(source, 0, 0);
-    // ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚Ì‰ğœ
+    // ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®è§£é™¤
     gsEndRenderTarget();
 
-    // ƒuƒ‰[‚Ì•ûŒü‚ğ‚’¼•ûŒü‚É‚·‚é
+    // ãƒ–ãƒ©ãƒ¼ã®æ–¹å‘ã‚’å‚ç›´æ–¹å‘ã«ã™ã‚‹
     gsSetShaderParam2f("u_Direction", &blur_v_direction);
-    // ‚’¼•ûŒüƒuƒ‰[—p‚ÌƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚ğ•`‰ææ‚É‚·‚é
+    // å‚ç›´æ–¹å‘ãƒ–ãƒ©ãƒ¼ç”¨ã®ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’æç”»å…ˆã«ã™ã‚‹
     gsBeginRenderTarget(blur_v);
-    // …•½•ûŒüƒuƒ‰[‚ÌƒeƒNƒXƒ`ƒƒ‚ğƒoƒCƒ“ƒh
+    // æ°´å¹³æ–¹å‘ãƒ–ãƒ©ãƒ¼ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ãƒã‚¤ãƒ³ãƒ‰
     gsBindRenderTargetTextureEx(blur_h, 0, 0);
-    // ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚ğ•`‰æ
+    // ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’æç”»
     gsDrawRenderTargetEx(blur_v);
-    // ƒeƒNƒXƒ`ƒƒ‚Ì‰ğœ
+    // ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®è§£é™¤
     gsUnbindRenderTargetTextureEx(blur_h, 0, 0);
-    // ƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg‚Ì‰ğœ
+    // ãƒ¬ãƒ³ãƒ€ãƒ¼ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®è§£é™¤
     gsEndRenderTarget();
-    // ƒVƒF[ƒ_[‚ğ–³Œø‚É‚·‚é
+    // ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’ç„¡åŠ¹ã«ã™ã‚‹
     gsEndShader();
 }
 

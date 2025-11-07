@@ -3,31 +3,50 @@
 #include "../../World/IWorld.h"
 #include "../../GameSystem/Camera/Camera.h"
 #include "../../GameSystem/InputSystem/InputSystem.h"
+#include "../../Actor/AttackCollide.h"
+
+#include "../../UI/PlayerUI.h"
 //ステートヘッダー
 #include "State/PlayerIdle.h"
 #include "State/PlayerMove.h"
+#include "State/PlayerDamage.h"
+#include "State/PlayerDead.h"
 #include "State/PlayerAttack.h"
 #include "State/PlayerUltimateSkill.h"
 
 Player::Player(IWorld* world, const GSvector3& position, GSuint mesh)
     :Charactor(world, position, mesh)
 {
-    
+    tag_ = ActorName::Player;
     name_ = ActorName::Player;
     //ステートの追加
     states_.AddState(PlayerState::Idle, new PlayerIdle(this));
     states_.AddState(PlayerState::Move, new PlayerMove(this));
+    states_.AddState(PlayerState::Damage, new PlayerDamage(this));
+    states_.AddState(PlayerState::Dead, new PlayerDead(this));
     states_.AddState(PlayerState::Attack, new PlayerAttack(this));
     states_.AddState(PlayerState::Ultimate, new PlayerUltimateSkill(this));
     states_.ChangeState(PlayerState::Idle);
-
-    //スキル
-    mesh_->AddEvent(6, 60, [=] {AttackCollide(); });
 
     colliderOffset_ = { 0.0f,1.0f,0.0f };
     camera_ = new CameraController(CameraController::Player);
     world_->AddCameraController(camera_);
     camera_->SetSmooth(true);
+    attackCollider_ = new AttackCollide(this,1,{ 0,0,0 },colliderOffset_);
+    world_->AddActor(attackCollider_);
+    ui_ = new PlayerUI(this);
+    world_->AddGUI(ui_);
+    //イベントの追加
+    mesh_->AddEvent(Motion::Attack, 30, [=] {TestAttack(); });
+    mesh_->AddEvent(Motion::Combo2, 30, [=] {TestAttack(); });
+    mesh_->AddEvent(Motion::Combo3, 30, [=] {TestAttack(); camera_->SetShakeValues(30.0f, 5.0f, 160.0f, 1.0f, 20.0f, { 0.1f,0.1f }, 0.0f); });
+    mesh_->AddEvent(Motion::Attack, 30, [=] {TestAttack(); });
+    mesh_->AddEvent(Motion::UltSkill, 45, [=] {TestAttack(); });
+    mesh_->AddEvent(Motion::UltSkill, 70, [=] {TestAttack(); });
+    mesh_->AddEvent(Motion::UltSkill, 90, [=] {TestAttack(); });
+    mesh_->AddEvent(Motion::UltSkill, 110, [=] {TestAttack(); });
+    mesh_->AddEvent(Motion::UltSkill, 130, [=] {TestAttack(); });
+    mesh_->AddEvent(Motion::UltSkill, 160, [=] {TestAttack(); });
 }
 Player::~Player()
 {
@@ -36,16 +55,20 @@ Player::~Player()
 void Player::Update(float deltaTime)
 {
     Charactor::Update(deltaTime);
-    collider_.Position(transform_.position() + colliderOffset_);
 
-    if (!IsAttack() && InputSystem::ButtonTrigger(InputSystem::Button::B)) {
-        states_.ChangeState(PlayerState::Attack);
-        camera_->SetShakeValues(30.0f, 1.0f, 160.0f, 1.0f, 20.0f, { 0.1f,0.1f }, 0.0f);
+    if (InputSystem::ButtonTrigger(InputSystem::Button::B)) {
+        if (!IsAttack() && CurrentState() != PlayerState::Damage) {
+            states_.ChangeState(PlayerState::Attack);
+            //camera_->SetShakeValues(30.0f, 1.0f, 160.0f, 1.0f, 20.0f, { 0.1f,0.1f }, 0.0f);
+        }
     }
+    
     if (!IsAttack() && InputSystem::ButtonTrigger(InputSystem::Button::A)) {
         states_.ChangeState(PlayerState::Ultimate);
     }
     MoveCamera(deltaTime);
+    MoveAttackCollide();
+    
 }
 void Player::LateUpdate(float deltaTime)
 {
@@ -60,7 +83,16 @@ void Player::Draw()const
 
 void Player::React(Actor& other)
 {
+}
 
+void Player::TakeDamage(float damage)
+{
+    //無敵なら攻撃を受けない
+    if (IsInvincible()) return;
+    hp_ -= damage;
+    //hpが0なら死亡
+    if (IsDying()) ChangeState(PlayerState::Dead);
+    else ChangeState(PlayerState::Damage);
 }
 
 void Player::MovePosition(float deltaTime)
@@ -121,9 +153,16 @@ void Player::MoveCamera(float deltaTime)
     camera_->SetView(cameraPos,target);
 }
 
-void Player::AttackCollide()
+void Player::MoveAttackCollide()
 {
-    int test = 0;
+    GSvector3 forward = transform_.forward() * 1.0f;
+    //攻撃判定を追従
+    attackCollider_->Transform().position(transform_.position()+ forward);
+}
+
+void Player::TestAttack()
+{
+    attackCollider_->IsAttack(0.01f,20);
 }
 
 //現在のカメラの方向を取得
@@ -145,4 +184,7 @@ GStransform& Player::CameraTransform()
 void Player::Debug(float deltaTime)
 {
     mesh_->Debug();
+    ImGui::Begin("Playerstatus");
+    ImGui::Value("hp", hp_);
+    ImGui::End();
 }

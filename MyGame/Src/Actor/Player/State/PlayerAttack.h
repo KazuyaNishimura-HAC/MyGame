@@ -11,6 +11,8 @@ public:
 	void Exit()override;
 	void SetID(int id = 0)override;
 	int GetID()override;
+private:
+	int combo_ = 0;
 };
 
 #endif

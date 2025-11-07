@@ -12,18 +12,32 @@ void PlayerAttack::Update(float deltaTime)
 		owner_->ChangeState(PlayerState::Idle);
 		return;
 	}
-	if(InputSystem::ButtonTrigger(InputSystem::Button::B)) owner_->ChangeMotion(3, false);
+	int time = owner_->GetMesh()->MotionEndTime() - 40.0f;
+	if (InputSystem::ButtonTrigger(InputSystem::Button::B) && time < owner_->GetMesh()->MotionTime()) {
+		switch (combo_) {
+			case 0:
+				owner_->ChangeMotion(Player::Combo2, false, 1.5f);
+				break;
+			case 1:
+				owner_->ChangeMotion(Player::Combo3, false, 1.5f);
+				break;
+			default:
+				break;
+		}
+		combo_++;
+	}
 }
 
 void PlayerAttack::Enter()
 {
-	owner_->IsAttack(true);
-	owner_->ChangeMotion(2, false,1.5f);
+	owner_->SetAttack(true);
+	owner_->ChangeMotion(Player::Attack, false,1.5f);
+	combo_ = 0;
 }
 
 void PlayerAttack::Exit()
 {
-	owner_->IsAttack(false);
+	owner_->SetAttack(false);
 }
 
 void PlayerAttack::SetID(int id)

@@ -142,6 +142,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Actor\Enemy\State\EnemyDamage.cpp" />
+    <ClCompile Include="Src\Actor\Enemy\State\EnemyDead.cpp" />
+    <ClCompile Include="Src\Actor\Player\State\PlayerDead.cpp" />
+    <ClCompile Include="Src\Actor\Player\State\PlayerDamage.cpp" />
+    <ClCompile Include="Src\Actor\AttackCollide.cpp" />
     <ClCompile Include="Src\Actor\Charactor.cpp" />
     <ClCompile Include="Src\Actor\Enemy\Default\DefaultEnemy.cpp" />
     <ClCompile Include="Src\GameSystem\Field\Field.cpp" />
@@ -183,13 +188,21 @@
     <ClCompile Include="Src\Sound\SoundManager.cpp" />
     <ClCompile Include="Src\State\StateMachine.cpp" />
     <ClCompile Include="Src\UI\GUIManager.cpp" />
+    <ClCompile Include="Src\UI\HorizontalGauge.cpp" />
     <ClCompile Include="Src\UI\Image.cpp" />
+    <ClCompile Include="Src\UI\PlayerUI.cpp" />
+    <ClCompile Include="Src\UI\SimpleHorizontalGauge.cpp" />
     <ClCompile Include="Src\World\World.cpp" />
     <ClCompile Include="Src\GameSystem\Event\UltimateAnimEvent.cpp" />
     <ClCompile Include="Src\GameSystem\Event\TimeLine\TimeLineEditor.cpp" />
     <ClCompile Include="Src\GameSystem\Event\TimeLine\TimeLine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Actor\Enemy\State\EnemyDamage.h" />
+    <ClInclude Include="Src\Actor\Enemy\State\EnemyDead.h" />
+    <ClInclude Include="Src\Actor\Player\State\PlayerDead.h" />
+    <ClInclude Include="Src\Actor\Player\State\PlayerDamage.h" />
+    <ClInclude Include="Src\Actor\AttackCollide.h" />
     <ClInclude Include="Src\Actor\Charactor.h" />
     <ClInclude Include="Src\Actor\Enemy\Default\DefaultEnemy.h" />
     <ClInclude Include="Src\GameSystem\Field\Field.h" />
@@ -256,7 +269,10 @@
     <ClInclude Include="Src\State\StateNull.h" />
     <ClInclude Include="Src\UI\GUI.h" />
     <ClInclude Include="Src\UI\GUIManager.h" />
+    <ClInclude Include="Src\UI\HorizontalGauge.h" />
     <ClInclude Include="Src\UI\Image.h" />
+    <ClInclude Include="Src\UI\PlayerUI.h" />
+    <ClInclude Include="Src\UI\SimpleHorizontalGauge.h" />
     <ClInclude Include="Src\UI\Texture.h" />
     <ClInclude Include="Src\World\IWorld.h" />
     <ClInclude Include="Src\World\World.h">

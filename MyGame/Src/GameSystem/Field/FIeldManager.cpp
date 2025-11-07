@@ -72,6 +72,17 @@ void FieldManager::CollideActor(GStransform& transform)
     transform.position(ClampPosition(transform.position(), 0.5f));
 }
 
+void FieldManager::CollideCamera(GStransform& transform, const GSvector3& viewTarget)
+{
+    Line camera;
+    camera.start = viewTarget;
+    camera.end = transform.position();
+    Field::FieldSurface surface = GetFieldSurface(camera);
+
+    if (surface.normal == GSvector3::zero())return;
+    transform.position(surface.collide);
+}
+
 GSvector3 FieldManager::ClampPosition(const GSvector3& position, float radius)
 {
     GSvector3 clampedPos = position;
@@ -84,6 +95,21 @@ GSvector3 FieldManager::ClampPosition(const GSvector3& position, float radius)
     }
     return clampedPos;
 }
+
+Field::FieldSurface FieldManager::GetFieldSurface(Line camera)
+{
+    Field::FieldSurface result;
+    for (auto field : fields_)
+    {
+        if (!field->Enable())continue;
+        if (!field->CameraCollide())continue;
+
+        result = field->ClampCameraPosition(camera, 0.2f);
+        if (result.normal != GSvector3::zero())break;
+    }
+    return result;
+}
+
 void FieldManager::Remove()
 {
     for (auto i = fieldActor_.begin(); i != fieldActor_.end();)

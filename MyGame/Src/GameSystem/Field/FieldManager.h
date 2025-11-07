@@ -3,12 +3,12 @@
 
 #include "../../Actor/ActorManager.h"
 #include "../Camera/Camera.h"
+#include "Field.h"
 #include <vector>
 class Ray;
 class Line;
 class BoundingSphere;
 class FieldActor;
-class Field;
 
 // フィールドアクターマネージャー
 class FieldManager {
@@ -25,7 +25,9 @@ public:
     FieldActor* GetFieldID(int index,int id);
     int GetFieldCount();
     void CollideActor(GStransform& transform);
+    void CollideCamera(GStransform& transform, const GSvector3& viewTarget);
     GSvector3 ClampPosition(const GSvector3& position, float radius);
+    Field::FieldSurface GetFieldSurface(Line camera);
     void Remove();
     void Clear();
     // レイとの衝突判定

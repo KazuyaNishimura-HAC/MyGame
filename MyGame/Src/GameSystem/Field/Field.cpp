@@ -25,6 +25,44 @@ GSvector3 Field::ClampPosition(const GSvector3& actorPosition, float radius)
     return clampedPosition;
 }
 
+Field::FieldSurface Field::ClampCameraPosition(Line camera, float radius)
+{
+    FieldSurface result;
+    //プレイヤーより前にある判定は無視
+    //if (GSvector3::dot(camera.Direction(), transform_.position() - camera.origin) <= 0)return result;
+    Line adjusted;
+    adjusted.start = camera.start;
+    adjusted.end = transform_.position();
+    for (int i = 0; i < 4; i++)
+    {
+        FieldSurface surface;
+        surface.pos = transform_.position() + normal_[i] * CollisionSize(radius);
+        surface.normal = normal_[i];
+        //裏面衝突は無視
+        if (GSvector3::dot(camera.DirectionVec(), surface.normal) >= 0)continue;
+        //カメラが面より手前だったら無視
+        if (GSvector3::dot(camera.end - surface.pos, surface.normal) >= 0)continue;
+
+        float camSurfNormDot = GSvector3::dot(surface.normal, camera.start - surface.pos);
+        if (camSurfNormDot <= 0)continue;
+        float camSurfNormLen = GSvector3::dot(surface.normal, camera.start - camera.end);
+        GSvector3 collidePos = camera.start + (camera.end - camera.start) * (camSurfNormDot / camSurfNormLen);
+        surface.size = CollisionSize(radius) * (GSvector3::one() - normal_[i % 2]);
+        surface.size.y = 0;
+        GSvector3 invSize = surface.size * GSvector3{ -1,0,-1 };
+        //衝突してたらdotがマイナスになるはず
+        GSvector3 collideOffsetBase = collidePos - surface.pos;
+        collideOffsetBase.y = 0;
+        float surfCollide = GSvector3::dot(collideOffsetBase + surface.size, collideOffsetBase + invSize);
+        if (surfCollide > 0)continue;
+        surface.collide = collidePos;
+        result = surface;
+        break;
+    }
+    return result;
+}
+
+
 void Field::Draw() const
 {
     const GSvector3& pos = transform_.position();
@@ -82,4 +120,9 @@ GSvector3 Field::CollisionExtents(float radius)
 bool Field::IsInside(const GSvector3& dist, const GSvector3& size)
 {
     return abs(dist.x) < size.x && abs(dist.z) < size.z;
+}
+
+GSvector3 Field::CollisionSize(float radius)
+{
+    return  transform_.localScale() / 2 + GSvector3::one() * radius;
 }

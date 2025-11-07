@@ -44,7 +44,7 @@ void World::Update(float deltaTime)
 
     //当たり判定
     actorManager_.Collide();
-    fieldManager_.CollideActor(actorManager_.GetPlayer()->Transform());
+    if(GetPlayer())fieldManager_.CollideActor(GetPlayer()->Transform());
     eventManager_.Invoke();
 
     fieldManager_.Remove();
@@ -92,7 +92,6 @@ void World::Clear()
 {
     delete timeLineEditor_;
     timeLineEditor_ = nullptr;
-    isEnd_ = false;
     fieldManager_.Clear();
     actorManager_.Clear();
     eventManager_.Clear();
@@ -102,7 +101,7 @@ void World::Clear()
     isEnd_ = false;
     isStart_ = false;
     isTimer_ = true;
-    
+    PostEffect::Instance().Clear();
     //SoundManager::StopBGM();
 }
 

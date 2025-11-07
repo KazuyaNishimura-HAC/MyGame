@@ -24,6 +24,8 @@ public:
     //必要な時のみoverride
     virtual void SetSceneData(SceneData data = {}) {};
     virtual void Debug(float delta_time) {};
+protected:
+    bool sceneEnd_{ false };
 };
 
 #endif

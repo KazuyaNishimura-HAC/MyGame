@@ -30,7 +30,6 @@ public:
     virtual void Debug(float delta_time)override;
 private:
     World world_;
-    bool sceneEnd_{ false };
 
     DebugCamera* debugCamera_{ nullptr };
 };

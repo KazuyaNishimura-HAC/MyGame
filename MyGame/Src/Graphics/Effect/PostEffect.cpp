@@ -120,6 +120,23 @@ void PostEffect::MargeShader(GSuint n, GSuint m)
     gsUnbindRenderTargetDepthEx(m, 1);
 }
 
+void PostEffect::Clear()
+{
+    //値を初期化
+    bloomThreshold_ = { 0.01f };
+    bloomIntencity_ = { 0.35f };
+   bloomColor_={ 1.0f,1.0f,1.0f,1.0f };
+   fogColor_={ 1.0f, 1.0f, 1.0f, 1.0f };
+    fogStart_={ 500.0f };
+    fogEnd_={ 1500.0f };
+    tilling_={ 1.0f, 1.0f };
+    offset_ = { 0.0f, 0.0f };
+    threshold_ ={ 0.0f };
+    edge_width_ = { 0.0f };
+   edge_color_={ 1.0f, 1.0f, 1.0f, 1.0f };
+    edge_color_intensity_={ 1.0f };
+}
+
 void PostEffect::CreateRender()
 {
     // 元シーン用のレンダーターゲットの作成

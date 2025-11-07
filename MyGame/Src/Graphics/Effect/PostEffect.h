@@ -13,6 +13,7 @@ public:
 	void Fog(GSuint n, GScolor col);
 	void Dissolve(GSuint n, GSuint m);
 	void MargeShader(GSuint n, GSuint m);
+    void Clear();
 private:
 	const float width_ = Screen::ScreenWidth;
 	const float height_ = Screen::ScreenHeight;

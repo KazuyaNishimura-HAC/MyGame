@@ -69,9 +69,7 @@ void World::Draw() const
         gsDrawSkyboxCubemap(SkyBox::GamePlay);
         fieldManager_.Draw(camera);
         actorManager_.Draw();
-        
         eventManager_.Draw();
-        // エフェクトの描画
         gsDrawEffect();
         RenderTexture::EndRender();
         RenderTexture::BindRenderTexture(Rt::BaseScene,0);

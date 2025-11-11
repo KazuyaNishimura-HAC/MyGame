@@ -1,10 +1,11 @@
-#ifndef GRAPHICS_H_
+ï»¿#ifndef GRAPHICS_H_
 #define GRAPHICS_H_
 
-//=======ƒOƒ‰ƒtƒBƒbƒNæ“¾=======
+//=======ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯å–å¾—=======
 
 #include "../UI/Texture.h"
 #include "../Graphics/Shader/RenderTextureID.h"
 #include "../Graphics/Shader/ShaderID.h"
+#include "../Graphics/Effect/Effect.h"
 
 #endif

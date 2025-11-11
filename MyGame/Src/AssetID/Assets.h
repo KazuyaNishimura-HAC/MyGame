@@ -9,5 +9,6 @@
 #include "../Sound/Sound.h"
 #include "../Graphics/Shader/RenderTextureID.h"
 #include "../Graphics/Shader/ShaderID.h"
+#include "../Graphics/Effect/Effect.h"
 
 #endif

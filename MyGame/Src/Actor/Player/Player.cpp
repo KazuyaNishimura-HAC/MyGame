@@ -4,7 +4,7 @@
 #include "../../GameSystem/Camera/Camera.h"
 #include "../../GameSystem/InputSystem/InputSystem.h"
 #include "../../Actor/AttackCollide.h"
-
+#include "../../Graphics/Effect/Effect.h"
 #include "../../UI/PlayerUI.h"
 //ステートヘッダー
 #include "State/PlayerIdle.h"
@@ -163,6 +163,8 @@ void Player::MoveAttackCollide()
 void Player::TestAttack()
 {
     attackCollider_->IsAttack(0.01f,20);
+    Effect::PlayEffect(EffectParam(Effect::Slash, { 0,0,1 }, {}), transform_);
+    Effect::PlayEffect(EffectParam(Effect::Slash, { 0,0,2 }, {}), transform_);
 }
 
 //現在のカメラの方向を取得

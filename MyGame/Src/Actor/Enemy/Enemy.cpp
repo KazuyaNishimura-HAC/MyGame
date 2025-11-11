@@ -3,6 +3,7 @@
 #include "../../World/IWorld.h"
 #include "../../GameSystem/InputSystem/InputSystem.h"
 #include "../../Actor/Player/Player.h"
+#include "../../Actor/AttackCollide.h"
 
 #include "State/EnemyState.h"
 #include "State/EnemyIdle.h"

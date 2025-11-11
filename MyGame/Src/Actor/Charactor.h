@@ -3,14 +3,16 @@
 #include "Actor.h"
 #include "../Actor/Model.h"
 #include "../State/StateMachine.h"
-#include "../Actor/AttackCollide.h"
-struct Status {
-	Status(int hp, float atk) :hp{ hp }, atk{ atk } { maxHP = hp; };
-	Status() : Status(60, 10) {};
-	int hp;
-	int maxHP;
-	float atk;
 
+class AttackCollide;
+
+struct Status {
+	Status(float hp, float atk) :hp{ hp }, atk{ atk } { maxHP = hp; };
+    //ステータス初期設定
+	Status() : Status(60, 10) {};
+    float hp;
+    float maxHP;
+	float atk;
 };
 class Charactor : public Actor
 {
@@ -30,8 +32,8 @@ public:
 	const Status& GetStatus();
 	void SetAttack(float attack);
 	float GetAttack();
-	int GetHealth();
-	int GetMaxHealth();
+	float GetHealth();
+	float GetMaxHealth();
 
 	//====================各状態フラグ====================
 	void SetAttack(bool isAttack);

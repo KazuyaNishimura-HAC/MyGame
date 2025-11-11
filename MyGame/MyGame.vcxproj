@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Graphics\Effect\EffectObject.cpp" />
     <ClCompile Include="Src\Actor\Enemy\State\EnemyDamage.cpp" />
     <ClCompile Include="Src\Actor\Enemy\State\EnemyDead.cpp" />
     <ClCompile Include="Src\Actor\Player\State\PlayerDead.cpp" />
@@ -150,7 +151,6 @@
     <ClCompile Include="Src\Actor\Charactor.cpp" />
     <ClCompile Include="Src\Actor\Enemy\Default\DefaultEnemy.cpp" />
     <ClCompile Include="Src\GameSystem\Field\Field.cpp" />
-    <ClCompile Include="Src\Graphics\Effect\EffectManager.cpp" />
     <ClCompile Include="Src\Actor\Enemy\State\EnemyAttack.cpp" />
     <ClCompile Include="Src\Actor\Enemy\State\EnemyIdle.cpp" />
     <ClCompile Include="Src\Actor\Enemy\State\EnemyMove.cpp" />
@@ -198,6 +198,7 @@
     <ClCompile Include="Src\GameSystem\Event\TimeLine\TimeLine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Graphics\Effect\EffectObject.h" />
     <ClInclude Include="Src\Actor\Enemy\State\EnemyDamage.h" />
     <ClInclude Include="Src\Actor\Enemy\State\EnemyDead.h" />
     <ClInclude Include="Src\Actor\Player\State\PlayerDead.h" />
@@ -207,7 +208,7 @@
     <ClInclude Include="Src\Actor\Enemy\Default\DefaultEnemy.h" />
     <ClInclude Include="Src\GameSystem\Field\Field.h" />
     <ClInclude Include="Src\GameSystem\Event\TimeLine\TImeLineData.h" />
-    <ClInclude Include="Src\Graphics\Effect\EffectManager.h" />
+    <ClInclude Include="Src\Graphics\Effect\Effect.h" />
     <ClInclude Include="Src\Actor\Enemy\State\EnemyAttack.h" />
     <ClInclude Include="Src\Actor\Enemy\State\EnemyIdle.h" />
     <ClInclude Include="Src\Actor\Enemy\State\EnemyMove.h" />

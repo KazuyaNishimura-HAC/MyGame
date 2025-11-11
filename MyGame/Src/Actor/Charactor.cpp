@@ -69,12 +69,12 @@ float Charactor::GetAttack()
 	return status_.atk;
 }
 
-int Charactor::GetHealth()
+float Charactor::GetHealth()
 {
 	return status_.hp;
 }
 
-int Charactor::GetMaxHealth()
+float Charactor::GetMaxHealth()
 {
 	return status_.maxHP;
 }
@@ -97,11 +97,9 @@ bool Charactor::IsInvincible()
 	return invincible_;
 }
 
-
-
 bool Charactor::IsDying()
 {
-	return status_.hp <= 0;
+	return status_.hp <= 0.0f;
 }
 
 IWorld* Charactor::World()

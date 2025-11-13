@@ -15,7 +15,6 @@ public:
 	int GetID()override;
 private:
 	Player* player_{ nullptr };
-	float motionCoolTime_{ 0.0f };
 };
 
 #endif

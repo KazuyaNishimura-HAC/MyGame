@@ -3,6 +3,7 @@
 #include "../../../World/IWorld.h"
 #include "../../../GameSystem/InputSystem/InputSystem.h"
 #include "../../../Actor/AttackCollide.h"
+#include "../../../Graphics/Effect/Effect.h"
 
 #include "../State/EnemyState.h"
 #include "../State/EnemyIdle.h"
@@ -37,8 +38,6 @@ void DefaultEnemy::Update(float deltaTime)
     Enemy::Update(deltaTime);
     //基底クラスの処理を実行
     MoveAttackCollide();
-    if(GetCoolTime() <= 0)
-    damageCoolTime_ -= deltaTime / 60.0f;
 }
 
 void DefaultEnemy::LateUpdate(float deltaTime)
@@ -81,4 +80,6 @@ void DefaultEnemy::Debug(float deltaTime)
 void DefaultEnemy::TestAttack()
 {
     attackCollider_->IsAttack(0.5f, 10);
+    GSuint atkHandle = gsPlayEffectEx(Effect::Slash, nullptr);
+    Effect::SetEffectParam(EffectParam(atkHandle, { 0,1,1 }, { 0,0,45 }, { 1,1,1 }), transform_);
 }

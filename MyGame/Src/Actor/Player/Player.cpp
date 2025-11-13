@@ -4,7 +4,6 @@
 #include "../../GameSystem/Camera/Camera.h"
 #include "../../GameSystem/InputSystem/InputSystem.h"
 #include "../../Actor/AttackCollide.h"
-#include "../../Graphics/Effect/Effect.h"
 #include "../../UI/PlayerUI.h"
 //ステートヘッダー
 #include "State/PlayerIdle.h"
@@ -40,13 +39,14 @@ Player::Player(IWorld* world, const GSvector3& position,Status status, GSuint me
     mesh_->AddEvent(Motion::Attack, 30, [=] {TestAttack(); });
     mesh_->AddEvent(Motion::Combo2, 30, [=] {TestAttack(); });
     mesh_->AddEvent(Motion::Combo3, 30, [=] {TestAttack(); camera_->SetShakeValues(30.0f, 5.0f, 160.0f, 1.0f, 20.0f, { 0.1f,0.1f }, 0.0f); });
-    mesh_->AddEvent(Motion::Attack, 30, [=] {TestAttack(); });
     mesh_->AddEvent(Motion::UltSkill, 45, [=] {TestAttack(); });
     mesh_->AddEvent(Motion::UltSkill, 70, [=] {TestAttack(); });
     mesh_->AddEvent(Motion::UltSkill, 90, [=] {TestAttack(); });
     mesh_->AddEvent(Motion::UltSkill, 110, [=] {TestAttack(); });
     mesh_->AddEvent(Motion::UltSkill, 130, [=] {TestAttack(); });
     mesh_->AddEvent(Motion::UltSkill, 160, [=] {TestAttack(); });
+    //エフェクト生成（登録）
+    effectHandles_[Effect::Aura] = gsPlayEffectEx(Effect::Aura, nullptr);
 }
 Player::~Player()
 {
@@ -66,9 +66,15 @@ void Player::Update(float deltaTime)
     if (!IsAttack() && InputSystem::ButtonTrigger(InputSystem::Button::A)) {
         states_.ChangeState(PlayerState::Ultimate);
     }
+    if (InputSystem::ButtonTrigger(InputSystem::Button::X)) {
+        gsSetEffectShown(effectHandles_[Effect::Aura], false);
+    }
+    if (InputSystem::ButtonTrigger(InputSystem::Button::Y)) {
+        gsSetEffectShown(effectHandles_[Effect::Aura], true);
+    }
+    Effect::SetEffectParam(EffectParam(effectHandles_[Effect::Aura], {}, {}, { 1,1,1 }), transform_);
     MoveCamera(deltaTime);
     MoveAttackCollide();
-    
 }
 void Player::LateUpdate(float deltaTime)
 {
@@ -130,6 +136,26 @@ void Player::MovePosition(float deltaTime)
     transform_.translate(moveVector, GStransform::Space::World);
 }
 
+void Player::SetGuard(bool guard)
+{
+    isGuard_ = guard;
+}
+
+bool Player::IsGuard()
+{
+    return isGuard_;
+}
+
+void Player::SetParry(bool parry)
+{
+    isParry_ = parry;
+}
+
+bool Player::IsParry()
+{
+    return isParry_;
+}
+
 void Player::MoveCamera(float deltaTime)
 {
     float yaw = 0, pitch = 0;
@@ -163,8 +189,8 @@ void Player::MoveAttackCollide()
 void Player::TestAttack()
 {
     attackCollider_->IsAttack(0.01f,20);
-    Effect::PlayEffect(EffectParam(Effect::Slash, { 0,0,1 }, {}), transform_);
-    Effect::PlayEffect(EffectParam(Effect::Slash, { 0,0,2 }, {}), transform_);
+    GSuint atkHandle = gsPlayEffectEx(Effect::Slash, nullptr);
+    Effect::SetEffectParam(EffectParam(atkHandle, { 0,1,1 },{ 0,0,45 },{ 1,1,1 },{ 0,0,1,1 }), transform_);
 }
 
 //現在のカメラの方向を取得

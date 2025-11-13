@@ -15,13 +15,11 @@ void EnemyDamage::Update(float deltaTime)
 
 void EnemyDamage::Enter()
 {
-	owner_->ChangeMotion(Enemy::Hit, false);
-
+	owner_->ChangeMotion(Enemy::Hit, false,1,0,0,true);
 }
 
 void EnemyDamage::Exit()
 {
-	owner_->SetCoolTime(1.0f);
 }
 
 void EnemyDamage::SetID(int id)

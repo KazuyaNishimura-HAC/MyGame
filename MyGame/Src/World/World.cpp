@@ -40,8 +40,9 @@ void World::Update(float deltaTime)
     actorManager_.Update(deltaTime);
     actorManager_.LateUpdate(deltaTime);
     eventManager_.Update(time_.GameDeltaTime());
+    gsUpdateEffect(deltaTime);
     guiManager_.Update(deltaTime, time_.GameDeltaTime());
-
+    
     //当たり判定
     actorManager_.Collide();
     if(GetPlayer())fieldManager_.CollideActor(GetPlayer()->Transform());

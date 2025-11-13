@@ -38,8 +38,13 @@ public:
     void Draw()const override;
     //接触判定
     void React(Actor& other)override;
+
     void TakeDamage(float damage)override;
     void MovePosition(float deltaTime);
+    void SetGuard(bool guard);
+    bool IsGuard();
+    void SetParry(bool parry);
+    bool IsParry();
     void Debug(float deltaTime)override;
 private:
     GSvector3 GetCameraDirection();
@@ -58,10 +63,13 @@ private:
     GSvector3 cameraFocusOffset_{ 0,1.5f,0 };
     //注視点までの距離
     float cameraDepth_{ 5.5f };
-
     //以下プレイヤー動作値
     float moveSpeed_{ 1.5f };
-
+    //ガード中か
+    bool isGuard_{ false };
+    //パリィ可能か
+    bool isParry_{ false };
     PlayerUI* ui_ = nullptr;
+    std::unordered_map <Effect::ID,GSuint> effectHandles_;
 };
 #endif

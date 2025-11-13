@@ -15,7 +15,7 @@ void PlayerDamage::Update(float deltaTime)
 
 void PlayerDamage::Enter()
 {
-	owner_->ChangeMotion(Player::Hit, false);
+	owner_->ChangeMotion(Player::Hit, false,1,0,0,true);
 }
 
 void PlayerDamage::Exit()

@@ -3,6 +3,7 @@
 #include "Actor.h"
 #include "../Actor/Model.h"
 #include "../State/StateMachine.h"
+#include "../Graphics/Effect/Effect.h"
 
 class AttackCollide;
 
@@ -46,6 +47,7 @@ public:
 protected:
 	StateMachine states_;
 	AttackCollide* attackCollider_{ nullptr };
+    std::unordered_map <Effect::ID, GSuint> effectHandles_;
 	Status status_{};
 	bool isAttack_{ false };
 	bool invincible_{ false };

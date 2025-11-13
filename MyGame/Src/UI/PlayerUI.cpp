@@ -23,11 +23,12 @@ PlayerUI::~PlayerUI()
 
 void PlayerUI::Update(float deltaTime)
 {
-    float health = (float)player_->GetHealth() / (float)player_->GetMaxHealth();
+    float health = player_->GetHealth() / player_->GetMaxHealth();
     healthGauge_->FillAmount(health);
 }
 
 void PlayerUI::Draw() const
 {
+    if (!enable_) return;
     healthGauge_->Draw();
 }

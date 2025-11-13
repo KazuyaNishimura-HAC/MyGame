@@ -1,5 +1,6 @@
 ﻿#include "LoadScene.h"
 #include <GSgame.h>
+#include <GSeffect.h>
 #include "../../GameSystem/InputSystem/InputSystem.h"
 #include "../../AssetID/Assets.h"
 #include "../../UI/Image.h"
@@ -14,7 +15,7 @@ void LoadScene::Start() {
     gsLoadTexture(Texture::LoadingText, "Assets/Texture/Scene/LoadingText.png");
     text_ = new Image({ 150,50 }, Texture::LoadingText);
     guiManager_.AddGUI(text_);
-    gslib::Game::run_thread([=] {LoadAssets(); });
+    gslib::Game::run_thread([=] { LoadAssets(); });
     
 }
 
@@ -67,6 +68,11 @@ void LoadScene::LoadAssets() {
     gsLoadTexture(Texture::MenuSliderBackGround, "Assets/Texture/Menu/SliderBackGround.png");
     loadCount_++;
     gsLoadTexture(Texture::MenuSliderFill, "Assets/Texture/Menu/SliderFill.png");
+    loadCount_++;
+    // エフェクトファイルの読み込み
+    gsLoadEffect(Effect::Slash, "Assets/Effect/Slash/Slash02_white_gray.efkefc");
+    loadCount_++;
+    gsLoadEffect(Effect::Aura, "Assets/Effect/Aura02/Aura02_Purple.efkefc");
     loadCount_++;
 }
 

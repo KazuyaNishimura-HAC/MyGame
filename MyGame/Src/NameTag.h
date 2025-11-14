@@ -16,15 +16,25 @@ namespace NameTag {
 		static constexpr const char* Debug = "Debug";
 	};
 
-	struct Actor {
+    struct ActorTag {
+        static constexpr const char* None = "None";
+        static constexpr const char* Charactoe = "Charactor";
+        static constexpr const char* Player = "Player";
+        static constexpr const char* Enemy = "Enemy";
+        static constexpr const char* Object = "Object";
+        static constexpr const char* Collide = "Collide";
+        static constexpr const char* ATKCollide = "ATKCollide";
+    };
+
+	struct ActorName {
 		static constexpr const char* None = "None";
 		static constexpr const char* Player = "Player";
 		static constexpr const char* Enemy = "Enemy";
 		static constexpr const char* DefaultEnemy = "DefaultEnemy";
 		static constexpr const char* Object = "Object";
-		static constexpr const char* ATKCollide = "ATKCollide";
 		static constexpr const char* PlayerATKCollide = "PlayerATKCollide";
 		static constexpr const char* EnemyATKCollide = "EnemyATKCollide";
+        static constexpr const char* ParryCollide = "ParryCollide";
 	};
 	struct PostEffect {
 		static constexpr const char* Bloom = "Bloom";
@@ -34,7 +44,8 @@ namespace NameTag {
 //呼び出し簡略化
 using SceneName = NameTag::Scene;
 using PriorityName = NameTag::Priority;
-using ActorName = NameTag::Actor;
+using ActorTag = NameTag::ActorTag;
+using ActorName = NameTag::ActorName;
 using EffectName = NameTag::PostEffect;
 
 

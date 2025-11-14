@@ -72,10 +72,10 @@ void ActorManager::Collide()
     //仮で敵を倒し切ったら遷移
     int testEnemyCount = 0;
     for (auto chara : charactors_) {
-        if (chara->GetTag() == NameTag::Actor::Enemy) testEnemyCount++;
+        if (chara->GetTag() == ActorTag::Enemy) testEnemyCount++;
     }
     for (auto chara : charactors_) {
-        if (chara->GetTag() == NameTag::Actor::Player && testEnemyCount == 0) {
+        if (chara->GetTag() == ActorTag::Player && testEnemyCount == 0) {
             chara->World()->IsEnd(true);
         }
     }

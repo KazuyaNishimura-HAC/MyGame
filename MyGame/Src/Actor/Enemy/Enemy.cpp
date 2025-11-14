@@ -13,7 +13,7 @@ Enemy::Enemy(IWorld* world, const GSvector3& position, Status status, GSuint mes
     :Charactor(world,position,status,mesh)
 {
     player_ = world_->GetCharactor("Player");
-    tag_ = ActorName::Enemy;
+    tag_ = ActorTag::Enemy;
     colliderOffset_ = { 0.0f,1.0f,0.0f };
     attackCollider_ = new AttackCollide(this,0.75f,{ 0,0,0 },colliderOffset_);
     world_->AddActor(attackCollider_);

@@ -4,7 +4,7 @@
 AttackCollide::AttackCollide(Charactor* owner, float radius, const GSvector3& pos, const GSvector3& offset)
 {
 	owner_ = owner;
-	tag_ = ActorName::ATKCollide;
+	tag_ = ActorTag::ATKCollide;
 	//攻撃主の名前を登録
 	name_ = owner_->GetTag() + tag_;
 	collider_ = BoundingSphere(radius,pos);
@@ -37,16 +37,14 @@ void AttackCollide::Update(float deltaTime)
 
 void AttackCollide::Draw() const
 {
-#if _DEBUG
 	//デバック用
 	collider_.Draw();
-#endif
-
 }
 void AttackCollide::React(Actor& other)
 {
 	Charactor* chara = dynamic_cast<Charactor*>(&other);
 	// Charactor以外もしくは攻撃主ならreturn
-	if (!chara || owner_ == chara) return;
+	if (!chara || owner_ == chara || owner_->GetTag() == chara->GetTag()) return;
 	chara->TakeDamage(attack_);
+    chara->Knockback(1,owner_->Transform().position());
 }

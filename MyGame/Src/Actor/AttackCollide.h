@@ -16,7 +16,6 @@ public:
 private:
 	Charactor* owner_{ nullptr };
 	float attack_{ 1.0f };
-	bool isAttack{ false };
 	//攻撃の持続時間
 	float duration_{ 1.0f };
 };

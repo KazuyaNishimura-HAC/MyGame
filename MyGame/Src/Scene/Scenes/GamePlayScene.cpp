@@ -12,19 +12,18 @@
 #include "../../UI/Image.h"
 // 開始
 void GamePlayScene::Start() {
-    world_.AddPlayer(new Player(&world_,{-50,0,0},Status(60, 10)));
+    world_.AddPlayer(new Player(&world_,{0,0,0},Status(60, 10)));
     world_.AddCharactor(new DefaultEnemy(&world_, { 15,0,5 }));
     world_.AddCharactor(new DefaultEnemy(&world_, { 15,0,-5 }));
     world_.AddCharactor(new DefaultEnemy(&world_, { 5,0,0 },Status(120, 30)));
+
     world_.AddCamera(new Camera(&world_));
     world_.AddField(new FieldActor({0,0,0},Model::DefaultMap,Model::MapCollide));
-    /*world_.AddField(new Field({ -20,0,6 },{ 120,10,1 }));
-    world_.AddField(new Field({ -30,0,-6 }, { 100,10,1 }));*/
     //テスト
-    world_.AddField(new Field({ -30,0,6 }, { 120,10,1 }));
+    /*world_.AddField(new Field({ -30,0,6 }, { 120,10,1 }));
     world_.AddField(new Field({ -30,0,-6 }, { 120,10,1 }));
     world_.AddField(new Field({ -80,0,0 }, { 1,10,30 }));
-    world_.AddField(new Field({ 18,0,0 }, { 1,10,30 }));
+    world_.AddField(new Field({ 18,0,0 }, { 1,10,30 }));*/
 
     debugCamera_ = new DebugCamera(&world_);
     world_.Start();
@@ -33,6 +32,12 @@ void GamePlayScene::Start() {
 // 更新
 void GamePlayScene::Update(float delta_time) {
     world_.Update(delta_time);
+    if (InputSystem::ButtonTrigger(InputSystem::Button::Start)) {
+        world_.Message(EventMessage::GamePause);
+    }
+    if (InputSystem::ButtonDetach(InputSystem::Button::Start)) {
+        world_.Message(EventMessage::PauseEnd);
+    }
     if (world_.IsEnd()) {
         sceneEnd_ = true;
     }

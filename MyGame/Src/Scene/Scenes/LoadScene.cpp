@@ -64,6 +64,10 @@ void LoadScene::LoadAssets() {
     loadCount_++;
     gsLoadMesh(Model::MapCollide, "Assets/Model/Stage/StageCollider.mshb");
     loadCount_++;
+    gsLoadSkinMesh(Model::Boss, "Assets/Model/Charactor/Boss/Boss.mshb");
+    loadCount_++;
+    gsLoadMesh(Model::GreatSword, "Assets/Model/Object/GreatSword.mshb");
+    loadCount_++;
     //動作チェック用
     gsLoadTexture(Texture::MenuSliderBackGround, "Assets/Texture/Menu/SliderBackGround.png");
     loadCount_++;

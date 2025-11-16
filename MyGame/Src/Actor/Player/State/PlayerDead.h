@@ -1,5 +1,5 @@
 ﻿#ifndef PLAYER_DEAD_H_
-#define ENEMY_DEAD_H_
+#define PLAYER_DEAD_H_
 #include "PlayerState.h"
 
 class PlayerDead : public PlayerState

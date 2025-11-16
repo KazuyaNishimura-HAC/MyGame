@@ -5,7 +5,7 @@
 #include "../State/StateMachine.h"
 #include "../Graphics/Effect/Effect.h"
 
-class AttackCollide;
+class AttackCollider;
 
 struct Status {
 	Status(float hp, float atk) :hp{ hp }, atk{ atk } { maxHP = hp; };
@@ -23,17 +23,22 @@ public:
 	virtual void Update(float deltaTime)override;
 	virtual void LateUpdate(float deltaTime)override;
 	virtual void Draw() const override;
-	virtual void TakeDamage(float damage);
-	virtual void AddDamage(float damage);
+    //ダメージを受ける
+	virtual void TakeDamage(float damage,const GSvector3& attackPos = { 0,0,0 });
+    //攻撃判定を有効化
+    virtual void SpawnAttackCollider(float time,float atk);
+    //ノックバック
+    virtual void Knockback(float power = 1.0f, const GSvector3& position = { 0,0,0 });
 	//ステート設定・取得
 	void ChangeState(int state);
 	int CurrentState();
+    bool IsCurrentState(int state);
 	//====================各ステータス====================
 	void SetStatus(Status status);
 	const Status& GetStatus();
-	void SetAttack(float attack);
-	float GetAttack();
-	float GetHealth();
+	void SetAttackPower(float attack);
+	float GetAttackPower();
+	float GetCurrentHealth();
 	float GetMaxHealth();
 
 	//====================各状態フラグ====================
@@ -46,7 +51,7 @@ public:
 	virtual IWorld* World();
 protected:
 	StateMachine states_;
-	AttackCollide* attackCollider_{ nullptr };
+    AttackCollider* attackCollider_{ nullptr };
     std::unordered_map <Effect::ID, GSuint> effectHandles_;
 	Status status_{};
 	bool isAttack_{ false };

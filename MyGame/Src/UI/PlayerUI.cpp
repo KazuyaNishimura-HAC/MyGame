@@ -23,7 +23,7 @@ PlayerUI::~PlayerUI()
 
 void PlayerUI::Update(float deltaTime)
 {
-    float health = player_->GetHealth() / player_->GetMaxHealth();
+    float health = player_->GetCurrentHealth() / player_->GetMaxHealth();
     healthGauge_->FillAmount(health);
 }
 

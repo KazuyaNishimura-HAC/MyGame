@@ -1,4 +1,5 @@
 ﻿#include "Charactor.h"
+#include "../Actor/AttackCollider.h"
 
 Charactor::Charactor(IWorld* world, const GSvector3& position,Status status, GSuint mesh)
 	:Actor(mesh)
@@ -30,13 +31,22 @@ void Charactor::Draw() const
 	Actor::Draw();
 }
 
-void Charactor::TakeDamage(float damage)
+void Charactor::TakeDamage(float damage, const GSvector3& attackPos)
 {
 	status_.hp -= damage;
 }
 
-void Charactor::AddDamage(float damage)
+void Charactor::SpawnAttackCollider(float time, float atk)
 {
+    attackCollider_->IsAttack(time,atk);
+}
+
+void Charactor::Knockback(float power, const GSvector3& position)
+{
+    GSvector3 dir = transform_.position() - position;
+    dir.normalized();
+    dir *= power;
+    transform_.position(transform_.position() + dir);
 }
 
 void Charactor::ChangeState(int state)
@@ -49,6 +59,11 @@ int Charactor::CurrentState()
 	return states_.CurrentState();
 }
 
+bool Charactor::IsCurrentState(int state)
+{
+    return states_.IsCurrentState(state);
+}
+
 void Charactor::SetStatus(Status status)
 {
 	status_ = status;
@@ -59,17 +74,17 @@ const Status& Charactor::GetStatus()
 	return status_;
 }
 
-void Charactor::SetAttack(float attack)
+void Charactor::SetAttackPower(float attack)
 {
 	status_.atk = attack;
 }
 
-float Charactor::GetAttack()
+float Charactor::GetAttackPower()
 {
 	return status_.atk;
 }
 
-float Charactor::GetHealth()
+float Charactor::GetCurrentHealth()
 {
 	return status_.hp;
 }

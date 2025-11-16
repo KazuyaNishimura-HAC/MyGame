@@ -8,6 +8,7 @@
 #include "../Graphics/Shader/RenderTexture.h"
 #include "../Graphics/Shader/RenderTextureID.h"
 #include "../Graphics/Effect/PostEffect.h"
+#include "../GameSystem/Field/Light.h"
 
 #include "../GameSystem/Event/TimeLine/TimeLineEditor.h"
 
@@ -26,21 +27,23 @@ World::~World()
 void World::Start()
 {
     time_ = Time{};
-    gsLoadTexture(SkyBox::GamePlay, "Assets/SkyBox/default.dds");
+    gsLoadTexture(SkyBox::GamePlay, "Assets/SkyBox/gameSkyBox.dds");
     GetTimeLine().SetIWorld(this);
     timeLineEditor_ = new TimeLineEditor(this,GetTimeLine());
     GetTimeLine().LoadFile();
     PostEffect::Instance().Load();
+    light_ = new Light(this);
+    // ライトマップの読み込み
+    gsLoadLightmap(0, "Assets/Light/Lightmap.txt");
+    // リフレクションプローブの読み込み
+    //gsLoadReflectionProbe(0, "Assets/RefProbe/ReflectionProbe.txt");
 }
 
 void World::Update(float deltaTime)
 {
     time_.Update(deltaTime);
-    fieldManager_.Update(deltaTime);
-    actorManager_.Update(deltaTime);
-    actorManager_.LateUpdate(deltaTime);
-    eventManager_.Update(time_.GameDeltaTime());
-    gsUpdateEffect(deltaTime);
+    GameUpdate(time_.GameDeltaTime());
+    
     guiManager_.Update(deltaTime, time_.GameDeltaTime());
     
     //当たり判定
@@ -55,9 +58,6 @@ void World::Update(float deltaTime)
     guiManager_.Remove();
     
     cameraManager_.Update(deltaTime);
-    // エフェクトの更新処理
-    gsUpdateEffect(deltaTime);
-    
 }
 
 void World::Draw() const
@@ -68,13 +68,15 @@ void World::Draw() const
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         camera->Draw();
         gsDrawSkyboxCubemap(SkyBox::GamePlay);
+        light_->Draw();
         fieldManager_.Draw(camera);
         actorManager_.Draw();
         eventManager_.Draw();
         gsDrawEffect();
         RenderTexture::EndRender();
         RenderTexture::BindRenderTexture(Rt::BaseScene,0);
-        PostEffect::Instance().Bloom(Rt::BaseScene, { 1.0f,1.0f,1.0f,1.0f });
+        //PostEffect::Instance().Bloom(Rt::BaseScene, { 0.6f, 0.8f, 1.0f, 1.0f });
+        //PostEffect::Instance().SetIntensity(0.75f);
         //PostEffect::Instance().Fog(Rt::BaseScene, { 0.1f,0.0f,0.1f,1.0f });
         RenderTexture::DrawRender(Rt::BaseScene);
     }
@@ -92,17 +94,30 @@ void World::Clear()
 {
     delete timeLineEditor_;
     timeLineEditor_ = nullptr;
+    delete light_;
+    light_ = nullptr;
     fieldManager_.Clear();
     actorManager_.Clear();
     eventManager_.Clear();
     guiManager_.Clear();
     cameraManager_.Clear();
-    time_.Pause(false);
+    time_.SetPause(false);
     isEnd_ = false;
     isStart_ = false;
     isTimer_ = true;
+    gsStopAllEffects();
     PostEffect::Instance().Clear();
     //SoundManager::StopBGM();
+}
+
+void World::GameUpdate(float deltaTime)
+{
+    if (time_.IsPause()) return;
+    fieldManager_.Update(deltaTime);
+    actorManager_.Update(deltaTime);
+    actorManager_.LateUpdate(deltaTime);
+    eventManager_.Update(deltaTime);
+    gsUpdateEffect(deltaTime);
 }
 
 void World::AddPlayer(Player* player)
@@ -205,11 +220,19 @@ void World::AddCameraController(CameraController* controller)
     cameraManager_.AddController(controller);
 }
 
-
-
 void World::SetTimeScale(TimeScale timeScale)
 {
     time_.SetTimeScale(timeScale);
+}
+
+float World::DeltaTime()
+{
+    return time_.DeltaTime();
+}
+
+bool World::IsTimeScaleDefault()
+{
+    return time_.IsTimeScaleDefault();
 }
 
 void World::IsEnd(bool end)
@@ -257,7 +280,6 @@ void World::Debug(float deltaTime)
     guiManager_.Debug();
     eventManager_.Debug();
     timeLineEditor_->DrawEditUI();
-    
 }
 
 bool World::IsDebug()
@@ -271,6 +293,12 @@ void World::Message(EventMessage message)
     case EventMessage::GameStart:
         break;
     case EventMessage::GameEnd:
+        break;
+    case EventMessage::GamePause:
+        time_.SetPause(true);
+        break;
+    case EventMessage::PauseEnd:
+        time_.SetPause(false);
         break;
     default:
         break;

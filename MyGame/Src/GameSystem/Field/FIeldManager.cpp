@@ -30,7 +30,7 @@ void FieldManager::Draw(Camera* camera) const
 #if _DEBUG
     for (auto field : fields_)
     {
-        field->Draw();
+        //field->Draw();
     }
 #endif
     for (auto field : fieldActor_)

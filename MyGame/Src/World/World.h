@@ -15,6 +15,7 @@ class Event;
 class Camera;
 class CameraController;
 class TimeLineEditor;
+class Light;
 
 class World :public IWorld
 {
@@ -28,6 +29,7 @@ public:
     void DrawGUI()const;
     void Clear();
 
+    void GameUpdate(float deltaTime);
     void AddPlayer(Player* player);
     void AddActor(Actor* actor)override;
     void AddCharactor(Charactor* charactor)override;
@@ -52,6 +54,9 @@ public:
     TimeLine& GetTimeLine()override;
 
     void SetTimeScale(TimeScale timeScale)override;
+    //ゲームデルタタイムの影響を受けないデルタタイム
+    float DeltaTime()override;
+    bool IsTimeScaleDefault()override;
 
     void IsEnd(bool end)override;
     bool IsEnd()override;
@@ -81,6 +86,7 @@ private:
     //エディター
     TimeLineEditor* timeLineEditor_{ nullptr };
     Time time_;
+    Light* light_{ nullptr };
     bool draw_{ true };
     bool isDebug_{ false };
     //ゲーム終了フラグ

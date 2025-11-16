@@ -24,6 +24,8 @@ enum class EventMessage
 {
     GameStart,
     GameEnd,
+    GamePause,
+    PauseEnd
 };
 
 class IWorld
@@ -50,6 +52,8 @@ public:
     virtual void AddCameraController(CameraController* controller) = 0;
 
     virtual void SetTimeScale(TimeScale timeScale) = 0;
+    virtual float DeltaTime() = 0;
+    virtual bool IsTimeScaleDefault() = 0;
 
     virtual FieldManager& Fields() = 0;
     virtual TimeLine& GetTimeLine() = 0;

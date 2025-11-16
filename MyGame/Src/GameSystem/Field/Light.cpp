@@ -10,25 +10,23 @@ Light::Light(IWorld* world) {
 
 //描画
 void Light::Draw() const {
-    static float ambient[]{ 0.0f, 0.0f, 0.0f, 1.0f };
-    static float diffuse[]{ 0.3f, 0.8f, 1.0f, 1.0f };
-    static float specular[]{ 1.0f,0.8f, 0.3f, 1.0f };
-    static float position[]{ -10.0f, 20.0f, 10.0f, 0.0f };
-    glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
-    glLightfv(GL_LIGHT0, GL_POSITION, position);
-    glEnable(GL_LIGHT0);
-    glEnable(GL_LIGHTING);
+    /*static float ambient[]{ 0.0f, 0.0f, 0.0f, 1.0f };
+    static float diffuse[]{ 0.6f, 0.7f, 0.9f, 1.0f };
+    static float specular[]{ 1.0f,1.0f, 1.0f, 1.0f };
+    static float position[]{ -100.0f, 100.0f, 100.0f, 0.0f };*/
 
-    //ImGuiによるパラメータ調整
- /*   ImGui::Begin("Lighting");
+    static float ambient[]{ 0.05f, 0.05f, 0.1f, 1.0f };  // 夜の環境光
+    static float diffuse[]{ 0.2f, 0.3f, 0.4f, 1.0f };    // 弱い月光
+    static float specular[]{ 0.3f, 0.3f, 0.4f, 1.0f };   // 弱い反射光
+    static float position[]{ -50.0f, 80.0f, 50.0f, 1.0f }; // 点光源（月光風）
+
+    // ImGuiによるパラメータ調整
+    ImGui::Begin("Lighting");
     ImGui::ColorEdit4("ambient", ambient, ImGuiColorEditFlags_Float);
     ImGui::ColorEdit4("diffuse", diffuse, ImGuiColorEditFlags_Float);
     ImGui::ColorEdit4("specular", specular, ImGuiColorEditFlags_Float);
-    ImGui::ColorEdit4("position", position);
-    ImGui::End();*/
-
+    ImGui::DragFloat4("position", position);
+    ImGui::End();
     //ライトのパラメータ設定
     glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);

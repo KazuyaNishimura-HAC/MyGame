@@ -8,11 +8,14 @@ public:
     {
         //[Player]
         Player,
+        //[Charactor]
+        Enemy,
+        Boss,
         //[MAP]
         DefaultMap,
         MapCollide,
-        //[Charactor]
-        Enemy,
+        //[Object]
+        GreatSword,
         //[Debug]
         PathObject,
         EditObject,

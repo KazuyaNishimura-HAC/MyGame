@@ -12,6 +12,7 @@ void PlayerAttack::Update(float deltaTime)
 		owner_->ChangeState(PlayerState::Idle);
 		return;
 	}
+    //攻撃が終わる40フレーム前に攻撃処理が入ったら追加攻撃
 	int time = owner_->GetMesh()->MotionEndTime() - 40.0f;
 	if (InputSystem::ButtonTrigger(InputSystem::Button::B) && time < owner_->GetMesh()->MotionTime()) {
 		switch (combo_) {

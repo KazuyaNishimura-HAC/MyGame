@@ -23,6 +23,7 @@ public:
         affectTime_ = MAX(affectTime_ - deltaTime, 0);
         timeScale_ = LERP(affectTime_ / affectStart_, targetTimeScale_, startTimeScale_);
     }
+    bool IsTimeScaleDefault() { return timeScale_ == 1 ; }
     float timeScale_ = 1;
 private:
     float affectTime_ = 0;
@@ -45,8 +46,9 @@ public:
     float GameDeltaTime() { return ScaledDeltaTime() * (pause_ ? 0 : 1); }
     void SetTimeScale(TimeScale timeScale) { timeScale_ = timeScale; }
     float GetTimeScale() { return timeScale_.timeScale_; }
-    void Pause(bool pause) { pause_ = pause; }
-    bool Pause() { return pause_; }
+    void SetPause(bool pause) { pause_ = pause; }
+    bool IsPause() { return pause_; }
+    bool IsTimeScaleDefault() { return timeScale_.timeScale_ == 1; }
 private:
     float deltaTime_{ 0.0f };
     bool pause_{ false };

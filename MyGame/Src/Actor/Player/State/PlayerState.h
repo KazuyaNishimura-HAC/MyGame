@@ -14,6 +14,8 @@ public:
 		Damage,
 		Skill,
 		Ultimate,
+        Guard,
+        Parry,
 		Dead
 	};
 	PlayerState(Player* owner) : owner_{ owner }{};

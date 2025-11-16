@@ -2,7 +2,7 @@
 #include <imgui/imgui.h>
 #include "../../../World/IWorld.h"
 #include "../../../GameSystem/InputSystem/InputSystem.h"
-#include "../../../Actor/AttackCollide.h"
+#include "../../../Actor/AttackCollider.h"
 #include "../../../Graphics/Effect/Effect.h"
 
 #include "../State/EnemyState.h"
@@ -57,7 +57,7 @@ void DefaultEnemy::React(Actor& other)
     }
 }
 
-void DefaultEnemy::TakeDamage(float damage)
+void DefaultEnemy::TakeDamage(float damage, const GSvector3& attackPos)
 {
     //死亡しているならreturn
     if (CurrentState() == EnemyState::Dead) return;

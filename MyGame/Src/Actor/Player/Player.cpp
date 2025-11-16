@@ -3,8 +3,9 @@
 #include "../../World/IWorld.h"
 #include "../../GameSystem/Camera/Camera.h"
 #include "../../GameSystem/InputSystem/InputSystem.h"
-#include "../../Actor/AttackCollide.h"
+#include "../../Actor/AttackCollider.h"
 #include "../../UI/PlayerUI.h"
+#include "ParryCollider.h"
 //ステートヘッダー
 #include "State/PlayerIdle.h"
 #include "State/PlayerMove.h"
@@ -12,17 +13,21 @@
 #include "State/PlayerDead.h"
 #include "State/PlayerAttack.h"
 #include "State/PlayerUltimateSkill.h"
+#include "State/PlayerGuard.h"
+#include "State/PlayerParry.h"
 
 Player::Player(IWorld* world, const GSvector3& position,Status status, GSuint mesh)
     :Charactor(world, position, status, mesh)
 {
-    tag_ = ActorName::Player;
+    tag_ = ActorTag::Player;
     name_ = ActorName::Player;
     //ステートの追加
     states_.AddState(PlayerState::Idle, new PlayerIdle(this));
     states_.AddState(PlayerState::Move, new PlayerMove(this));
     states_.AddState(PlayerState::Damage, new PlayerDamage(this));
     states_.AddState(PlayerState::Dead, new PlayerDead(this));
+    states_.AddState(PlayerState::Guard, new PlayerGuard(this));
+    states_.AddState(PlayerState::Parry, new PlayerParry(this));
     states_.AddState(PlayerState::Attack, new PlayerAttack(this));
     states_.AddState(PlayerState::Ultimate, new PlayerUltimateSkill(this));
     states_.ChangeState(PlayerState::Idle);
@@ -31,8 +36,10 @@ Player::Player(IWorld* world, const GSvector3& position,Status status, GSuint me
     camera_ = new CameraController(CameraController::Player);
     world_->AddCameraController(camera_);
     camera_->SetSmooth(true);
-    attackCollider_ = new AttackCollide(this,1,{ 0,0,0 },colliderOffset_);
+    attackCollider_ = new AttackCollider(this,1,{},colliderOffset_);
     world_->AddActor(attackCollider_);
+    parryCollider_ = new ParryCollider(this,2.5f,{}, colliderOffset_);
+    world_->AddActor(parryCollider_);
     ui_ = new PlayerUI(this);
     world_->AddGUI(ui_);
     //イベントの追加
@@ -45,36 +52,40 @@ Player::Player(IWorld* world, const GSvector3& position,Status status, GSuint me
     mesh_->AddEvent(Motion::UltSkill, 110, [=] {TestAttack(); });
     mesh_->AddEvent(Motion::UltSkill, 130, [=] {TestAttack(); });
     mesh_->AddEvent(Motion::UltSkill, 160, [=] {TestAttack(); });
+    mesh_->AddEvent(Motion::AttackSkill, 0, [=] {TestAttack(); });
+    mesh_->AddEvent(Motion::AttackSkill, 20, [=] {TestAttack(); });
+    mesh_->AddEvent(Motion::AttackSkill, 40, [=] {TestAttack(); });
+    mesh_->AddEvent(Motion::AttackSkill, 80, [=] {TestAttack(); });
     //エフェクト生成（登録）
     effectHandles_[Effect::Aura] = gsPlayEffectEx(Effect::Aura, nullptr);
 }
 Player::~Player()
 {
+
 }
 
 void Player::Update(float deltaTime)
 {
     Charactor::Update(deltaTime);
+    //死んでいるなら更新を止める
+    if (IsDying()) return;
 
     if (InputSystem::ButtonTrigger(InputSystem::Button::B)) {
-        if (!IsAttack() && CurrentState() != PlayerState::Damage) {
+        if (!IsAttack() && !IsParry() && !IsCurrentState(PlayerState::Damage)) {
             states_.ChangeState(PlayerState::Attack);
             //camera_->SetShakeValues(30.0f, 1.0f, 160.0f, 1.0f, 20.0f, { 0.1f,0.1f }, 0.0f);
         }
     }
     
-    if (!IsAttack() && InputSystem::ButtonTrigger(InputSystem::Button::A)) {
+    if (!IsAttack() && !IsParry() && InputSystem::ButtonTrigger(InputSystem::Button::A)) {
         states_.ChangeState(PlayerState::Ultimate);
     }
-    if (InputSystem::ButtonTrigger(InputSystem::Button::X)) {
-        gsSetEffectShown(effectHandles_[Effect::Aura], false);
-    }
-    if (InputSystem::ButtonTrigger(InputSystem::Button::Y)) {
-        gsSetEffectShown(effectHandles_[Effect::Aura], true);
-    }
-    Effect::SetEffectParam(EffectParam(effectHandles_[Effect::Aura], {}, {}, { 1,1,1 }), transform_);
+
+    if (!IsAttack() && !IsParry() && InputSystem::ButtonTrigger(InputSystem::Button::Y)) ChangeState(PlayerState::Guard);
+
+    Effect::SetEffectParam(EffectParam(effectHandles_[Effect::Aura], { 0,1,0 }, {}, { 1,1,1 }, { 1,1,1,1 }, 0.5f), transform_);
     MoveCamera(deltaTime);
-    MoveAttackCollide();
+    MoveColliders();
 }
 void Player::LateUpdate(float deltaTime)
 {
@@ -91,12 +102,20 @@ void Player::React(Actor& other)
 {
 }
 
-void Player::TakeDamage(float damage)
+void Player::TakeDamage(float damage, const GSvector3& attackPos)
 {
     //無敵なら攻撃を受けない
     if (IsInvincible()) return;
+    //パリィ可能ならパリィ処理
+    if (IsParryEnable()) {
+        parryCollider_->IsParry(true);
+        ChangeState(PlayerState::Parry);
+        return;
+    }
+
+    //ダメージ処理
     status_.hp -= damage;
-    //hpが0なら死亡
+
     if (IsDying()) ChangeState(PlayerState::Dead);
     else ChangeState(PlayerState::Damage);
 }
@@ -146,6 +165,16 @@ bool Player::IsGuard()
     return isGuard_;
 }
 
+void Player::SetParryEnable(bool enable)
+{
+    isParryEnable_ = enable;
+}
+
+bool Player::IsParryEnable()
+{
+    return isParryEnable_;
+}
+
 void Player::SetParry(bool parry)
 {
     isParry_ = parry;
@@ -156,6 +185,21 @@ bool Player::IsParry()
     return isParry_;
 }
 
+void Player::SetTimeScale(float slowTime, float affectTime)
+{
+    world_->SetTimeScale(TimeScale{ slowTime,affectTime });
+}
+
+bool Player::IsTimeScaleDefault()
+{
+    return world_->IsTimeScaleDefault();
+}
+
+CameraController* Player::GetPlayerCamera()
+{
+    return camera_;
+}
+
 void Player::MoveCamera(float deltaTime)
 {
     float yaw = 0, pitch = 0;
@@ -163,7 +207,7 @@ void Player::MoveCamera(float deltaTime)
     pitch = InputSystem::RightStick().y * 3 * deltaTime;
     cameraRotation_.y -= yaw;
     cameraRotation_.x -= pitch;
-    cameraRotation_.x = CLAMP(cameraRotation_.x, 0.0f, 20.0f);
+    cameraRotation_.x = CLAMP(cameraRotation_.x, 0.0f, 30.0f);
 
     float yawRad = DEG_TO_RAD(cameraRotation_.y);
     float pitchRad = DEG_TO_RAD(cameraRotation_.x);
@@ -179,16 +223,18 @@ void Player::MoveCamera(float deltaTime)
     camera_->SetView(cameraPos,target);
 }
 
-void Player::MoveAttackCollide()
+void Player::MoveColliders()
 {
     GSvector3 forward = transform_.forward() * 1.0f;
-    //攻撃判定を追従
-    attackCollider_->Transform().position(transform_.position()+ forward);
+    //攻撃判定を追従(常にプレイヤーの正面に)
+    attackCollider_->Transform().position(transform_.position() + forward);
+    //パリィ専用判定を追従
+    parryCollider_->Transform().position(transform_.position());
 }
 
 void Player::TestAttack()
 {
-    attackCollider_->IsAttack(0.01f,20);
+    SpawnAttackCollider(0.01f, 20);
     GSuint atkHandle = gsPlayEffectEx(Effect::Slash, nullptr);
     Effect::SetEffectParam(EffectParam(atkHandle, { 0,1,1 },{ 0,0,45 },{ 1,1,1 },{ 0,0,1,1 }), transform_);
 }
@@ -216,5 +262,10 @@ void Player::Debug(float deltaTime)
     ImGui::Value("MaxHP", status_.maxHP);
     ImGui::Value("HP", status_.hp);
     ImGui::Value("ATK", status_.atk);
+    ImGui::Value("isATK", IsAttack());
+    ImGui::Value("isGuard", IsGuard());
+    ImGui::Value("isParryEnable", IsParryEnable());
+    ImGui::Value("isParrying", IsParry());
+    ImGui::Value("isDying", IsDying());
     ImGui::End();
 }

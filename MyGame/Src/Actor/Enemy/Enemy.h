@@ -40,6 +40,7 @@ public:
 
     virtual void MovePosition(float deltaTime);
     virtual void MoveAttackCollide();
+    virtual void OnParryHit(const GSvector3& position);
     virtual void SetCoolTime(float time);
     virtual float GetCoolTime();
     virtual void Debug(float deltaTime)override;

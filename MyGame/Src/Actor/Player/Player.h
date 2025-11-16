@@ -7,6 +7,7 @@
 class GUI;
 class PlayerUI;
 class CameraController;
+class ParryCollider;
 class Player : public Charactor
 {
 public:
@@ -38,20 +39,26 @@ public:
     void Draw()const override;
     //接触判定
     void React(Actor& other)override;
-
-    void TakeDamage(float damage)override;
+    void TakeDamage(float damage, const GSvector3& attackPos = { 0,0,0 })override;
     void MovePosition(float deltaTime);
     void SetGuard(bool guard);
     bool IsGuard();
+    void SetParryEnable(bool enable);
+    bool IsParryEnable();
     void SetParry(bool parry);
     bool IsParry();
+
+    void SetTimeScale(float slowTime,float affectTime = 0.0f);
+    //スケールがデフォルトの値か？
+    bool IsTimeScaleDefault();
+    CameraController* GetPlayerCamera();
     void Debug(float deltaTime)override;
 private:
     GSvector3 GetCameraDirection();
     float GetCameraHorizontalRadian();
     GStransform& CameraTransform();
     void MoveCamera(float deltaTime);
-    void MoveAttackCollide();
+    void MoveColliders();
     void TestAttack();
     CameraController* camera_{ nullptr };
 
@@ -68,8 +75,15 @@ private:
     //ガード中か
     bool isGuard_{ false };
     //パリィ可能か
+    bool isParryEnable_{ false };
+    //パリィ中か
     bool isParry_{ false };
+
+    //パリィ判定
+    ParryCollider* parryCollider_{ nullptr };
+    //プレイヤーUI表示
     PlayerUI* ui_ = nullptr;
+    //loop再生用エフェクトハンドル
     std::unordered_map <Effect::ID,GSuint> effectHandles_;
 };
 #endif

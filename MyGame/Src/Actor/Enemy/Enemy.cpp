@@ -3,7 +3,7 @@
 #include "../../World/IWorld.h"
 #include "../../GameSystem/InputSystem/InputSystem.h"
 #include "../../Actor/Player/Player.h"
-#include "../../Actor/AttackCollide.h"
+#include "../../Actor/AttackCollider.h"
 
 #include "State/EnemyState.h"
 #include "State/EnemyIdle.h"
@@ -15,7 +15,7 @@ Enemy::Enemy(IWorld* world, const GSvector3& position, Status status, GSuint mes
     player_ = world_->GetCharactor("Player");
     tag_ = ActorTag::Enemy;
     colliderOffset_ = { 0.0f,1.0f,0.0f };
-    attackCollider_ = new AttackCollide(this,0.75f,{ 0,0,0 },colliderOffset_);
+    attackCollider_ = new AttackCollider(this,0.75f,{ 0,0,0 },colliderOffset_);
     world_->AddActor(attackCollider_);
 }
 
@@ -71,6 +71,12 @@ void Enemy::MoveAttackCollide()
     GSvector3 forward = transform_.forward() * 0.8f;
     //攻撃判定を追従
     attackCollider_->Transform().position(transform_.position() + forward);
+}
+
+void Enemy::OnParryHit(const GSvector3& position)
+{
+    ChangeState(EnemyState::Damage);
+    Knockback(0.5f,position);
 }
 
 void Enemy::SetCoolTime(float time)

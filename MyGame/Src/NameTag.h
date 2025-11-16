@@ -22,8 +22,8 @@ namespace NameTag {
         static constexpr const char* Player = "Player";
         static constexpr const char* Enemy = "Enemy";
         static constexpr const char* Object = "Object";
-        static constexpr const char* Collide = "Collide";
-        static constexpr const char* ATKCollide = "ATKCollide";
+        static constexpr const char* Collider = "Collider";
+        static constexpr const char* ATKCollider = "ATKCollider";
     };
 
 	struct ActorName {
@@ -32,9 +32,9 @@ namespace NameTag {
 		static constexpr const char* Enemy = "Enemy";
 		static constexpr const char* DefaultEnemy = "DefaultEnemy";
 		static constexpr const char* Object = "Object";
-		static constexpr const char* PlayerATKCollide = "PlayerATKCollide";
-		static constexpr const char* EnemyATKCollide = "EnemyATKCollide";
-        static constexpr const char* ParryCollide = "ParryCollide";
+		static constexpr const char* PlayerATKCollider = "PlayerATKCollider";
+		static constexpr const char* EnemyATKCollider = "EnemyATKCollider";
+        static constexpr const char* ParryCollider = "ParryCollider";
 	};
 	struct PostEffect {
 		static constexpr const char* Bloom = "Bloom";

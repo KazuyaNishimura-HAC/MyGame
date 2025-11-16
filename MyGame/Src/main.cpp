@@ -6,6 +6,7 @@
 #include "Screen.h"
 #include "GameSystem/InputSystem/GamepadInput.h"
 #include "GameSystem/InputSystem/InputSystem.h"
+#include "AssetID/Assets.h"
 
 #include "Scene/SceneManager.h"
 #include "Scene/Scenes/TitleScene.h"

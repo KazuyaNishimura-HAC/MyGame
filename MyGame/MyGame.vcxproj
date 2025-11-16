@@ -142,10 +142,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Actor\Enemy\Boss\Boss.cpp" />
     <ClCompile Include="Src\Actor\Player\ParryCollider.cpp" />
     <ClCompile Include="Src\Actor\Player\State\PlayerGuard.cpp" />
     <ClCompile Include="Src\Actor\Player\State\PlayerParry.cpp" />
-    <ClCompile Include="Src\Graphics\Effect\EffectObject.cpp" />
     <ClCompile Include="Src\Actor\Enemy\State\EnemyDamage.cpp" />
     <ClCompile Include="Src\Actor\Enemy\State\EnemyDead.cpp" />
     <ClCompile Include="Src\Actor\Player\State\PlayerDead.cpp" />
@@ -201,10 +201,10 @@
     <ClCompile Include="Src\GameSystem\Event\TimeLine\TimeLine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Actor\Enemy\Boss\Boss.h" />
     <ClInclude Include="Src\Actor\Player\ParryCollider.h" />
     <ClInclude Include="Src\Actor\Player\State\PlayerGuard.h" />
     <ClInclude Include="Src\Actor\Player\State\PlayerParry.h" />
-    <ClInclude Include="Src\Graphics\Effect\EffectObject.h" />
     <ClInclude Include="Src\Actor\Enemy\State\EnemyDamage.h" />
     <ClInclude Include="Src\Actor\Enemy\State\EnemyDead.h" />
     <ClInclude Include="Src\Actor\Player\State\PlayerDead.h" />

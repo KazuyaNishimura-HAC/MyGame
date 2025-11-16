@@ -5,7 +5,7 @@
 ParryCollider::ParryCollider(Charactor* owner, float radius, const GSvector3& pos, const GSvector3& offset)
 {
     owner_ = owner;
-    tag_ = ActorTag::Collide;
+    tag_ = ActorTag::Collider;
     //攻撃主の名前を登録
     name_ = ActorName::ParryCollider;
     collider_ = BoundingSphere(radius, pos);

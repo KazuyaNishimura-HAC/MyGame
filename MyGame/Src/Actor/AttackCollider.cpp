@@ -4,7 +4,7 @@
 AttackCollider::AttackCollider(Charactor* owner, float radius, const GSvector3& pos, const GSvector3& offset)
 {
 	owner_ = owner;
-	tag_ = ActorTag::ATKCollide;
+	tag_ = ActorTag::ATKCollider;
 	//攻撃主の名前を登録
 	name_ = owner_->GetTag() + tag_;
 	collider_ = BoundingSphere(radius,pos);
@@ -38,7 +38,7 @@ void AttackCollider::Update(float deltaTime)
 void AttackCollider::Draw() const
 {
 	//デバック用
-	//collider_.Draw();
+	collider_.Draw();
 }
 void AttackCollider::React(Actor& other)
 {

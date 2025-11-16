@@ -39,7 +39,9 @@ public:
     Actor(const Actor& other) = delete;
     Actor& operator=(const Actor& other) = delete;
 
+    //デバック
     virtual void Debug(float deltaTime) {};
+    void ColliderView(bool edit) { collider_.Edit(edit); };
 protected:
     //前フレームからの経過秒数を返す
     float DeltaSeconds(float deltaTime);

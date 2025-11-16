@@ -1,7 +1,7 @@
-﻿#include "AttackCollide.h"
+﻿#include "AttackCollider.h"
 #include "../Actor/Charactor.h"
 
-AttackCollide::AttackCollide(Charactor* owner, float radius, const GSvector3& pos, const GSvector3& offset)
+AttackCollider::AttackCollider(Charactor* owner, float radius, const GSvector3& pos, const GSvector3& offset)
 {
 	owner_ = owner;
 	tag_ = ActorTag::ATKCollide;
@@ -14,19 +14,19 @@ AttackCollide::AttackCollide(Charactor* owner, float radius, const GSvector3& po
 	collider_.Enable(false);
 }
 
-AttackCollide::~AttackCollide()
+AttackCollider::~AttackCollider()
 {
 
 }
 
-void AttackCollide::IsAttack(float time, float attack)
+void AttackCollider::IsAttack(float time, float attack)
 {
 	collider_.Enable(true);
 	duration_ = time;
 	attack_ = attack;
 }
 
-void AttackCollide::Update(float deltaTime)
+void AttackCollider::Update(float deltaTime)
 {
 	collider_.Position(transform_.position() + colliderOffset_);
 	if (!collider_.Enable()) return;
@@ -35,16 +35,15 @@ void AttackCollide::Update(float deltaTime)
 	if (duration_ <= 0) collider_.Enable(false);
 }
 
-void AttackCollide::Draw() const
+void AttackCollider::Draw() const
 {
 	//デバック用
-	collider_.Draw();
+	//collider_.Draw();
 }
-void AttackCollide::React(Actor& other)
+void AttackCollider::React(Actor& other)
 {
 	Charactor* chara = dynamic_cast<Charactor*>(&other);
 	// Charactor以外もしくは攻撃主ならreturn
 	if (!chara || owner_ == chara || owner_->GetTag() == chara->GetTag()) return;
-	chara->TakeDamage(attack_);
-    chara->Knockback(1,owner_->Transform().position());
+	chara->TakeDamage(attack_, owner_->Transform().position());
 }

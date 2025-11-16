@@ -38,6 +38,7 @@ public:
     Charactor* GetCharactor(std::string name);
 
     void Debug(float deltaTime);
+    void ColliderView(bool enable);
 private:
     void ActorUpdate(float deltaTime, Actor& actor);
     void ActorLateUpdate(float deltaTime, Actor& actor);
@@ -52,11 +53,10 @@ private:
 
     void ActorCollide(Actor& other1, Actor& other2);
 
-    
-
     Player* player_{ nullptr };
     std::vector<Actor*>actors_;
     std::vector<Charactor*>charactors_;
+    bool debugCollide_{ false };
 };
 
 #endif

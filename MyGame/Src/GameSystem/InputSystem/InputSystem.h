@@ -39,6 +39,7 @@ public:
     static float LeftTriggerWeight(int padID = 0);
     static float RightTriggerWeight(int padID = 0);
 
+    //コントローラーの接続数を返却
     static int ConnectedCount();
 
     static bool MenuInput();

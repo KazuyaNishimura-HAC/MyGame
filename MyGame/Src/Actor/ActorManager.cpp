@@ -2,8 +2,8 @@
 #include "Actor.h"
 #include "Charactor.h"
 #include "Player/Player.h"
-
 #include "../World/IWorld.h"
+#include "imgui/imgui.h"
 
 ActorManager::ActorManager()
 {
@@ -171,9 +171,34 @@ Charactor* ActorManager::GetCharactor(std::string name)
 
 void ActorManager::Debug(float deltaTime)
 {
+    const std::string buttonText = debugCollide_ ? "OFF" : "ON";
+
+    ImGui::Begin("Collider");
+    ImGui::Text("ActorCollide:");
+    ImGui::SameLine();
+    if (ImGui::Button(buttonText.c_str(), ImVec2(40, 20))) {
+        debugCollide_ = !debugCollide_;
+        ColliderView(debugCollide_);
+    }
+    ImGui::End();
+
     //キャラクターのデバック
-    for (auto actor : charactors_) {
+    for (auto chara : charactors_) {
+        chara->Debug(deltaTime);
+    }
+    //その他Objectのデバック
+    for (auto actor : actors_) {
         actor->Debug(deltaTime);
+    }
+}
+
+void ActorManager::ColliderView(bool enable)
+{
+    for (auto chara : charactors_) {
+        chara->ColliderView(debugCollide_);
+    }
+    for (auto actor : actors_) {
+        actor->ColliderView(debugCollide_);
     }
 }
 

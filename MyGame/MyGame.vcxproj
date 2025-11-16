@@ -142,12 +142,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Actor\Player\ParryCollider.cpp" />
+    <ClCompile Include="Src\Actor\Player\State\PlayerGuard.cpp" />
+    <ClCompile Include="Src\Actor\Player\State\PlayerParry.cpp" />
     <ClCompile Include="Src\Graphics\Effect\EffectObject.cpp" />
     <ClCompile Include="Src\Actor\Enemy\State\EnemyDamage.cpp" />
     <ClCompile Include="Src\Actor\Enemy\State\EnemyDead.cpp" />
     <ClCompile Include="Src\Actor\Player\State\PlayerDead.cpp" />
     <ClCompile Include="Src\Actor\Player\State\PlayerDamage.cpp" />
-    <ClCompile Include="Src\Actor\AttackCollide.cpp" />
+    <ClCompile Include="Src\Actor\AttackCollider.cpp" />
     <ClCompile Include="Src\Actor\Charactor.cpp" />
     <ClCompile Include="Src\Actor\Enemy\Default\DefaultEnemy.cpp" />
     <ClCompile Include="Src\GameSystem\Field\Field.cpp" />
@@ -198,12 +201,15 @@
     <ClCompile Include="Src\GameSystem\Event\TimeLine\TimeLine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Actor\Player\ParryCollider.h" />
+    <ClInclude Include="Src\Actor\Player\State\PlayerGuard.h" />
+    <ClInclude Include="Src\Actor\Player\State\PlayerParry.h" />
     <ClInclude Include="Src\Graphics\Effect\EffectObject.h" />
     <ClInclude Include="Src\Actor\Enemy\State\EnemyDamage.h" />
     <ClInclude Include="Src\Actor\Enemy\State\EnemyDead.h" />
     <ClInclude Include="Src\Actor\Player\State\PlayerDead.h" />
     <ClInclude Include="Src\Actor\Player\State\PlayerDamage.h" />
-    <ClInclude Include="Src\Actor\AttackCollide.h" />
+    <ClInclude Include="Src\Actor\AttackCollider.h" />
     <ClInclude Include="Src\Actor\Charactor.h" />
     <ClInclude Include="Src\Actor\Enemy\Default\DefaultEnemy.h" />
     <ClInclude Include="Src\GameSystem\Field\Field.h" />

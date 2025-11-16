@@ -27,6 +27,7 @@ void BoundingSphere::Draw() const
 {
     //リリース時はコメント
 #if _DEBUG
+    if (!edit_) return;
     glPushMatrix();          
         // ライティング無効化
         glDisable(GL_LIGHTING);

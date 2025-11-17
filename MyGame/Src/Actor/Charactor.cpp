@@ -39,6 +39,7 @@ void Charactor::TakeDamage(float damage, const GSvector3& attackPos)
 
 void Charactor::SpawnAttackCollider(float time, float atk)
 {
+    if (!attackCollider_) return;
     attackCollider_->IsAttack(time,atk);
 }
 

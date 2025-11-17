@@ -11,7 +11,7 @@ class DefaultEnemy : public Enemy
 {
 public:
     //コンストラクタ
-    DefaultEnemy(IWorld* world = nullptr, const GSvector3& position = {0, 0, 0}, Status status = Status(), GSuint mesh = Model::Enemy);
+    DefaultEnemy(IWorld* world = nullptr, const GSvector3& position = {0, 0, 0}, const GSvector3& rotate = { 0, 0, 0 }, Status status = {}, GSuint mesh = Model::Enemy);
     //デストラクタ
     ~DefaultEnemy()override;
 

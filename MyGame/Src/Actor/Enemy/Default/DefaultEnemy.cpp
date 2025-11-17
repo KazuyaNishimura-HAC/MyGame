@@ -12,8 +12,8 @@
 #include "../State/EnemyDamage.h"
 #include "../State/EnemyDead.h"
 
-DefaultEnemy::DefaultEnemy(IWorld* world, const GSvector3& position,Status status, GSuint mesh)
-    :Enemy(world, position, status, mesh)
+DefaultEnemy::DefaultEnemy(IWorld* world, const GSvector3& position, const GSvector3& rotate, Status status, GSuint mesh)
+    :Enemy(world, position, rotate, status, mesh)
 {
     name_ = ActorName::DefaultEnemy;
     //ステートの追加

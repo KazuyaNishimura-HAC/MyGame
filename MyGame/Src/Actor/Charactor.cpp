@@ -1,12 +1,13 @@
 ﻿#include "Charactor.h"
 #include "../Actor/AttackCollider.h"
 
-Charactor::Charactor(IWorld* world, const GSvector3& position,Status status, GSuint mesh)
+Charactor::Charactor(IWorld* world, const GSvector3& position, const GSvector3& rotate,Status status, GSuint mesh)
 	:Actor(mesh)
 {
 	world_ = world;
 	//初期座標設定
 	transform_.position(position);
+    transform_.rotate(rotate);
 	status_ = status;
 }
 

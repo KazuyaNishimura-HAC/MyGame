@@ -9,8 +9,8 @@
 #include "State/EnemyIdle.h"
 #include "State/EnemyMove.h"
 #include "State/EnemyAttack.h"
-Enemy::Enemy(IWorld* world, const GSvector3& position, Status status, GSuint mesh)
-    :Charactor(world,position,status,mesh)
+Enemy::Enemy(IWorld* world, const GSvector3& position, const GSvector3& rotate, Status status, GSuint mesh)
+    :Charactor(world,position,rotate,status,mesh)
 {
     player_ = world_->GetCharactor("Player");
     tag_ = ActorTag::Enemy;
@@ -49,7 +49,7 @@ void Enemy::React(Actor& other)
 
 void Enemy::MovePosition(float deltaTime)
 {
-    //プレイヤーいない・もしくは死んでいるならreturn
+    //プレイヤーがいない・もしくは死んでいるならreturn
     if (!player_ || player_->IsDying()) return;
     // ターゲット方向のベクトルを求める
     GSvector3 target = player_->Transform().position() - transform_.position();

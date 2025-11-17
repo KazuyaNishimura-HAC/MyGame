@@ -18,7 +18,7 @@ struct Status {
 class Charactor : public Actor
 {
 public:
-	Charactor(IWorld* world = nullptr, const GSvector3& position = { 0, 0, 0 },Status status = Status(), GSuint mesh = Model::DefaultCharactor);
+	Charactor(IWorld* world = nullptr, const GSvector3& position = { 0, 0, 0 }, const GSvector3& rotate = { 0, 0, 0 },Status status = {}, GSuint mesh = Model::DefaultCharactor);
 	~Charactor()override;
 	virtual void Update(float deltaTime)override;
 	virtual void LateUpdate(float deltaTime)override;

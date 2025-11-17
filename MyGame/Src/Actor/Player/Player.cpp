@@ -16,8 +16,8 @@
 #include "State/PlayerGuard.h"
 #include "State/PlayerParry.h"
 
-Player::Player(IWorld* world, const GSvector3& position,Status status, GSuint mesh)
-    :Charactor(world, position, status, mesh)
+Player::Player(IWorld* world, const GSvector3& position, const GSvector3& rotate, Status status, GSuint mesh)
+    :Charactor(world, position, rotate, status, mesh)
 {
     tag_ = ActorTag::Player;
     name_ = ActorName::Player;

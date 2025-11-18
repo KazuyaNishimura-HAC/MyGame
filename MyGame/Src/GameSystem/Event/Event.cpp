@@ -1,6 +1,6 @@
 ﻿#include "Event.h"
 #include "../../Actor/Actor.h"
-#include "../../Actor/Player/Player.h"
+#include "../../Actor/Charactor/Player/Player.h"
 
 Event::Event(IWorld* world,int invokeType, const GSvector3& position, GSvector2 size)
     :world_{ world },invokeType_{ invokeType }, size_{ size }

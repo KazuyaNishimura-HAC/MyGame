@@ -1,7 +1,7 @@
 ﻿#include "ActorManager.h"
 #include "Actor.h"
-#include "Charactor.h"
-#include "Player/Player.h"
+#include "Charactor/Charactor.h"
+#include "Charactor/Player/Player.h"
 #include "../World/IWorld.h"
 #include "imgui/imgui.h"
 

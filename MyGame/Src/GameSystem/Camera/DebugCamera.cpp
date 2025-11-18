@@ -2,7 +2,7 @@
 #include "../../GameSystem/InputSystem/InputSystem.h"
 #include "CameraController.h"
 #include "../../World/IWorld.h"
-#include "../../Actor/Player/Player.h"
+#include "../../Actor/Charactor/Player/Player.h"
 #include <imgui/imgui.h>
 const double PI{ 3.1415926535f };
 

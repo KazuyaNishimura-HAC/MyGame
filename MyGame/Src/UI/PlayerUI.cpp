@@ -1,5 +1,5 @@
 ﻿#include "PlayerUI.h"
-#include"../Actor/Player/Player.h"
+#include"../Actor/Charactor/Player/Player.h"
 #include "../GameSystem/InputSystem/InputSystem.h"
 #include "HorizontalGauge.h"
 #include "Texture.h"

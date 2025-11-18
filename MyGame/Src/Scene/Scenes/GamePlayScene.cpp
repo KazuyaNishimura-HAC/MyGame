@@ -2,9 +2,10 @@
 #include "../../World/World.h"
 #include "../../AssetID/Assets.h"
 #include "../../GameSystem/InputSystem/InputSystem.h"
-#include "../../Actor/Player/Player.h"
-#include "../../Actor/Enemy/Enemy.h"
-#include "../../Actor/Enemy/Default/DefaultEnemy.h"
+#include "../../Actor/Charactor/Player/Player.h"
+#include "../../Actor/Charactor/Enemy/Enemy.h"
+#include "../../Actor/Charactor/Enemy/Default/DefaultEnemy.h"
+#include "../../Actor/Charactor/Enemy/Boss/Boss.h"
 #include "../../GameSystem/Camera/DebugCamera.h"
 #include "../../GameSystem/Field/FieldActor.h"
 #include "../../GameSystem/Field/Field.h"
@@ -12,20 +13,8 @@
 #include "../../UI/Image.h"
 // 開始
 void GamePlayScene::Start() {
-    world_.AddPlayer(new Player(&world_,{0,0,0},Status(60, 10)));
-    world_.AddCharactor(new DefaultEnemy(&world_, { 15,0,5 }));
-    world_.AddCharactor(new DefaultEnemy(&world_, { 15,0,-5 }));
-    world_.AddCharactor(new DefaultEnemy(&world_, { 5,0,0 },Status(120, 30)));
-
-    world_.AddCamera(new Camera(&world_));
-    world_.AddField(new FieldActor({0,0,0},Model::DefaultMap,Model::MapCollide));
-    //テスト
-    /*world_.AddField(new Field({ -30,0,6 }, { 120,10,1 }));
-    world_.AddField(new Field({ -30,0,-6 }, { 120,10,1 }));
-    world_.AddField(new Field({ -80,0,0 }, { 1,10,30 }));
-    world_.AddField(new Field({ 18,0,0 }, { 1,10,30 }));*/
-
     debugCamera_ = new DebugCamera(&world_);
+    InitialSettings();
     world_.Start();
 }
 
@@ -80,4 +69,61 @@ void GamePlayScene::Debug(float delta_time)
 {
     world_.Debug(delta_time);
     debugCamera_->Update(delta_time);
+}
+
+void GamePlayScene::InitialSettings()
+{
+    //カメラ追加
+    world_.AddCamera(new Camera(&world_));
+    //Actor生成
+    AddActors();
+    AddFields();
+}
+
+void GamePlayScene::AddActors()
+{
+    world_.AddPlayer(new Player(&world_, {}, {}, Status{ 60, 10 }));
+    world_.AddCharactor(new DefaultEnemy(&world_, { 15,1000,5 }));
+    /*world_.AddCharactor(new DefaultEnemy(&world_, { 15,0,5 }));
+    world_.AddCharactor(new DefaultEnemy(&world_, { 15,0,-5 }));
+    world_.AddCharactor(new DefaultEnemy(&world_, { 5,0,0 }, {}, Status{ 120, 20 }));
+    world_.AddCharactor(new Boss(&world_, { 30,0,0 }, {}, Status{ 500, 30 }));*/
+}
+
+void GamePlayScene::AddFields()
+{
+    world_.AddField(new FieldActor({ 0,0,0 }, Model::DefaultMap, Model::MapCollide));
+    //テスト
+    world_.AddField(new Field({ -7,0,0 }, { 1,10,30 }));
+    world_.AddField(new Field({ 5,0,6 }, { 30,10,2 }));
+    world_.AddField(new Field({ 5,0,-6 },{ 30,10,2 }));
+
+    world_.AddField(new Field({ 20,0,9 }, { 1.5,10,15 }));
+    world_.AddField(new Field({ 20,0,-9 }, { 1.5,10,15 }));
+    world_.AddField(new Field({ 48,0,8 }, { 1,10,13 }));
+    world_.AddField(new Field({ 48,0,-8 }, { 1,10,13 }));
+    world_.AddField(new Field({ 57,0,6 }, { 18,10,2 }));
+    world_.AddField(new Field({ 57,0,-6 }, { 18,10,2 }));
+
+    world_.AddField(new Field({ 66,0,9 }, { 1.5,10,15 }));
+    world_.AddField(new Field({ 66,0,-9 }, { 1.5,10,15 }));
+    world_.AddField(new Field({ 94,0,8 }, { 1,10,13 }));
+    world_.AddField(new Field({ 94,0,-8 }, { 1,10,13 }));
+    world_.AddField(new Field({ 103,0,6 }, { 18,10,2 }));
+    world_.AddField(new Field({ 103,0,-6 }, { 18,10,2 }));
+
+    world_.AddField(new Field({ 112,0,9 }, { 1.5,10,15 }));
+    world_.AddField(new Field({ 112,0,-9 }, { 1.5,10,15 }));
+    world_.AddField(new Field({ 140,0,8 }, { 1,10,13 }));
+    world_.AddField(new Field({ 140,0,-8 }, { 1,10,13 }));
+    world_.AddField(new Field({ 152,0,6 }, { 24,10,2 }));
+    world_.AddField(new Field({ 152,0,-6 }, { 24,10,2 }));
+
+    world_.AddField(new Field({ 164,0,9 }, { 1.5,10,15 }));
+    world_.AddField(new Field({ 164,0,-9 }, { 1.5,10,15 }));
+    world_.AddField(new Field({ 192,0,0 }, { 1,10,30 }));
+
+    //縦線
+    world_.AddField(new Field({ 60,0,14 }, { 300,10,2 }));
+    world_.AddField(new Field({ 60,0,-14 }, { 300,10,2 }));
 }

@@ -29,6 +29,10 @@ public:
     virtual void SetSceneData(SceneData data) override;
     virtual void Debug(float delta_time)override;
 private:
+
+    void InitialSettings();
+    void AddActors();
+    void AddFields();
     World world_;
 
     DebugCamera* debugCamera_{ nullptr };

@@ -4,7 +4,7 @@
 #include "../../GameSystem/InputSystem/InputSystem.h"
 #include "../../Actor/Charactor/Player/Player.h"
 #include "../../Actor/Charactor/Enemy/Enemy.h"
-#include "../../Actor/Charactor/Enemy/Default/DefaultEnemy.h"
+#include "../../Actor/Charactor/Enemy/SwordEnemy1/SwordEnemy1.h"
 #include "../../Actor/Charactor/Enemy/Boss/Boss.h"
 #include "../../GameSystem/Camera/DebugCamera.h"
 #include "../../GameSystem/Field/FieldActor.h"
@@ -82,12 +82,11 @@ void GamePlayScene::InitialSettings()
 
 void GamePlayScene::AddActors()
 {
-    world_.AddPlayer(new Player(&world_, {}, {}, Status{ 60, 10 }));
-    world_.AddCharactor(new DefaultEnemy(&world_, { 15,1000,5 }));
-    /*world_.AddCharactor(new DefaultEnemy(&world_, { 15,0,5 }));
-    world_.AddCharactor(new DefaultEnemy(&world_, { 15,0,-5 }));
-    world_.AddCharactor(new DefaultEnemy(&world_, { 5,0,0 }, {}, Status{ 120, 20 }));
-    world_.AddCharactor(new Boss(&world_, { 30,0,0 }, {}, Status{ 500, 30 }));*/
+    world_.AddPlayer(new Player(&world_, {}, { 0,90,0 }, Status{ 60, 10 }));
+    //world_.AddCharactor(new SwordEnemy1(&world_, { 20,0,5 }));
+    //world_.AddCharactor(new SwordEnemy1(&world_, { 20,0,-5 }));
+    world_.AddCharactor(new SwordEnemy1(&world_, { 10,0,0 }, {}, Status{ 120, 20 }));
+    world_.AddCharactor(new Boss(&world_, { 40,0,0 }, {}, Status{ 500, 30 }));
 }
 
 void GamePlayScene::AddFields()

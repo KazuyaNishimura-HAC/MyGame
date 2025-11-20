@@ -1,6 +1,6 @@
 ﻿#include "World.h"
 #include "../Actor/Actor.h"
-#include "../Actor/Player/Player.h"
+#include "../Actor/Charactor/Player/Player.h"
 #include "../GameSystem/InputSystem/InputSystem.h"
 #include "../UI/GUI.h"
 #include "../GameSystem/Event/Event.h"
@@ -273,6 +273,7 @@ void World::Debug(float deltaTime)
     }
     ImGui::Begin("WorldGUI");
     ImGui::Value("FPS", 60 / deltaTime);
+    ImGui::Value("TimeScale", time_.GetTimeScale());
     ImGui::End();
     if (!isDebug_) return;
     actorManager_.Debug(deltaTime);

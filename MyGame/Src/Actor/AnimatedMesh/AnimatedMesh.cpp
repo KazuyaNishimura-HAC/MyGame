@@ -165,12 +165,12 @@ float AnimatedMesh::UpdateMotionTimer(float deltaTime, float timer, float motion
     return timer;
 }
 
-void AnimatedMesh::Debug()
+void AnimatedMesh::Debug(const std::string& actorName)
 {
     int motion = curMotion_.clip_;
     const int motionCount = MotionCount();
 
-    ImGui::Begin("AnimationLog");
+    ImGui::Begin((actorName +"Animation").c_str());
     ImGui::Value("AnimCount", motionCount);
     ImGui::Value("curAnim", curMotion_.clip_);
     ImGui::Value("cur", curMotion_.timer_);

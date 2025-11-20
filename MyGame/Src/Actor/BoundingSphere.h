@@ -32,7 +32,7 @@ public:
     GSvector3 position;
     bool enable_{ true };
     bool trigger_{ false };
-    bool edit_{ true };
+    bool edit_{ false };
     //デフォルトカラー(白色)
     GSvector3 defColor_;
     //編集中 

@@ -171,7 +171,7 @@ Charactor* ActorManager::GetCharactor(std::string name)
 
 void ActorManager::Debug(float deltaTime)
 {
-    const std::string buttonText = debugCollide_ ? "OFF" : "ON";
+    const std::string buttonText = debugCollide_ ? "ON" : "OFF";
 
     ImGui::Begin("Collider");
     ImGui::Text("ActorCollide:");

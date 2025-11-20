@@ -5,6 +5,7 @@
 #include <vector>
 #include <list>
 #include <functional>
+#include <string>
 
 #include "../../Graphics/Mesh/MeshDrawer.h"
 
@@ -54,7 +55,7 @@ public:
     GSmatrix4 boneMatrices(int boneNo)const;
     int MotionCount()const;
 
-    virtual void Debug();
+    virtual void Debug(const std::string& actorName = "");
 
 protected:
     void UpdateLerpTimer(float deltaTime);

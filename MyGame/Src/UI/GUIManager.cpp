@@ -108,7 +108,7 @@ void GUIManager::Enable(bool enable)
 
 void GUIManager::Debug()
 {
-    const std::string buttonText = isAllDraw_ ? "OFF" : "ON";
+    const std::string buttonText = isAllDraw_ ? "ON" : "OFF";
 
     ImGui::Begin("UIDebug");
     ImGui::Text("AllDraw");

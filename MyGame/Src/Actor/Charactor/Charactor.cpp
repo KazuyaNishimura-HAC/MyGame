@@ -35,6 +35,8 @@ void Charactor::Draw() const
 void Charactor::TakeDamage(float damage, const GSvector3& attackPos)
 {
 	status_.hp -= damage;
+    //0以下にならないようクランプ
+    if (status_.hp < 0.0f) status_.hp = CLAMP(status_.hp,0,status_.maxHP);
 }
 
 void Charactor::SpawnAttackCollider(float time, float atk)

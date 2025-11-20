@@ -10,7 +10,7 @@ public:
 	void Enter()override;
 	void Exit()override;
 private:
-    const float waitTime_{ 1.0f };
+    const float waitTime_{ 2.0f };
     bool isParryAttack_{ false };
 };
 

@@ -17,14 +17,15 @@ void PlayerParry::Update(float deltaTime)
     //ボタンが押されたらパリィ攻撃可能
     if (!isParryAttack_ && InputSystem::ButtonTrigger(InputSystem::Button::B)) {
         owner_->SetTimeScale(1.0f);
-        owner_->ChangeMotion(Player::AttackSkill,false,1.5f);
+        owner_->ChangeMotion(PlayerMotion::ParryATK,false,1.5f);
         isParryAttack_ = true;
     }
 }
 
 void PlayerParry::Enter()
 {
-    owner_->SetTimeScale(0.25f, waitTime_);
+    owner_->ChangeMotion(PlayerMotion::ParrySuccess, false, 1.5f,30.0f);
+    owner_->SetTimeScale(0.2f, waitTime_);
     owner_->SetParry(true);
     owner_->SetInvincible(true);
 }

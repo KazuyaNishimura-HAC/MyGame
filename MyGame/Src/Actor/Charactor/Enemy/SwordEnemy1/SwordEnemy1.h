@@ -1,5 +1,5 @@
-﻿#ifndef DEFAULT_ENEMY_H_
-#define DEFAULT_ENEMY_H_
+﻿#ifndef SWORD_ENEMY1_H_
+#define SWORD_ENEMY1_H_
 
 #include <vector>
 #include <GStransform.h>
@@ -7,13 +7,13 @@
 
 class GUI;
 
-class DefaultEnemy : public Enemy
+class SwordEnemy1 : public Enemy
 {
 public:
     //コンストラクタ
-    DefaultEnemy(IWorld* world = nullptr, const GSvector3& position = {0, 0, 0}, const GSvector3& rotate = { 0, 0, 0 }, Status status = {}, GSuint mesh = Model::Enemy);
+    SwordEnemy1(IWorld* world = nullptr, const GSvector3& position = {0, 0, 0}, const GSvector3& rotate = { 0, 0, 0 }, Status status = {}, GSuint mesh = Model::Enemy);
     //デストラクタ
-    ~DefaultEnemy()override;
+    ~SwordEnemy1()override;
 
     //更新
     void Update(float deltaTime)override;

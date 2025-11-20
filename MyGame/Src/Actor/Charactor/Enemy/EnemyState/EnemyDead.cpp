@@ -14,7 +14,7 @@ void EnemyDead::Update(float deltaTime)
 
 void EnemyDead::Enter()
 {
-	owner_->ChangeMotion(Enemy::Death,false);
+	owner_->ChangeMotion(BasicEnemyMotion::Die,false);
 	//当たり判定を無効化
 	owner_->SetEnable(false);
 }

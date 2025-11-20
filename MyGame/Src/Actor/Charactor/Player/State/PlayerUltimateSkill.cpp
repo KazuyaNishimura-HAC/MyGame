@@ -21,7 +21,7 @@ void PlayerUltimateSkill::Enter()
 {
 	owner_->SetAttack(true);
 	owner_->SetInvincible(true);
-	owner_->ChangeMotion(Player::UltSkill, false);
+	owner_->ChangeMotion(PlayerMotion::UltimateSkill, false);
 	//イベント発火
 	skillEvent_->SetInvoke(true);
 }

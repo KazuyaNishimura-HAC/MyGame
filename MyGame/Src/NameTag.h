@@ -30,7 +30,8 @@ namespace NameTag {
 		static constexpr const char* None = "None";
 		static constexpr const char* Player = "Player";
 		static constexpr const char* Enemy = "Enemy";
-		static constexpr const char* DefaultEnemy = "DefaultEnemy";
+		static constexpr const char* SwordEnemy1 = "SwordEnemy1";
+        static constexpr const char* Boss = "Boss";
 		static constexpr const char* Object = "Object";
 		static constexpr const char* PlayerATKCollider = "PlayerATKCollider";
 		static constexpr const char* EnemyATKCollider = "EnemyATKCollider";

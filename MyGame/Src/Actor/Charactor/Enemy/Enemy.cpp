@@ -5,10 +5,9 @@
 #include "../Player/Player.h"
 #include "../AttackCollider.h"
 
-#include "State/EnemyState.h"
-#include "State/EnemyIdle.h"
-#include "State/EnemyMove.h"
-#include "State/EnemyAttack.h"
+#include "EnemyState/EnemyState.h"
+#include "EnemyState/EnemyIdle.h"
+#include "EnemyState/EnemyMove.h"
 Enemy::Enemy(IWorld* world, const GSvector3& position, const GSvector3& rotate, Status status, GSuint mesh)
     :Charactor(world,position,rotate,status,mesh)
 {

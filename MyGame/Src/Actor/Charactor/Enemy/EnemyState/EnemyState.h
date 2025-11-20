@@ -3,15 +3,17 @@
 
 #include "../../../../State/IState.h"
 #include "../Enemy.h"
+#include "../BasicEnemyMotion.h"
 class EnemyState :public IState
 {
 public:
+    //共通ステート
 	enum State {
 		Idle,
 		Move,
-		Stan,
 		Attack,
 		Damage,
+        ParryHit,
 		Dead
 	};
 	EnemyState(Enemy* owner) : owner_{ owner } {};

@@ -19,7 +19,7 @@ void EnemyIdle::Update(float deltaTime)
 
 void EnemyIdle::Enter()
 {
-	owner_->ChangeMotion(Enemy::Idle, true);
+	owner_->ChangeMotion(BasicEnemyMotion::Idle, true);
 }
 
 void EnemyIdle::Exit()

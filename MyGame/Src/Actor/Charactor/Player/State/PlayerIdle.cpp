@@ -12,7 +12,7 @@ void PlayerIdle::Update(float deltaTime)
 
 void PlayerIdle::Enter()
 {
-	owner_->ChangeMotion(Player::Idle,true);
+	owner_->ChangeMotion(PlayerMotion::Idle,true);
 }
 
 void PlayerIdle::Exit()

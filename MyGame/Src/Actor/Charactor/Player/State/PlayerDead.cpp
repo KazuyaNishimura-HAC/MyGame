@@ -15,7 +15,7 @@ void PlayerDead::Update(float deltaTime)
 
 void PlayerDead::Enter()
 {
-	owner_->ChangeMotion(Player::Death2, false);
+	owner_->ChangeMotion(PlayerMotion::Die, false);
 	//当たり判定を無効化
 	owner_->SetEnable(false);
 }

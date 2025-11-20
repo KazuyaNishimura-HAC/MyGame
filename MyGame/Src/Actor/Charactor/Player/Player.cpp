@@ -6,6 +6,7 @@
 #include "../AttackCollider.h"
 #include "../../../UI/PlayerUI.h"
 #include "ParryCollider.h"
+#include "PlayerMotion.h"
 //ステートヘッダー
 #include "State/PlayerIdle.h"
 #include "State/PlayerMove.h"
@@ -43,19 +44,19 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& rotate
     ui_ = new PlayerUI(this);
     world_->AddGUI(ui_);
     //イベントの追加
-    mesh_->AddEvent(Motion::Attack, 30, [=] {TestAttack(); });
-    mesh_->AddEvent(Motion::Combo2, 30, [=] {TestAttack(); });
-    mesh_->AddEvent(Motion::Combo3, 30, [=] {TestAttack(); camera_->SetShakeValues(30.0f, 5.0f, 160.0f, 1.0f, 20.0f, { 0.1f,0.1f }, 0.0f); });
-    mesh_->AddEvent(Motion::UltSkill, 45, [=] {TestAttack(); });
-    mesh_->AddEvent(Motion::UltSkill, 70, [=] {TestAttack(); });
-    mesh_->AddEvent(Motion::UltSkill, 90, [=] {TestAttack(); });
-    mesh_->AddEvent(Motion::UltSkill, 110, [=] {TestAttack(); });
-    mesh_->AddEvent(Motion::UltSkill, 130, [=] {TestAttack(); });
-    mesh_->AddEvent(Motion::UltSkill, 160, [=] {TestAttack(); });
-    mesh_->AddEvent(Motion::AttackSkill, 0, [=] {TestAttack(); });
-    mesh_->AddEvent(Motion::AttackSkill, 20, [=] {TestAttack(); });
-    mesh_->AddEvent(Motion::AttackSkill, 40, [=] {TestAttack(); });
-    mesh_->AddEvent(Motion::AttackSkill, 80, [=] {TestAttack(); });
+    mesh_->AddEvent(PlayerMotion::Attack1, 30, [=] {TestAttack(); });
+    mesh_->AddEvent(PlayerMotion::Attack2, 30, [=] {TestAttack(); });
+    mesh_->AddEvent(PlayerMotion::Attack4, 30, [=] {TestAttack(); camera_->SetShakeValues(30.0f, 5.0f, 160.0f, 1.0f, 20.0f, { 0.1f,0.1f }, 0.0f); });
+    mesh_->AddEvent(PlayerMotion::UltimateSkill, 45, [=] {TestAttack(); });
+    mesh_->AddEvent(PlayerMotion::UltimateSkill, 70, [=] {TestAttack(); });
+    mesh_->AddEvent(PlayerMotion::UltimateSkill, 90, [=] {TestAttack(); });
+    mesh_->AddEvent(PlayerMotion::UltimateSkill, 110, [=] {TestAttack(); });
+    mesh_->AddEvent(PlayerMotion::UltimateSkill, 130, [=] {TestAttack(); });
+    mesh_->AddEvent(PlayerMotion::UltimateSkill, 160, [=] {TestAttack(); });
+    mesh_->AddEvent(PlayerMotion::ParryATK, 0, [=] {TestAttack(); });
+    mesh_->AddEvent(PlayerMotion::ParryATK, 20, [=] {TestAttack(); });
+    mesh_->AddEvent(PlayerMotion::ParryATK, 40, [=] {TestAttack(); });
+    mesh_->AddEvent(PlayerMotion::ParryATK, 80, [=] {TestAttack(); });
     //エフェクト生成（登録）
     effectHandles_[Effect::Aura] = gsPlayEffectEx(Effect::Aura, nullptr);
 }
@@ -257,7 +258,7 @@ GStransform& Player::CameraTransform()
 
 void Player::Debug(float deltaTime)
 {
-    mesh_->Debug();
+    mesh_->Debug("Player");
     ImGui::Begin("Playerstatus");
     ImGui::Value("MaxHP", status_.maxHP);
     ImGui::Value("HP", status_.hp);

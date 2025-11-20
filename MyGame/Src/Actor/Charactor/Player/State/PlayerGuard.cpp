@@ -24,7 +24,7 @@ void PlayerGuard::Enter()
     owner_->SetGuard(true);
     owner_->SetParryEnable(true);
     parryTimer_ = parryDuration_;
-    owner_->ChangeMotion(Player::SkillCoolTime);
+    owner_->ChangeMotion(PlayerMotion::Guard);
 }
 
 void PlayerGuard::Exit()

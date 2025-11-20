@@ -11,22 +11,7 @@ class ParryCollider;
 class Player : public Charactor
 {
 public:
-    enum Motion {
-        Idle,
-        Run,
-        Attack,
-        Combo2,
-        Combo3,
-        Attack2,
-        SkillCoolTime,
-        AttackSkill,
-        UltSkill,
-        Parry,
-        Hit,
-        Death,
-        Death2,
-        Death3
-    };
+    
     //コンストラクタ
     Player(IWorld* world = nullptr,const GSvector3& position = {0, 0, 0}, const GSvector3& rotate = { 0, 0, 0 }, Status status = {}, GSuint mesh = Model::Player);
     //デストラクタ

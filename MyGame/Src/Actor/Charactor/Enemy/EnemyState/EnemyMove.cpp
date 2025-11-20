@@ -13,7 +13,7 @@ void EnemyMove::Update(float deltaTime)
 
 void EnemyMove::Enter()
 {
-	owner_->ChangeMotion(Enemy::Run);
+	owner_->ChangeMotion(BasicEnemyMotion::Run);
 }
 
 void EnemyMove::Exit()

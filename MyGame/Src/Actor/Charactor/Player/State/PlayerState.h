@@ -3,6 +3,7 @@
 
 #include "../../../../State/IState.h"
 #include "../Player.h"
+#include "../PlayerMotion.h"
 class PlayerState :public IState
 {
 public:

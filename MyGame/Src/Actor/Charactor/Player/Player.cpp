@@ -46,6 +46,7 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& rotate
     //イベントの追加
     mesh_->AddEvent(PlayerMotion::Attack1, 30, [=] {TestAttack(); });
     mesh_->AddEvent(PlayerMotion::Attack2, 30, [=] {TestAttack(); });
+    mesh_->AddEvent(PlayerMotion::Attack3, 30, [=] {TestAttack(); });
     mesh_->AddEvent(PlayerMotion::Attack4, 30, [=] {TestAttack(); camera_->SetShakeValues(30.0f, 5.0f, 160.0f, 1.0f, 20.0f, { 0.1f,0.1f }, 0.0f); });
     mesh_->AddEvent(PlayerMotion::UltimateSkill, 45, [=] {TestAttack(); });
     mesh_->AddEvent(PlayerMotion::UltimateSkill, 70, [=] {TestAttack(); });
@@ -57,8 +58,6 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& rotate
     mesh_->AddEvent(PlayerMotion::ParryATK, 20, [=] {TestAttack(); });
     mesh_->AddEvent(PlayerMotion::ParryATK, 40, [=] {TestAttack(); });
     mesh_->AddEvent(PlayerMotion::ParryATK, 80, [=] {TestAttack(); });
-    //エフェクト生成（登録）
-    effectHandles_[Effect::Aura] = gsPlayEffectEx(Effect::Aura, nullptr);
 }
 Player::~Player()
 {
@@ -84,7 +83,6 @@ void Player::Update(float deltaTime)
 
     if (!IsAttack() && !IsParry() && InputSystem::ButtonTrigger(InputSystem::Button::Y)) ChangeState(PlayerState::Guard);
 
-    Effect::SetEffectParam(EffectParam(effectHandles_[Effect::Aura], { 0,1,0 }, {}, { 1,1,1 }, { 1,1,1,1 }, 0.5f), transform_);
     MoveCamera(deltaTime);
     MoveColliders();
 }

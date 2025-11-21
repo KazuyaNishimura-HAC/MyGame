@@ -41,6 +41,7 @@ void AnimatedMesh::Draw() const
     gsSetMatrixSkeleton(boneMatrices_.data());
     mesh_.Draw(transform_);
     gsEnable(GS_CALC_SKELETON);
+    
 }
 
 void AnimatedMesh::ChangeMotion(GSuint motion, bool loop, float motionSpeed, float motionTime, float lerpTime, bool forceChange)
@@ -165,11 +166,18 @@ float AnimatedMesh::UpdateMotionTimer(float deltaTime, float timer, float motion
     return timer;
 }
 
+void AnimatedMesh::WeaponDraw(GSuint model, int boneNo)
+{
+    glPushMatrix();
+        glMultMatrixf(boneMatrices(boneNo));
+        gsDrawMesh(model);
+    glPopMatrix();
+}
+
 void AnimatedMesh::Debug(const std::string& actorName)
 {
     int motion = curMotion_.clip_;
     const int motionCount = MotionCount();
-
     ImGui::Begin((actorName +"Animation").c_str());
     ImGui::Value("AnimCount", motionCount);
     ImGui::Value("curAnim", curMotion_.clip_);
@@ -183,7 +191,6 @@ void AnimatedMesh::Debug(const std::string& actorName)
     ImGui::Value("lerp", lerpTimer_);
     ImGui::InputInt("changeAnim",&motion);
     ImGui::End();
-
     motion = CLAMP(motion,0, motionCount - 1);
     if(curMotion_.clip_ != motion)ChangeMotion(motion,true);
 }

@@ -55,6 +55,7 @@ public:
     GSmatrix4 boneMatrices(int boneNo)const;
     int MotionCount()const;
 
+    void WeaponDraw(GSuint model,int boneNo);
     virtual void Debug(const std::string& actorName = "");
 
 protected:

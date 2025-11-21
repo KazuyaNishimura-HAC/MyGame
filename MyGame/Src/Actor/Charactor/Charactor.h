@@ -52,6 +52,7 @@ public:
 protected:
 	StateMachine states_;
     AttackCollider* attackCollider_{ nullptr };
+    //loop再生用エフェクトハンドル
     std::unordered_map <Effect::ID, GSuint> effectHandles_;
 	Status status_{};
 	bool isAttack_{ false };

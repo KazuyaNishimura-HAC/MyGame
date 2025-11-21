@@ -69,7 +69,5 @@ private:
     ParryCollider* parryCollider_{ nullptr };
     //プレイヤーUI表示
     PlayerUI* ui_ = nullptr;
-    //loop再生用エフェクトハンドル
-    std::unordered_map <Effect::ID,GSuint> effectHandles_;
 };
 #endif

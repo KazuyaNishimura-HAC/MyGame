@@ -4,18 +4,27 @@
 
 class Charactor;
 
+struct AttackInfo {
+    float damage{ 1.0f };
+    float knockbackPower{ 1.0f };
+    GSvector3 hitPos{};
+    GSvector3 hitRot{};
+    Charactor* attacker{ nullptr };
+};
 class AttackCollider : public Actor
 {
 public:
 	AttackCollider(Charactor* owner ,float radius = 1.0f,const GSvector3& pos = { 0,0,0 },const GSvector3& offset = { 0,0,0 });
 	~AttackCollider();
-	void IsAttack(float time = 1.0f,float attack = 0.0f);
+	void SetAttack(float time = 1.0f,float attack = 0.0f);
 	void Update(float deltTime)override;
 	void Draw()const override;
 	void React(Actor& other)override;
 private:
+    //生成主
 	Charactor* owner_{ nullptr };
-	float attack_{ 1.0f };
+    //攻撃情報
+    AttackInfo attackInfo_{};
 	//攻撃の持続時間
 	float duration_{ 1.0f };
 };

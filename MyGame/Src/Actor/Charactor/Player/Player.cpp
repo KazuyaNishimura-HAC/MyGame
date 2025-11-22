@@ -101,10 +101,10 @@ void Player::React(Actor& other)
 {
 }
 
-void Player::TakeDamage(float damage, const GSvector3& attackPos)
+void Player::HitAttackCollider(const AttackInfo& info)
 {
-    //無敵なら攻撃を受けない
-    if (IsInvincible()) return;
+    //無敵or死亡中なら攻撃を受けない
+    if (IsInvincible() || IsDying()) return;
     //パリィ可能ならパリィ処理
     if (IsParryEnable()) {
         parryCollider_->IsParry(true);
@@ -113,7 +113,7 @@ void Player::TakeDamage(float damage, const GSvector3& attackPos)
     }
 
     //ダメージ処理
-    status_.hp -= damage;
+    TakeDamage(info.damage);
 
     if (IsDying()) ChangeState(PlayerState::Dead);
     else ChangeState(PlayerState::Damage);

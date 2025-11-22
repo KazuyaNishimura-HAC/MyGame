@@ -25,8 +25,10 @@ public:
     virtual void MovePosition(float deltaTime);
     virtual void MoveAttackCollide();
     virtual void OnParryHit(const GSvector3& position);
-    virtual void SetCoolTime(float time);
-    virtual float GetCoolTime();
+    
+    void LookAtPlayer();
+    void SetCoolTime(float time);
+    float GetCoolTime();
 protected:
     //ターゲットとなるアクター(Player)を持っておく
     Charactor* player_{ nullptr };

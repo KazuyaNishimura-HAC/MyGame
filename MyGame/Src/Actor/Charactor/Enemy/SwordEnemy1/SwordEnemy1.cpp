@@ -58,14 +58,14 @@ void SwordEnemy1::React(Actor& other)
     }
 }
 
-void SwordEnemy1::TakeDamage(float damage, const GSvector3& attackPos)
+void SwordEnemy1::HitAttackCollider(const AttackInfo& atkInfo)
 {
     //死亡しているならreturn
-    if (CurrentState() == EnemyState::Dead) return;
+    if (IsDying()) return;
 
-    status_.hp -= damage;
+    TakeDamage(atkInfo.damage);
     //hpが0なら死亡
-    if(IsDying()) ChangeState(EnemyState::Dead);
+    if (IsDying()) ChangeState(EnemyState::Dead);
     else ChangeState(EnemyState::Damage);
 }
 
@@ -80,7 +80,7 @@ void SwordEnemy1::Debug(float deltaTime)
 
 void SwordEnemy1::TestAttack()
 {
-    attackCollider_->IsAttack(0.5f, 10);
+    SpawnAttackCollider(0.5f, 10);
     GSuint atkHandle = gsPlayEffectEx(Effect::Slash, nullptr);
     Effect::SetEffectParam(EffectParam(atkHandle, { 0,1,1 }, { 0,0,45 }, { 1,1,1 }), transform_);
 }

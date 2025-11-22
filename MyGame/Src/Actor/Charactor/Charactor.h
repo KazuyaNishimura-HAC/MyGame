@@ -4,6 +4,7 @@
 #include "../Model.h"
 #include "../../State/StateMachine.h"
 #include "../../Graphics/Effect/Effect.h"
+#include "AttackCollider.h"
 
 class AttackCollider;
 
@@ -24,9 +25,11 @@ public:
 	virtual void LateUpdate(float deltaTime)override;
 	virtual void Draw() const override;
     //ダメージを受ける
-	virtual void TakeDamage(float damage,const GSvector3& attackPos = { 0,0,0 });
+	void TakeDamage(float damage);
     //攻撃判定を有効化
     virtual void SpawnAttackCollider(float time,float atk);
+    //攻撃を受ける
+    virtual void HitAttackCollider(const AttackInfo& atkInfo);
     //ノックバック
     virtual void Knockback(float power = 1.0f, const GSvector3& position = { 0,0,0 });
 	//ステート設定・取得

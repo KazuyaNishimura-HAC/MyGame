@@ -1,5 +1,4 @@
 ﻿#include "Charactor.h"
-#include "AttackCollider.h"
 
 Charactor::Charactor(IWorld* world, const GSvector3& position, const GSvector3& rotate,Status status, GSuint mesh)
 	:Actor(mesh)
@@ -32,7 +31,7 @@ void Charactor::Draw() const
 	Actor::Draw();
 }
 
-void Charactor::TakeDamage(float damage, const GSvector3& attackPos)
+void Charactor::TakeDamage(float damage)
 {
 	status_.hp -= damage;
     //0以下にならないようクランプ
@@ -42,7 +41,13 @@ void Charactor::TakeDamage(float damage, const GSvector3& attackPos)
 void Charactor::SpawnAttackCollider(float time, float atk)
 {
     if (!attackCollider_) return;
-    attackCollider_->IsAttack(time,atk);
+    attackCollider_->SetAttack(time,atk);
+}
+
+void Charactor::HitAttackCollider(const AttackInfo& atkInfo)
+{
+    if (invincible_ || IsDying())return;
+    TakeDamage(atkInfo.damage);
 }
 
 void Charactor::Knockback(float power, const GSvector3& position)

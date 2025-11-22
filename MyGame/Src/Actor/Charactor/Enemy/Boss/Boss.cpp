@@ -25,6 +25,8 @@ Boss::Boss(IWorld* world, const GSvector3& position, const GSvector3& rotate, St
     states_.AddState(BossState::Dead, new BossDead(this));
     states_.ChangeState(BossState::Idle);
     collider_ = BoundingSphere(1);
+    //エフェクト生成（登録）
+    effectHandles_[Effect::Aura] = gsPlayEffectEx(Effect::Aura, nullptr);
     //攻撃処理
     mesh_->AddEvent(BossMotion::Attack1, 30, [=] {Attack(); });
 }
@@ -37,6 +39,7 @@ Boss::~Boss()
 void Boss::Update(float deltaTime)
 {
     Enemy::Update(deltaTime);
+    if (!IsDying()) Effect::SetEffectParam(EffectParam(effectHandles_[Effect::Aura], { 0,1,0 }, {}, { 1.5f,1.5f,1.5f }, { 1,1,1,1 }, 0.5f), transform_);
     //基底クラスの処理を実行
     MoveAttackCollide();
 }
@@ -49,6 +52,8 @@ void Boss::LateUpdate(float deltaTime)
 void Boss::Draw() const
 {
     Enemy::Draw();
+    //手につけるモデルとボーンID
+    mesh_->WeaponDraw(Model::GreatSword,47);
 }
 
 void Boss::React(Actor& other)
@@ -58,12 +63,12 @@ void Boss::React(Actor& other)
     }
 }
 
-void Boss::TakeDamage(float damage, const GSvector3& attackPos)
+void Boss::HitAttackCollider(const AttackInfo& atkInfo)
 {
     //死亡しているならreturn
-    if (CurrentState() == BossState::Dead) return;
+    if (IsDying()) return;
 
-    status_.hp -= damage;
+    TakeDamage(atkInfo.damage);
     //hpが0なら死亡
     if (IsDying()) ChangeState(BossState::Dead);
     else ChangeState(BossState::Damage);

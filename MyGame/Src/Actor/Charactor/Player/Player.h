@@ -24,7 +24,7 @@ public:
     void Draw()const override;
     //接触判定
     void React(Actor& other)override;
-    void TakeDamage(float damage, const GSvector3& attackPos = { 0,0,0 })override;
+    void HitAttackCollider(const AttackInfo& info)override;
     void MovePosition(float deltaTime);
     void SetGuard(bool guard);
     bool IsGuard();

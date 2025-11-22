@@ -77,6 +77,11 @@ void Enemy::OnParryHit(const GSvector3& position)
     Knockback(0.5f,position);
 }
 
+void Enemy::LookAtPlayer()
+{
+    transform_.lookAt(player_->Transform().position());
+}
+
 void Enemy::SetCoolTime(float time)
 {
     damageCoolTime_ = time;

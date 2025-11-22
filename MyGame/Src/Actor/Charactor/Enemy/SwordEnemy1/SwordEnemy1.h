@@ -21,7 +21,7 @@ public:
     //描画
     void Draw()const override;
     void React(Actor& other)override;
-    void TakeDamage(float damage, const GSvector3& attackPos = { 0,0,0 })override;
+    void HitAttackCollider(const AttackInfo& atkInfo)override;
     virtual void Debug(float deltaTime)override;
 private:
     void TestAttack();

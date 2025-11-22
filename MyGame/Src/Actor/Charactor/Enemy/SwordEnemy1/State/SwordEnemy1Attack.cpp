@@ -14,6 +14,7 @@ void SwordEnemy1Attack::Update(float deltaTime)
 void SwordEnemy1Attack::Enter()
 {
 	owner_->SetAttack(true);
+    owner_->LookAtPlayer();
 	owner_->ChangeMotion(SwordEnemy1Motion::Attack1, false);
 }
 

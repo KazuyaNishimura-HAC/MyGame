@@ -58,5 +58,6 @@ private:
     GStransform transform_;
     GSvector3 velocity_{0,0,0};
     GSvector2 viewRange_, viewOffset_;
+    float smoothTime_{ 4.5f };
 };
 #endif

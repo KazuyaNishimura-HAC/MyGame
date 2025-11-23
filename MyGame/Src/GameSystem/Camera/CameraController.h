@@ -8,6 +8,7 @@ struct View {
 	GSvector3 tar{ 0.0f,0.0f,0.0f };
 	float fov{ 45.0f };
 	bool isSmooth{ false };
+    float smoothTime{ 4.5f };
 };
 
 struct CameraShake {
@@ -92,6 +93,9 @@ public:
 	//Lerp設定・取得
 	void SetSmooth(bool smooth);
 	bool IsSmooth() const;
+
+    void SetSmoothTime(float time);
+    float GetSmoothTime();
 
 	void SetMovePrevious(bool preMove);
 	bool IsMovePrevious() const;

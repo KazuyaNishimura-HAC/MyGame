@@ -104,6 +104,16 @@ bool CameraController::IsSmooth() const
 	return view_.isSmooth;
 }
 
+void CameraController::SetSmoothTime(float time)
+{
+    view_.smoothTime = time;
+}
+
+float CameraController::GetSmoothTime()
+{
+    return view_.smoothTime;
+}
+
 void CameraController::SetMovePrevious(bool preMove)
 {
 	preMove_ = preMove;

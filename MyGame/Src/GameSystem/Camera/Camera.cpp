@@ -70,6 +70,7 @@ void Camera::Debug()
     ImGui::InputFloat3("LookAt", transform_.position() + transform_.forward());
     ImGui::InputFloat3("UP", transform_.up());
     ImGui::InputFloat("FoV", &fov_);
+    ImGui::InputFloat("SmoothTime",&smoothTime_);
     ImGui::End();
 
     CameraShake debugShake = controller_->GetShake();
@@ -200,10 +201,9 @@ void Camera::SetView(View view,float deltaTime)
         transform_.position(view.pos);
     }
     else {
-        // スムースダンプによる滑らかな補間
-        const float SmoothTime{ 4.5f };    // 補間フレーム数
+        smoothTime_ = view.smoothTime;
         const float MaxSpeed{ 100 };       // 移動スピードの最大値
-        GSvector3 pos = GSvector3::smoothDamp(transform_.position(), view.pos, velocity_, SmoothTime, MaxSpeed, deltaTime);
+        GSvector3 pos = GSvector3::smoothDamp(transform_.position(), view.pos, velocity_, smoothTime_, MaxSpeed, deltaTime);
         transform_.position(pos);
     }
     

@@ -27,13 +27,19 @@ void TimeLineEditor::DrawEditUI()
     ImGui::Begin("TimeLineTest");
     //マウス位置を取得
     mousePos = ImGui::GetIO().MousePos;
-    //TimeLineEditorのCanvas内座標
+    //TimeLineEditorのCanvas内座標取得
     mousePosInCanvas_ = GSvector2{ mousePos.x - canvasPos.x, mousePos.y - canvasPos.y };
     if (ImGui::Button("LoadData")) LoadKeyData();
     PreView();
     DrawUI();
     Edit();
-    if (ImGui::Button("SaveFile")) Save();
+    if (ImGui::Button("SaveFile")) {
+        openSaveWindow_ = true;
+        //開いているイベント名を初期値に設定
+        strcpy_s(saveEventName, selectedEventName_.c_str());
+        ImGui::OpenPopup("SaveFileDialog");
+    }
+    SaveFileDialog();
     ImGui::End();
 }
 
@@ -50,18 +56,34 @@ void TimeLineEditor::AddTimeLine()
 
 void TimeLineEditor::AddKey()
 {
-    ImVec2 clickPos = { mouseClickPos_ .x,mouseClickPos_ .y};
-    ImVec2 clickPosInCanvas_ = { clickPos.x - canvasPos.x, clickPos.y - canvasPos.y };
+    //キー選択中ならreturn
+    if (selectedKey_) return;
+    ImVec2 clickPosInFill = { mouseClickPos_.x - fillStartPos.x, mouseClickPos_.y - fillStartPos.y };
     EditKeyData keyData;
-    if (IsInsideRect(canvasPos, fillSize2, clickPos)) {
-        keyData.frame = clickPosInCanvas_.x / timeFillScale_;
-        keyData.pos = { clickPosInCanvas_.x ,30};
-        keyData.data = new CameraKey();
-        keyData.selected = false;
-        editKeyData_[IKeyData::Camera].push_back(keyData);
+    keyData.frame = clickPosInFill.x / timeFillScale_;
+    keyData.pos = { clickPosInFill.x ,(selectedTruck_ * 60.0f) + 30.0f};
+    keyData.selected = true;
+    int keyType = rowIndex_[selectedTruck_];
+    switch (keyType) {
+        case IKeyData::Camera:
+            keyData.data = new CameraKey();
+            break;
+        case IKeyData::Effect:
+            keyData.data = new EffectKey();
+            break;
+        case IKeyData::Shake:
+            keyData.data = new CameraShakeKey();
+            break;
+        //万が一登録していないキーが入ったらreturn;
+        default : return;
     }
-    //選択中のキーをクリアしてから生成キーを選択
+    
+    editKeyData_[keyType].push_back(keyData);
+    //念のため保持しているキーを解除
     ClearSelectedKey();
+    //selectedがtrueのキーをselectedKey_に割り当て
+    selectedKey_ = GetSelectedKey();
+    //ゲーム内に反映させる
     timeLine_.AddKey(selectedEventName_, keyData.frame,keyData.data);
 }
 
@@ -92,6 +114,12 @@ void TimeLineEditor::DeleteKey()
     timeLine_.DeleteKey(selectedEventName_, frame, type);
 }
 
+void TimeLineEditor::AddTruck()
+{
+    if (IsRowPresent(truckListNum_)) return;
+    rowIndex_.push_back(truckListNum_);
+}
+
 void TimeLineEditor::Edit()
 {
     KeyEdit();
@@ -119,7 +147,11 @@ void TimeLineEditor::Edit()
             ImGui::InputFloat3("Position", camKey->view.pos);
             ImGui::InputFloat3("Target", camKey->view.tar);
             ImGui::InputFloat("Fov", &camKey->view.fov);
-            ImGui::Checkbox("Smooth", &camKey->view.isSmooth);
+            ImGui::Checkbox("IsSmooth", &camKey->view.isSmooth);
+            if (camKey->view.isSmooth) {
+                ImGui::SameLine();
+                ImGui::InputFloat("Time", &camKey->view.smoothTime);
+            }
             if (camKey->isTargetActor) {
                 //プレイヤーの情報を渡す
                 camKey->targetActor = world_->GetAllActor(ActorName::Player);
@@ -141,6 +173,18 @@ void TimeLineEditor::Edit()
             ImGui::Value("Affected", effKey->effect.affected);
             break;
         }
+        case IKeyData::Shake:
+        {
+            CameraShakeKey* shakeKey = SAs<CameraShakeKey>(selectedKey_->data);
+            ImGui::InputFloat("Timer", &shakeKey->shake.timer);
+            ImGui::InputFloat("strength", &shakeKey->shake.strength);
+            ImGui::InputFloat("decayTime", &shakeKey->shake.decayTime);
+            ImGui::InputFloat("decaySpeed", &shakeKey->shake.decaySpeed);
+            ImGui::InputFloat("HZ", &shakeKey->shake.hz);
+            ImGui::InputFloat2("AffectVector", shakeKey->shake.affectVector);
+            ImGui::InputFloat("AffectFov", &shakeKey->shake.affectFov);
+            break;
+        }
         default: break;
     }
 }
@@ -149,7 +193,7 @@ void TimeLineEditor::Edit()
 void TimeLineEditor::KeyEdit()
 {
     
-    bool isMouseInside = IsInsideRect(canvasPos, fillSize, mousePos);
+    bool isMouseInside = IsInsideRect(fillStartPos, maxFillPos, mousePos);
     //編集可能な場所かつクリック時
     if (gsGetMouseButtonTrigger(GMOUSE_BUTTON_1) && isMouseInside) {
         for (int index = 0; index < IKeyData::TypeCount; ++index) {
@@ -158,7 +202,8 @@ void TimeLineEditor::KeyEdit()
             //map要素がないなら引き返し
             if (editKeyData_.find(index) == editKeyData_.end()) continue;
             for (auto& key : editKeyData_[index]) {
-                float dist = gsVector2Distance(&key.pos, &mousePosInCanvas_);
+                GSvector2 canvasKeyPos = key.pos + ImVecToGSVec(fillOffset);
+                float dist = gsVector2Distance(&canvasKeyPos, &mousePosInCanvas_);
                 //クリック地点にキーが存在したらキー取得
                 if (dist < circleSize_) {
                     selectedKey_ = &key;
@@ -173,7 +218,8 @@ void TimeLineEditor::KeyEdit()
     }
     //選択中のキーの横軸移動
     if (gsGetMouseButtonState(GMOUSE_BUTTON_1) &&  selectedKey_ && isMouseInside) {
-        selectedKey_->pos = { mousePosInCanvas_.x,selectedKey_->pos.y };
+        //Offset分減算した座標を反映実際のフレーム座標に割り当て
+        selectedKey_->pos.x = mousePosInCanvas_.x - ImVecToGSVec(fillOffset).x;
         //最大フレーム空でないようにクランプ
         selectedKey_->pos.x = CLAMP(selectedKey_->pos.x,0,eventTime_ * 60.0f * timeFillScale_);
     }
@@ -184,8 +230,7 @@ void TimeLineEditor::KeyEdit()
     }
 
     //キー追加
-    if (gsGetMouseButtonTrigger(GMOUSE_BUTTON_2)) {
-        ClearSelectedKey();
+    if (gsGetMouseButtonTrigger(GMOUSE_BUTTON_2) && IsInsideRect(fillStartPos, maxFillPos, GSVecToImVec(mouseClickPos_))) {
         AddKey();
     }
     //if (ImGui::Button("Delete Key")) {
@@ -213,10 +258,12 @@ void TimeLineEditor::PreView()
 
 void TimeLineEditor::LoadKeyData(std::string name)
 {
-    if (name == "")selectedEventName_ = "TEST1";
-
+    //イベントが存在しないならリターン
+    if (!timeLine_.KeyDatas(selectedEventName_)) return;
+    //各要素をクリア
     ClearSelectedKey();
     editKeyData_.clear();
+    rowIndex_.clear();
     //キー種類追加(空箱を作る)
     for (int keyType = 0; keyType < IKeyData::TypeCount; ++keyType) {
         editKeyData_[keyType];
@@ -232,26 +279,26 @@ void TimeLineEditor::LoadKeyData(std::string name)
             keyData.frame = data.first;
             keyData.pos = { timeFillScale_ * keyData.frame , ((int)key->type * 60) + 30.0f };
             keyData.data = key;
+            //トラックごとのキー情報を格納
             editKeyData_[key->type].push_back(keyData);
         }
     }
     //追加後空のイベント配列を削除
     for (int keyType = 0; keyType < IKeyData::TypeCount; ++keyType) {
-        if (editKeyData_[keyType].empty()) editKeyData_.erase(keyType);
-    }
-    if (ImGui::IsItemActive()) {
-        // （押されてドラッグ中など）のとき
-    }
-
-    if (ImGui::IsItemHovered()) {
-        // 直前の "Key" ボタンにマウスが乗っている
+        if (editKeyData_[keyType].empty()) {
+            editKeyData_.erase(keyType);
+            continue;
+        }
+        rowIndex_.push_back(keyType);
     }
 
-    //値取得（カメラキーのみ）
-    /*for (const auto& key : editKeyData_[IKeyData::Camera]) {
-        CameraKey* camKey = SAs<CameraKey>(key.data);
-        View a = camKey->view;
-    }*/
+    //編集キーのy座標だけ上に積める
+    for (size_t i = 0; i < rowIndex_.size(); ++i) {
+        int keyType = rowIndex_[i];
+        for (auto& key : editKeyData_[keyType]) {
+            key.pos.y = (i * 60) + 30.0f;
+        }
+    }
     
 }
 
@@ -259,9 +306,12 @@ void TimeLineEditor::Save()
 {
     nlohmann::ordered_json saveFile{};
     std::string eventName = selectedEventName_;
-    int frameKeyCount = timeLine_.FrameKeyCount(selectedEventName_);
+    
+    int frameKeyCount = timeLine_.FrameKeyCount(eventName);
     TimeLineData* data = timeLine_.KeyDatas(eventName);
-    saveFile["EventName"] = eventName;
+    std::string saveName = saveEventName;
+    if (!data) return;
+    saveFile["EventName"] = saveName;
     saveFile["KeyCount"] = frameKeyCount;
     saveFile["EventTime"] = data->playTime;
     int frameCount = 0;
@@ -270,26 +320,45 @@ void TimeLineEditor::Save()
         int frame = frameData.first;
         saveFile[keyNum]["frame"] = frame;
         //IKey情報を入力
-        for (const auto& key : frameData.second) {
-            if (auto cam = DAs<CameraKey>(key)) {
-                std::string targetType = cam->isTargetActor ? "Actor" : "World";
-                saveFile[keyNum]["Camera"]["targetType"] = targetType;
-                if (cam->targetActor) {
-                    saveFile[keyNum]["Camera"]["targetName"] = cam->targetActor->GetName();
+        for (int type = 0; type < IKeyData::TypeCount;++type) {
+            for (const auto& key : frameData.second) {
+                //順番通りのキータイプじゃないなら見つかるまでcontinue
+                if (key->type != type) continue;
+                if (auto cam = DAs<CameraKey>(key)) {
+                    std::string targetType = cam->isTargetActor ? "Actor" : "World";
+                    saveFile[keyNum]["Camera"]["targetType"] = targetType;
+                    if (cam->targetActor) {
+                        saveFile[keyNum]["Camera"]["targetName"] = cam->targetActor->GetName();
+                    }
+                    saveFile[keyNum]["Camera"]["position"] = { cam->view.pos.x,cam->view.pos.y,cam->view.pos.z };
+                    saveFile[keyNum]["Camera"]["target"] = { cam->view.tar.x,cam->view.tar.y,cam->view.tar.z };
+                    saveFile[keyNum]["Camera"]["fov"] = cam->view.fov;
+                    saveFile[keyNum]["Camera"]["IsSmooth"] = cam->view.isSmooth;
+                    if(cam->view.isSmooth) saveFile[keyNum]["Camera"]["smoothTime"] = cam->view.smoothTime;
                 }
-                saveFile[keyNum]["Camera"]["position"] = { cam->view.pos.x,cam->view.pos.y,cam->view.pos.z };
-                saveFile[keyNum]["Camera"]["target"] = { cam->view.tar.x,cam->view.tar.y,cam->view.tar.z };
-                saveFile[keyNum]["Camera"]["fov"] = cam->view.fov;
-                saveFile[keyNum]["Camera"]["smooth"] = cam->view.isSmooth; 
-            }
-            if (auto eff = DAs<EffectKey>(key)) {
-                saveFile[keyNum]["Effect"]["affected"] = eff->effect.affected;
+                if (auto eff = DAs<EffectKey>(key)) {
+                    saveFile[keyNum]["Effect"]["affected"] = eff->effect.affected;
+                }
+                if (auto shake = DAs<CameraShakeKey>(key)) {
+                    saveFile[keyNum]["CameraShake"]["timer"] = shake->shake.timer;
+                    saveFile[keyNum]["CameraShake"]["strength"] = shake->shake.strength;
+                    saveFile[keyNum]["CameraShake"]["decayTime"] = shake->shake.decayTime;
+                    saveFile[keyNum]["CameraShake"]["decaySpeed"] = shake->shake.decaySpeed;
+                    saveFile[keyNum]["CameraShake"]["hz"] = shake->shake.hz;
+                    //小数第三位まで四捨五入で整理
+                    saveFile[keyNum]["CameraShake"]["affectVector"] = { shake->shake.affectVector.x,shake->shake.affectVector.y };
+                    saveFile[keyNum]["CameraShake"]["affectFov"] = shake->shake.affectFov;
+
+                }
             }
         }
+        
         frameCount++;
     }
+    //今保存したファイルを選択
+    selectedEventName_ = saveName;
     // ファイルにJSONデータを書き込む
-    std::ofstream of("Src/TimeLineData/test.json");
+    std::ofstream of("Src/TimeLineData/" + saveName + ".json");
     of << saveFile.dump(4);
     of.close();
     //更新後データ読み込み
@@ -298,29 +367,96 @@ void TimeLineEditor::Save()
     LoadKeyData();
 }
 
+void TimeLineEditor::SaveFileDialog()
+{
+    if (!openSaveWindow_) return;
+    
+    if (ImGui::BeginPopupModal("SaveFileDialog", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+    {
+        ImGui::Text("FileName");
+
+        ImGui::InputText("##filename", saveEventName, IM_ARRAYSIZE(saveEventName));
+
+        ImGui::Spacing();
+
+        if (ImGui::Button("Save", ImVec2(120, 0))) {
+            Save();
+            ImGui::CloseCurrentPopup();
+            openSaveWindow_ = false;
+        }
+
+        ImGui::SameLine();
+
+        if (ImGui::Button("Cancel", ImVec2(120, 0))) {
+            ImGui::CloseCurrentPopup();
+            openSaveWindow_ = false;
+        }
+
+        ImGui::EndPopup();
+    }
+}
+
+void TimeLineEditor::SaveKey(const IKeyData& key)
+{
+    //ここにType別ごとに保存
+}
+
 void TimeLineEditor::DrawUI()
 {
+    ImGui::BeginChild(ImGui::GetID((void*)0), ImVec2(100, 40), ImGuiWindowFlags_NoTitleBar);
+    for (int i = 0; i < std::size(truckArray_); ++i)
+    {
+        bool press = ImGui::Button(GetTruckName(i).c_str());
+        if (!press)continue;
+        truckListNum_ = i;
+    }
+    ImGui::EndChild();
+    ImGui::SameLine();
+    if (ImGui::Button(("AddTruck : " + GetTruckName(truckListNum_)).c_str())) {
+        AddTruck();
+    }
+    if (eventTime_ <= 0.0f) return;
     ImDrawList* drawList = ImGui::GetWindowDrawList();
     canvasPos = ImGui::GetCursorScreenPos();
-    canvasSize = ImVec2(ImGui::GetContentRegionAvail().x, 200);
-    if (eventTime_ <= 0.0f) return;
-    fillSize = ImVec2(canvasPos.x + (60.0f * eventTime_ * timeFillScale_), canvasPos.y + canvasSize.y);
-    fillSize2 = ImVec2(canvasPos.x + (60.0f * eventTime_ * timeFillScale_), canvasPos.y + 60);
-    // 背景
-    drawList->AddRectFilled(canvasPos, fillSize, IM_COL32(50, 50, 50, 255));
+    fillStartPos = { canvasPos.x + fillOffset.x,canvasPos.y + fillOffset.y };
+    canvasSize = ImVec2(ImGui::GetContentRegionAvail().x, 300);
+    maxFillPos = ImVec2(fillStartPos.x + (60.0f * eventTime_ * timeFillScale_), fillStartPos.y + rowIndex_.size() * 60.0f);
+    //トラックの数だけ塗りつぶし描画
+    for (size_t i = 0; i < rowIndex_.size();++i) {
+        GSvector2 truckStartPos = ImVecToGSVec(fillStartPos);
+        truckStartPos.y += 60 * i;
+        drawList->AddText(ImVec2(canvasPos.x, canvasPos.y + 20 + (i * 60)),
+            IM_COL32(255, 255, 255, 255),
+            GetTruckName(rowIndex_[i]).c_str());
+        ImVec2 invisibleFill = { 60.0f * eventTime_ * timeFillScale_ + fillOffset.x ,60.0f };
+        if (ImGui::InvisibleButton("truck"+ i, invisibleFill)) selectedTruck_ = i;
 
-    drawList->AddRectFilled(canvasPos, fillSize2, IM_COL32(70, 70, 70, 100));
-
+        ImVec2 truckEndPos = { maxFillPos.x,truckStartPos.y + 60.0f };
+        
+        //トラック描画
+        if (selectedTruck_ == i) {
+            drawList->AddRectFilled(GSVecToImVec(truckStartPos), truckEndPos, IM_COL32(50, 50, 50, 255));
+        }
+        else {
+            drawList->AddRectFilled(GSVecToImVec(truckStartPos), truckEndPos, IM_COL32(50, 50, 50, 150));
+        }
+        //境界線描画
+        ImVec2 truckLineStarts = { canvasPos.x , canvasPos.y + 60 * i };
+        drawList->AddLine(truckLineStarts, ImVec2(maxFillPos.x, truckLineStarts.y), IM_COL32(200, 200, 200, 255));
+    }
     //カーソル位置に◯描画
-    if (IsInsideRect(canvasPos, fillSize, mousePos))drawList->AddCircleFilled(mousePos, 5, IM_COL32(0, 100, 180, 90), 12);
+    if (IsInsideRect(fillStartPos, maxFillPos, mousePos))drawList->AddCircleFilled(mousePos, 5, IM_COL32(0, 100, 180, 90), 12);
 
-    drawList->AddCircleFilled({mouseClickPos_.x,mouseClickPos_.y}, 5, IM_COL32(0, 100, 180, 90), 12);
+    //クリック地点に◯描画
+    if (IsInsideRect(fillStartPos, maxFillPos, GSVecToImVec(mouseClickPos_))) {
+        drawList->AddCircleFilled({ mouseClickPos_.x,mouseClickPos_.y }, 5, IM_COL32(0, 100, 180, 90), 12);
+    }
 
     //メモ）keyPosからtimelineScaleを引くとフレーム数が書けるぞい(keyPos.x / timelineScale = frame)
     for (int index = 0; index < IKeyData::TypeCount;++index) {
         for (const auto& key : editKeyData_[index]) {
-            ImVec2 keyPos = {canvasPos.x + key.pos.x,canvasPos.y + key.pos.y};
-
+            ImVec2 keyPos = { fillStartPos.x + key.pos.x,fillStartPos.y + key.pos.y};
+            //選択キーは赤色に描画
             if (key.selected) {
                 drawList->AddCircleFilled(keyPos, circleSize_, IM_COL32(255, 0, 0, 255), 12);
                 continue;
@@ -333,25 +469,23 @@ void TimeLineEditor::DrawUI()
     for (int t = 0; t <= 60 * eventTime_; t++) {
         float x = 0;
         if (t % 10 == 0) {
-            x = canvasPos.x + t * timeFillScale_ - timeFillOffset_;
+            x = fillStartPos.x + t * timeFillScale_ - timeFillOffset_;
             float lineAlpha;
+            //60フレーム感覚で線を濃くする
             lineAlpha = t % 60 ? 40 : 100;
-            drawList->AddLine(ImVec2(x, canvasPos.y), ImVec2(x, canvasPos.y + canvasSize.y), IM_COL32(200, 200, 200, lineAlpha));
+            drawList->AddLine(ImVec2(x, fillStartPos.y), ImVec2(x, maxFillPos.y), IM_COL32(200, 200, 200, lineAlpha));
         }
         if (t % 60 == 0) {
-            drawList->AddText(ImVec2(x + 2, canvasPos.y), IM_COL32_WHITE, std::to_string(t).c_str());
+            drawList->AddText(ImVec2(x + 2, fillStartPos.y), IM_COL32_WHITE, std::to_string(t).c_str());
         }
     }
     //Preview用ライン描画
     if (timeLine_.IsRunning()) {
-        float x = canvasPos.x + (timeLine_.EventTimer() * 60.0f * timeFillScale_) - timeFillOffset_;
-        drawList->AddLine(ImVec2(x, canvasPos.y), ImVec2(x, canvasPos.y + canvasSize.y), IM_COL32(200, 200, 200, 255));
+        float x = fillStartPos.x + (timeLine_.EventTimer() * 60.0f * timeFillScale_) - timeFillOffset_;
+        drawList->AddLine(ImVec2(x, fillStartPos.y), ImVec2(x, maxFillPos.y), IM_COL32(255, 0, 0, 255));
     }
-    //キー操作用の透明背景(タイムライン上はウィンドウ操作無効)
-    ImVec2 invisibleFill = { fillSize.x - canvasPos.x,fillSize.y - canvasPos.y };
-    ImGui::InvisibleButton("my_rect_block", invisibleFill);
     // テキストを矩形の下に配置
-    ImGui::SetCursorScreenPos(ImVec2(canvasPos.x, fillSize.y + 5));
+    ImGui::SetCursorScreenPos(ImVec2(canvasPos.x, maxFillPos.y + 5));
     
 }
 void TimeLineEditor::UpdateKeyFrame(EditKeyData* key)
@@ -400,4 +534,14 @@ bool TimeLineEditor::IsInsideRect(const ImVec2& rectMin, const ImVec2& rectMax, 
 {
     return (pos.x >= rectMin.x && pos.x <= rectMax.x &&
         pos.y >= rectMin.y && pos.y <= rectMax.y);
+}
+
+std::string TimeLineEditor::GetTruckName(int type)
+{
+    return truckArray_[type];
+}
+
+bool TimeLineEditor::IsRowPresent(int type)
+{
+    return std::find(rowIndex_.begin(), rowIndex_.end(), type) != rowIndex_.end();
 }

@@ -43,6 +43,7 @@ public:
 	void SetEventTime(std::string name,float time);
 	//キーデータ全取得
 	TimeLineData* KeyDatas(std::string name) const;
+    bool HasKeyDatas(std::string name);
 	//キーの追加・削除
 	void AddKey(std::string name,int frame, IKeyData* data);
 	void DeleteKey(std::string name, int frame, IKeyData::KeyType type);
@@ -51,12 +52,14 @@ public:
 	void KeyDataClear();
 	void AllClear();
 private:
-	
 	void LoadView(std::vector<IKeyData*>& data, std::string key);
 	void LoadEffect(std::vector<IKeyData*>& data, std::string key);
+    void LoadShake(std::vector<IKeyData*>& data, std::string key);
 	void SetView(CameraKey* key);
 	void SetEffect(EffectKey* key);
 	void SetShake(CameraShakeKey* key);
+    bool IsLoadSuccess(const std::ifstream& file);
+    std::vector<std::string> GetJsonFilesWin(const std::string& folderPath);
 	//ファイル読み込み
 	nlohmann::ordered_json loadFile_;
 	//フレームごとにあるイベントデータ（再生用）

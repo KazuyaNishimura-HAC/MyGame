@@ -34,7 +34,6 @@ void TimeLine::Update(float deltaTime)
             switch (key->type) {
             case IKeyData::Camera: {
                 CameraKey* camKey = static_cast<CameraKey*>(key);
-                
                 SetView(camKey);
             } break;
 
@@ -43,6 +42,12 @@ void TimeLine::Update(float deltaTime)
                 // effKey->effect などにアクセス
                 SetEffect(effKey);
             } break;
+
+            case IKeyData::Shake: {
+                CameraShakeKey* shakeKey = static_cast<CameraShakeKey*>(key);
+                SetShake(shakeKey);
+            } break;
+
 
             default:
                 break;
@@ -55,7 +60,7 @@ void TimeLine::Update(float deltaTime)
 
 void TimeLine::StartTimeLine(std::string name)
 {
-    if (data_.find(name) == data_.end() || runningEvent_) return;
+    if (!HasKeyDatas(name) || runningEvent_) return;
     runningEvent_ = data_.at(name);
     endTime_ = runningEvent_->playTime;
     eventTimer_ = 0.0f;
@@ -74,30 +79,36 @@ void TimeLine::LoadFile()
     runningEvent_ = nullptr;
     //念のため一回クリアする
     KeyDataClear();
-    std::ifstream ifs("Src/TimeLineData/test.json");
-    if (ifs.is_open() && ifs.good())
-    {
-        ifs >> loadFile_;
-        //イベント名
-        std::string eventName = loadFile_.value("EventName", "NONE");
-        //フレームキー生成
-        data_[eventName] = new TimeLineData();
-        data_[eventName]->playTime = loadFile_.value("EventTime", 0.0f);
-        //キー総数取得
-        int keyCount = loadFile_.value("KeyCount", 0);
-        
-        for (int keyNum = 0; keyNum < keyCount; ++keyNum) {
-            //key番号(string型)
-            std::string CurrentKey = "key" + std::to_string(keyNum);
-            //フレーム取得
-            int frame = loadFile_[CurrentKey].value("frame",0);
-            //指定キーが存在したらLoad
-            if (loadFile_[CurrentKey].contains("Camera")) LoadView(data_[eventName]->frameEvent[frame], CurrentKey);
-            if (loadFile_[CurrentKey].contains("Effect")) LoadEffect(data_[eventName]->frameEvent[frame], CurrentKey);
-        }
-    }
+    auto files = GetJsonFilesWin("Src/TimeLineData");
+    for (auto& fileName : files) {
+        std::ifstream ifs(fileName);
+        //使用可能なファイルか？
+        if (IsLoadSuccess(ifs))
+        {
+            ifs >> loadFile_;
+            //イベント名
+            std::string eventName = loadFile_.value("EventName", "NONE");
+            //既に同じイベント名があるなら先に入れたTimeLineを優先
+            if (HasKeyDatas(eventName)) continue;
+            //フレームキー生成
+            data_[eventName] = new TimeLineData();
+            data_[eventName]->playTime = loadFile_.value("EventTime", 0.0f);
+            //キー総数取得
+            int keyCount = loadFile_.value("KeyCount", 0);
 
-    ifs.close();
+            for (int keyNum = 0; keyNum < keyCount; ++keyNum) {
+                //key番号(string型)
+                std::string CurrentKey = "key" + std::to_string(keyNum);
+                //フレーム取得
+                int frame = loadFile_[CurrentKey].value("frame", 0);
+                //指定キーが存在したらLoad(この順番で登録)
+                if (loadFile_[CurrentKey].contains("Camera")) LoadView(data_[eventName]->frameEvent[frame], CurrentKey);
+                if (loadFile_[CurrentKey].contains("Effect")) LoadEffect(data_[eventName]->frameEvent[frame], CurrentKey);
+                if (loadFile_[CurrentKey].contains("CameraShake")) LoadShake(data_[eventName]->frameEvent[frame], CurrentKey);
+            }
+        }
+        ifs.close();
+    };
 }
 
 int TimeLine::TimeLineCount() const
@@ -137,6 +148,11 @@ TimeLineData* TimeLine::KeyDatas(std::string name) const
 {
     if (data_.find(name) == data_.end()) return nullptr;
     return data_.at(name);
+}
+
+bool TimeLine::HasKeyDatas(std::string name)
+{
+    return data_.find(name) != data_.end();
 }
 
 void TimeLine::AddKey(std::string name, int frame, IKeyData* data)
@@ -242,8 +258,10 @@ void TimeLine::LoadView(std::vector<IKeyData*>& data, std::string key)
     camera->view.pos = { viewPos[0],viewPos[1],viewPos[2] };
     camera->view.tar = { viewTar[0],viewTar[1],viewTar[2] };
     camera->view.fov = loadFile_[key]["Camera"]["fov"];
-    camera->view.isSmooth = loadFile_[key]["Camera"]["smooth"];
-    
+    camera->view.isSmooth = loadFile_[key]["Camera"]["IsSmooth"];
+    if (camera->view.isSmooth) {
+        camera->view.smoothTime = loadFile_[key]["Camera"].value("smoothTime", 4.5f);
+    }
     if (loadFile_[key]["Camera"]["targetType"] == "Actor") {
         std::string actorName = loadFile_[key]["Camera"].value("targetName", "");
         camera->isTargetActor = true;
@@ -260,6 +278,20 @@ void TimeLine::LoadEffect(std::vector<IKeyData*>& data, std::string key)
     data.push_back(testEffect);
 }
 
+void TimeLine::LoadShake(std::vector<IKeyData*>& data, std::string key)
+{
+    CameraShakeKey* cameraShake = new CameraShakeKey();
+    cameraShake->shake.timer = loadFile_[key]["CameraShake"]["timer"];
+    cameraShake->shake.strength = loadFile_[key]["CameraShake"]["strength"];
+    cameraShake->shake.decayTime = loadFile_[key]["CameraShake"]["decayTime"];
+    cameraShake->shake.decaySpeed = loadFile_[key]["CameraShake"]["decaySpeed"];
+    cameraShake->shake.hz = loadFile_[key]["CameraShake"]["hz"];
+    std::vector<float> affectVec = loadFile_[key]["CameraShake"]["affectVector"];
+    cameraShake->shake.affectVector = { affectVec[0],affectVec[1]};
+    cameraShake->shake.affectFov = loadFile_[key]["CameraShake"]["affectFov"];
+    data.push_back(cameraShake);
+}
+
 void TimeLine::SetView(CameraKey* key)
 {
     View view;
@@ -273,6 +305,7 @@ void TimeLine::SetView(CameraKey* key)
         //fov,smoothはそのまま
         view.fov = key->view.fov;
         view.isSmooth = key->view.isSmooth;
+        view.smoothTime = key->view.smoothTime;
     }
     else {
         view = key->view;
@@ -280,6 +313,7 @@ void TimeLine::SetView(CameraKey* key)
     camera_->SetView(view.pos,view.tar);
     camera_->SetFov(view.fov);
     camera_->SetSmooth(view.isSmooth);
+    camera_->SetSmoothTime(view.smoothTime);
 }
 
 void TimeLine::SetEffect(EffectKey* key)
@@ -289,4 +323,25 @@ void TimeLine::SetEffect(EffectKey* key)
 
 void TimeLine::SetShake(CameraShakeKey* key)
 {
+    camera_->SetShake(key->shake);
+}
+
+bool TimeLine::IsLoadSuccess(const std::ifstream& file)
+{
+    return file.is_open() && file.good();
+}
+
+std::vector<std::string> TimeLine::GetJsonFilesWin(const std::string& folderPath)
+{
+    std::vector<std::string> jsonFiles;
+    WIN32_FIND_DATAA findData;
+    HANDLE hFind = FindFirstFileA((folderPath + "/*.json").c_str(), &findData);
+
+    if (hFind != INVALID_HANDLE_VALUE) {
+        do {
+            jsonFiles.push_back(folderPath + "/" + findData.cFileName);
+        } while (FindNextFileA(hFind, &findData));
+        FindClose(hFind);
+    }
+    return jsonFiles;
 }

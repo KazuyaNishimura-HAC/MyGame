@@ -28,12 +28,15 @@ struct CameraKey : IKeyData {
 	CameraKey() { type = Camera; }
 	View view{};
 };
+
+struct CameraShakeKey : IKeyData {
+    CameraShakeKey() { type = Shake; }
+    CameraShake shake{};
+};
+
 struct EffectKey : IKeyData {
 	EffectKey() { type = Effect; }
 	TestEffect effect{};
 };
-struct CameraShakeKey : IKeyData {
-	CameraShakeKey() { type = Shake; }
-	CameraShake shake{};
-};
+
 #endif

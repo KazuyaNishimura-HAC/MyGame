@@ -80,6 +80,8 @@ void Camera::Debug()
     ImGui::InputFloat("DecayTime", &debugShake.decayTime);
     ImGui::InputFloat("DecaySpeed", &debugShake.decaySpeed);
     ImGui::InputFloat("HZ", &debugShake.hz);
+    ImGui::InputFloat2("AffectVec", debugShake.affectVector);
+    ImGui::InputFloat("AffectFov", &debugShake.affectFov);
     ImGui::End();
 }
 

@@ -11,7 +11,7 @@ class AttackCollider;
 struct Status {
     Status(float maxHP, float atk) :maxHP{ maxHP }, hp{ maxHP }, atk{ atk } {};
     //ステータス初期設定
-	Status() : Status(60, 10) {};
+	Status() : Status(100, 10) {};
     float maxHP;
     float hp;
 	float atk;

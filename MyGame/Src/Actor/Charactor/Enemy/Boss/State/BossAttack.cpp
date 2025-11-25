@@ -7,7 +7,7 @@ BossAttack::BossAttack(Boss* owner)
 void BossAttack::Update(float deltaTime)
 {
 	if (owner_->GetMesh()->IsEndMotion()) {
-		owner_->ChangeState(BossState::Idle);
+		owner_->ChangeState(BossState::Move);
 	}
 }
 

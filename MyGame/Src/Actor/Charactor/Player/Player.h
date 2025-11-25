@@ -38,13 +38,14 @@ public:
     bool IsTimeScaleDefault();
     CameraController* GetPlayerCamera();
     void Debug(float deltaTime)override;
+    void TestAttack();
 private:
     GSvector3 GetCameraDirection();
     float GetCameraHorizontalRadian();
     GStransform& CameraTransform();
     void MoveCamera(float deltaTime);
     void MoveColliders();
-    void TestAttack();
+    
     //カメラコントローラー
     CameraController* camera_{ nullptr };
 

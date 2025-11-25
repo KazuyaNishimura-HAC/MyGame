@@ -41,23 +41,8 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& rotate
     world_->AddActor(attackCollider_);
     parryCollider_ = new ParryCollider(this,2.5f,{}, colliderOffset_);
     world_->AddActor(parryCollider_);
-    ui_ = new PlayerUI(this);
+    ui_ = new PlayerUI(world,this);
     world_->AddGUI(ui_);
-    //イベントの追加
-    mesh_->AddEvent(PlayerMotion::Attack1, 30, [=] {TestAttack(); });
-    mesh_->AddEvent(PlayerMotion::Attack2, 30, [=] {TestAttack(); });
-    mesh_->AddEvent(PlayerMotion::Attack3, 30, [=] {TestAttack(); });
-    mesh_->AddEvent(PlayerMotion::Attack4, 30, [=] {TestAttack(); camera_->SetShakeValues(30.0f, 5.0f, 160.0f, 1.0f, 20.0f, { 0.1f,0.1f }, 0.0f); });
-    mesh_->AddEvent(PlayerMotion::UltimateSkill, 45, [=] {TestAttack(); });
-    mesh_->AddEvent(PlayerMotion::UltimateSkill, 70, [=] {TestAttack(); });
-    mesh_->AddEvent(PlayerMotion::UltimateSkill, 90, [=] {TestAttack(); });
-    mesh_->AddEvent(PlayerMotion::UltimateSkill, 110, [=] {TestAttack(); });
-    mesh_->AddEvent(PlayerMotion::UltimateSkill, 130, [=] {TestAttack(); });
-    mesh_->AddEvent(PlayerMotion::UltimateSkill, 160, [=] {TestAttack(); });
-    mesh_->AddEvent(PlayerMotion::ParryATK, 0, [=] {TestAttack(); });
-    mesh_->AddEvent(PlayerMotion::ParryATK, 20, [=] {TestAttack(); });
-    mesh_->AddEvent(PlayerMotion::ParryATK, 40, [=] {TestAttack(); });
-    mesh_->AddEvent(PlayerMotion::ParryATK, 80, [=] {TestAttack(); });
 }
 Player::~Player()
 {
@@ -233,9 +218,8 @@ void Player::MoveColliders()
 
 void Player::TestAttack()
 {
-    SpawnAttackCollider(0.01f, 20);
-    GSuint atkHandle = gsPlayEffectEx(Effect::Slash, nullptr);
-    Effect::SetEffectParam(EffectParam(atkHandle, { 0,1,1 },{ 0,0,45 },{ 1,1,1 },{ 0,0,1,1 }), transform_);
+    camera_->SetShakeValues(10.0f, 5.0f, 160.0f, 1.0f, 5.0f, { 0.25f,0.25f }, 0.0f);
+    SpawnAttackCollider(0.01f, GetAttackPower());
 }
 
 //現在のカメラの方向を取得

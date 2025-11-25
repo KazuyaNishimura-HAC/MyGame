@@ -12,7 +12,13 @@ public:
 	void Enter()override;
 	void Exit()override;
 private:
+    void Attack(int count);
 	UltimateAnimEvent* skillEvent_{ nullptr };
+    std::vector<EffectParam> effectParams{
+        {0, { 0,1,1 }, { 0,0,240 }, { 1,1,1 }, { 1,0,0,1 },1.5f},
+        {0, { 0,1,1 }, { 0,0,290 }, { 1,1,1 }, { 1,0,0,1 },1.5f},
+        {0, { 0,1.5f,1 }, { 0,0,140 }, { 1,1,1 }, { 1,0,0,1 },1.5f},
+    };
 };
 
 #endif

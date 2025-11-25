@@ -5,6 +5,13 @@
 PlayerUltimateSkill::PlayerUltimateSkill(Player* owner)
 	:PlayerState::PlayerState(owner)
 {
+    owner_->GetMesh()->AddEvent(PlayerMotion::UltimateSkill, 45, [=] {Attack(0); });
+    owner_->GetMesh()->AddEvent(PlayerMotion::UltimateSkill, 70, [=] {Attack(1); });
+    owner_->GetMesh()->AddEvent(PlayerMotion::UltimateSkill, 90, [=] {Attack(0); });
+    owner_->GetMesh()->AddEvent(PlayerMotion::UltimateSkill, 110, [=] {Attack(0); });
+    owner_->GetMesh()->AddEvent(PlayerMotion::UltimateSkill, 130, [=] {Attack(0); });
+    owner_->GetMesh()->AddEvent(PlayerMotion::UltimateSkill, 160, [=] {Attack(2); });
+
 	skillEvent_ = new UltimateAnimEvent(owner_->World(),InvokeType::Manual);
 	owner_->World()->AddEvent(skillEvent_);
 }
@@ -30,4 +37,12 @@ void PlayerUltimateSkill::Exit()
 {
 	owner_->SetAttack(false);
 	owner_->SetInvincible(false);
+}
+
+void PlayerUltimateSkill::Attack(int count)
+{
+    GSuint atkHandle = gsPlayEffectEx(Effect::Slash, nullptr);
+    effectParams[count].handle = atkHandle;
+    Effect::SetEffectParam(effectParams[count], owner_->Transform());
+    owner_->TestAttack();
 }

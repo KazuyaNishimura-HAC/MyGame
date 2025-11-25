@@ -3,7 +3,11 @@
 PlayerAttack::PlayerAttack(Player* owner)
 	:PlayerState::PlayerState(owner)
 {
-	
+    owner_->GetMesh()->AddEvent(PlayerMotion::Attack1, 20, [=] { ComboAttack(); });
+    owner_->GetMesh()->AddEvent(PlayerMotion::Attack2, 20, [=] { ComboAttack(); });
+    owner_->GetMesh()->AddEvent(PlayerMotion::Attack3, 20, [=] { ComboAttack(); });
+    owner_->GetMesh()->AddEvent(PlayerMotion::Attack3, 30, [=] { ComboAttack(); });
+    owner_->GetMesh()->AddEvent(PlayerMotion::Attack4, 30, [=] { ComboAttack(); });
 }
 
 void PlayerAttack::Update(float deltaTime)
@@ -15,7 +19,7 @@ void PlayerAttack::Update(float deltaTime)
     //攻撃が終わる40フレーム前に攻撃処理が入ったら追加攻撃
 	int time = owner_->GetMesh()->MotionEndTime() - 100.0f;
 	if (InputSystem::ButtonTrigger(InputSystem::Button::B) && time < owner_->GetMesh()->MotionTime()) {
-		switch (combo_) {
+		switch (attackCount_) {
 			case 0:
 				owner_->ChangeMotion(PlayerMotion::Attack2, false, 1.5f);
 				break;
@@ -28,7 +32,7 @@ void PlayerAttack::Update(float deltaTime)
 			default:
 				break;
 		}
-		combo_++;
+        attackCount_++;
 	}
 }
 
@@ -36,11 +40,21 @@ void PlayerAttack::Enter()
 {
 	owner_->SetAttack(true);
 	owner_->ChangeMotion(PlayerMotion::Attack1, false,1.5f);
-	combo_ = 0;
+    attackCount_ = 0;
+    combo_ = 0;
 }
 
 void PlayerAttack::Exit()
 {
 	owner_->SetAttack(false);
+}
+
+void PlayerAttack::ComboAttack()
+{
+    GSuint atkHandle = gsPlayEffectEx(Effect::Slash, nullptr);
+    effectParams[combo_].handle = atkHandle;
+    Effect::SetEffectParam(effectParams[combo_], owner_->Transform());
+    owner_->TestAttack();
+    combo_++;
 }
 

@@ -6,11 +6,12 @@ class Player;
 
 class PlayerUI : public GUI{
 public:
-    PlayerUI(Player* player,const GSvector2& position = { 0,0 });
+    PlayerUI(IWorld* world, Player* player,const GSvector2& position = { 0,0 });
     ~PlayerUI();
     void Update(float deltaTime)override;
     void Draw()const override;
 private:
+    IWorld* world_{ nullptr };
     HorizontalGauge* healthGauge_{ nullptr };
     Player* player_{ nullptr };
 };

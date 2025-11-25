@@ -3,9 +3,11 @@
 #include "../GameSystem/InputSystem/InputSystem.h"
 #include "HorizontalGauge.h"
 #include "Texture.h"
-PlayerUI::PlayerUI(Player* player,const GSvector2& position)
+#include "../World/IWorld.h"
+PlayerUI::PlayerUI(IWorld* world, Player* player,const GSvector2& position)
     :GUI(position)
 {
+    world_ = world;
     player_ = player;
     healthGauge_ = new HorizontalGauge(
         GSvector2{ 1500,800 } + position,

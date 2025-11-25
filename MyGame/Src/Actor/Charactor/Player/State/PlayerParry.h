@@ -10,8 +10,15 @@ public:
 	void Enter()override;
 	void Exit()override;
 private:
+    void Attack(int count);
     const float waitTime_{ 2.0f };
     bool isParryAttack_{ false };
+    std::vector<EffectParam> effectParams{
+        {0, { 0,1,1 }, { 0,0,340 }, { 1,1,1 }, { 1,0,0,1 },1.5f},
+        {0, { 0,1,1 }, { 0,0,150 }, { 1,1,1 }, { 1,0,0,1 },1.5f},
+        {0, { 0,1,1 }, { 0,0,340 }, { 1,1,1 }, { 1,0,0,1 },1.5f},
+        {0, { 0,1,1 }, { 0,0,0 }, { 1,1,1 }, { 1,0,0,1 },1.5f},
+    };
 };
 
 #endif

@@ -4,6 +4,11 @@
 PlayerParry::PlayerParry(Player* owner)
     :PlayerState::PlayerState(owner)
 {
+    //イベントの追加
+    owner_->GetMesh()->AddEvent(PlayerMotion::ParryATK, 0, [=] {Attack(0); });
+    owner_->GetMesh()->AddEvent(PlayerMotion::ParryATK, 18, [=] {Attack(1); });
+    owner_->GetMesh()->AddEvent(PlayerMotion::ParryATK, 30, [=] {Attack(2); });
+    owner_->GetMesh()->AddEvent(PlayerMotion::ParryATK, 75, [=] {Attack(3); });
 }
 
 void PlayerParry::Update(float deltaTime)
@@ -36,4 +41,12 @@ void PlayerParry::Exit()
     owner_->SetParry(false);
     owner_->SetInvincible(false);
     isParryAttack_ = false;
+}
+
+void PlayerParry::Attack(int count)
+{
+    GSuint atkHandle = gsPlayEffectEx(Effect::Slash, nullptr);
+    effectParams[count].handle = atkHandle;
+    Effect::SetEffectParam(effectParams[count], owner_->Transform());
+    owner_->TestAttack();
 }

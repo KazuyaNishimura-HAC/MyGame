@@ -19,6 +19,7 @@ class FieldManager;
 class Event;
 class CameraController;
 class TimeLine;
+class BattleManager;
 
 enum class EventMessage
 {
@@ -50,6 +51,7 @@ public:
     virtual void AddEvent(Event* newEvent) {};
     virtual void AddCamera(Camera* camera) = 0;
     virtual void AddCameraController(CameraController* controller) = 0;
+    virtual void AddBattleManager(BattleManager* battleManager) = 0;
 
     virtual void SetTimeScale(TimeScale timeScale) = 0;
     virtual float DeltaTime() = 0;
@@ -57,6 +59,8 @@ public:
 
     virtual FieldManager& Fields() = 0;
     virtual TimeLine& GetTimeLine() = 0;
+
+    virtual void BattleMessage(int group) = 0;
 
     virtual void IsEnd(bool end) = 0;
     virtual bool IsEnd() = 0;

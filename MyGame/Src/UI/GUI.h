@@ -17,16 +17,16 @@ public:
         gsDrawRectangle2D(new GSrect(position_.x - size_.x / 2, position_.y - size_.y / 2, position_.x + size_.x / 2, position_.y + size_.y / 2), new GSvector4(0, 1, 0, 1));
     };
     //3D空間からUIに座標変換
-    virtual GSvector2 ScreenPosition(const GSvector3* worldPosition, Camera* camera)
+    virtual GSvector2 ScreenPosition(const GSvector3* worldPosition)
     {
         GSvector3 position;
         Screen::CalculateScreenPosition(&position, worldPosition);
         behindCamera_ = position.z > 1;
         return { position.x,position.y };
     }
-    virtual void Transform(const GSvector3* worldPosition, Camera* camera)
+    virtual void Transform(const GSvector3* worldPosition)
     {
-        position_ = ScreenPosition(worldPosition, camera);
+        position_ = ScreenPosition(worldPosition);
     }
     virtual void Position(const GSvector2& position)
     {

@@ -11,6 +11,7 @@
 #include "../GameSystem/Field/Light.h"
 
 #include "../GameSystem/Event/TimeLine/TimeLineEditor.h"
+#include "../GameSystem/BattleSystem/BattleManager.h"
 
 #include <GSeffect.h>
 #include <GSgame.h>
@@ -101,6 +102,8 @@ void World::Clear()
     eventManager_.Clear();
     guiManager_.Clear();
     cameraManager_.Clear();
+    delete battleManager_;
+    battleManager_ = nullptr;
     time_.SetPause(false);
     isEnd_ = false;
     isStart_ = false;
@@ -180,6 +183,12 @@ TimeLine& World::GetTimeLine()
     return eventManager_.GetTimeLine();
 }
 
+void World::BattleMessage(int group)
+{
+    if (!battleManager_) return;
+    battleManager_->EnemyDeadMessage(group);
+}
+
 Camera* World::GetCamera(float id)
 {
     return cameraManager_.GetCamera(id);
@@ -218,6 +227,12 @@ void World::AddCamera(Camera* camera)
 void World::AddCameraController(CameraController* controller)
 {
     cameraManager_.AddController(controller);
+}
+
+void World::AddBattleManager(BattleManager* battleManager)
+{
+    if (battleManager_) return;
+    battleManager_ = battleManager;
 }
 
 void World::SetTimeScale(TimeScale timeScale)

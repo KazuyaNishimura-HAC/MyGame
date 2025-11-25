@@ -9,12 +9,15 @@
 #include "../../GameSystem/Camera/DebugCamera.h"
 #include "../../GameSystem/Field/FieldActor.h"
 #include "../../GameSystem/Field/Field.h"
+#include "../../GameSystem/BattleSystem/BattleManager.h"
 //動作確認用
 #include "../../UI/Image.h"
 // 開始
 void GamePlayScene::Start() {
     debugCamera_ = new DebugCamera(&world_);
     InitialSettings();
+    //バトルマネージャを追加
+    world_.AddBattleManager(new BattleManager(&world_));
     world_.Start();
 }
 
@@ -82,11 +85,7 @@ void GamePlayScene::InitialSettings()
 
 void GamePlayScene::AddActors()
 {
-    world_.AddPlayer(new Player(&world_, {}, { 0,90,0 }, Status{ 60, 10 }));
-    //world_.AddCharactor(new SwordEnemy1(&world_, { 20,0,5 }));
-    //world_.AddCharactor(new SwordEnemy1(&world_, { 20,0,-5 }));
-    world_.AddCharactor(new SwordEnemy1(&world_, { 10,0,0 }, {}, Status{ 120, 20 }));
-    world_.AddCharactor(new Boss(&world_, { 40,0,0 }, {}, Status{ 500, 30 }));
+    world_.AddPlayer(new Player(&world_, {}, { 0,90,0 }, Status{ 100, 10 }));
 }
 
 void GamePlayScene::AddFields()

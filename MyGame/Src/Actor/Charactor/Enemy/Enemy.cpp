@@ -8,7 +8,7 @@
 #include "EnemyState/EnemyState.h"
 #include "EnemyState/EnemyIdle.h"
 #include "EnemyState/EnemyMove.h"
-Enemy::Enemy(IWorld* world, const GSvector3& position, const GSvector3& rotate, Status status, GSuint mesh)
+Enemy::Enemy(IWorld* world,float groupID, const GSvector3& position, const GSvector3& rotate, Status status, GSuint mesh)
     :Charactor(world,position,rotate,status,mesh)
 {
     player_ = world_->GetCharactor("Player");
@@ -16,6 +16,7 @@ Enemy::Enemy(IWorld* world, const GSvector3& position, const GSvector3& rotate, 
     colliderOffset_ = { 0.0f,1.0f,0.0f };
     attackCollider_ = new AttackCollider(this,0.75f,{ 0,0,0 },colliderOffset_);
     world_->AddActor(attackCollider_);
+    groupID_ = groupID;
 }
 
 
@@ -64,9 +65,9 @@ void Enemy::MovePosition(float deltaTime)
     transform_.translate(0.0f, 0.0f, 0.1f * deltaTime);
 }
 
-void Enemy::MoveAttackCollide()
+void Enemy::MoveAttackCollide(float forwardValue)
 {
-    GSvector3 forward = transform_.forward() * 0.8f;
+    GSvector3 forward = transform_.forward() * forwardValue;
     //攻撃判定を追従
     attackCollider_->Transform().position(transform_.position() + forward);
 }
@@ -80,14 +81,4 @@ void Enemy::OnParryHit(const GSvector3& position)
 void Enemy::LookAtPlayer()
 {
     transform_.lookAt(player_->Transform().position());
-}
-
-void Enemy::SetCoolTime(float time)
-{
-    damageCoolTime_ = time;
-}
-
-float Enemy::GetCoolTime()
-{
-    return damageCoolTime_;
 }

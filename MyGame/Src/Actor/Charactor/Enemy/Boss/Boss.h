@@ -6,7 +6,7 @@ class Boss : public Enemy
 public:
     
 
-    Boss(IWorld* world = nullptr,const GSvector3& position = { 0,0,0 },const GSvector3& rotate = { 0,0,0 },Status status = {}, GSuint mesh = Model::Boss);
+    Boss(IWorld* world = nullptr,float groupID = 0,const GSvector3& position = { 0,0,0 },const GSvector3& rotate = { 0,0,0 },Status status = {}, GSuint mesh = Model::Boss);
     ~Boss()override;
 
     //更新

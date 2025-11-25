@@ -11,7 +11,7 @@ class SwordEnemy1 : public Enemy
 {
 public:
     //コンストラクタ
-    SwordEnemy1(IWorld* world = nullptr, const GSvector3& position = {0, 0, 0}, const GSvector3& rotate = { 0, 0, 0 }, Status status = {}, GSuint mesh = Model::Enemy);
+    SwordEnemy1(IWorld* world = nullptr, float groupID = 0, const GSvector3& position = {0, 0, 0}, const GSvector3& rotate = { 0, 0, 0 }, Status status = {}, GSuint mesh = Model::Enemy);
     //デストラクタ
     ~SwordEnemy1()override;
 

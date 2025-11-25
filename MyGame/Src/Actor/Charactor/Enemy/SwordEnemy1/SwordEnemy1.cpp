@@ -13,8 +13,8 @@
 #include "../EnemyState/EnemyDamage.h"
 #include "../EnemyState/EnemyDead.h"
 
-SwordEnemy1::SwordEnemy1(IWorld* world, const GSvector3& position, const GSvector3& rotate, Status status, GSuint mesh)
-    :Enemy(world, position, rotate, status, mesh)
+SwordEnemy1::SwordEnemy1(IWorld* world,float groupID, const GSvector3& position, const GSvector3& rotate, Status status, GSuint mesh)
+    :Enemy(world, groupID, position, rotate, status, mesh)
 {
     name_ = ActorName::SwordEnemy1;
     //ステートの追加
@@ -31,6 +31,8 @@ SwordEnemy1::SwordEnemy1(IWorld* world, const GSvector3& position, const GSvecto
 
 SwordEnemy1::~SwordEnemy1()
 {
+    //バトルシステムに通知
+    world_->BattleMessage(groupID_);
 }
 
 
@@ -38,7 +40,7 @@ void SwordEnemy1::Update(float deltaTime)
 {
     Enemy::Update(deltaTime);
     //基底クラスの処理を実行
-    MoveAttackCollide();
+    MoveAttackCollide(0.8f);
 }
 
 void SwordEnemy1::LateUpdate(float deltaTime)
@@ -65,7 +67,9 @@ void SwordEnemy1::HitAttackCollider(const AttackInfo& atkInfo)
 
     TakeDamage(atkInfo.damage);
     //hpが0なら死亡
-    if (IsDying()) ChangeState(EnemyState::Dead);
+    if (IsDying()) {
+        ChangeState(EnemyState::Dead);
+    }
     else ChangeState(EnemyState::Damage);
 }
 
@@ -80,7 +84,7 @@ void SwordEnemy1::Debug(float deltaTime)
 
 void SwordEnemy1::TestAttack()
 {
-    SpawnAttackCollider(0.5f, 10);
+    SpawnAttackCollider(0.5f, GetAttackPower());
     GSuint atkHandle = gsPlayEffectEx(Effect::Slash, nullptr);
     Effect::SetEffectParam(EffectParam(atkHandle, { 0,1,1 }, { 0,0,45 }, { 1,1,1 }), transform_);
 }

@@ -12,7 +12,7 @@ void EnemyIdle::Update(float deltaTime)
 {
 	if (player_->IsDying()) return;
 	float dist = GSvector3::distance(owner_->Transform().position(), player_->Transform().position());
-	if (dist < 5) {
+	if (dist < 10) {
 		owner_->ChangeState(State::Move);
 	}
 }

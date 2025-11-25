@@ -13,8 +13,8 @@
 #include "State/BossDamage.h"
 #include "State/BossDead.h"
 
-Boss::Boss(IWorld* world, const GSvector3& position, const GSvector3& rotate, Status status, GSuint mesh)
-    :Enemy(world, position, rotate, status, mesh)
+Boss::Boss(IWorld* world, float groupID, const GSvector3& position, const GSvector3& rotate, Status status, GSuint mesh)
+    :Enemy(world,groupID, position, rotate, status, mesh)
 {
     name_ = ActorName::Boss;
     //ステートの追加
@@ -25,14 +25,16 @@ Boss::Boss(IWorld* world, const GSvector3& position, const GSvector3& rotate, St
     states_.AddState(BossState::Dead, new BossDead(this));
     states_.ChangeState(BossState::Idle);
     collider_ = BoundingSphere(1);
+    attackCollider_->SetRadius(1.5f);
     //エフェクト生成（登録）
     effectHandles_[Effect::Aura] = gsPlayEffectEx(Effect::Aura, nullptr);
     //攻撃処理
-    mesh_->AddEvent(BossMotion::Attack1, 30, [=] {Attack(); });
+    mesh_->AddEvent(BossMotion::Attack1, 40, [=] {Attack(); });
 }
 
 Boss::~Boss()
 {
+    world_->IsEnd(true);
 }
 
 
@@ -41,7 +43,7 @@ void Boss::Update(float deltaTime)
     Enemy::Update(deltaTime);
     if (!IsDying()) Effect::SetEffectParam(EffectParam(effectHandles_[Effect::Aura], { 0,1,0 }, {}, { 1.5f,1.5f,1.5f }, { 1,1,1,1 }, 0.5f), transform_);
     //基底クラスの処理を実行
-    MoveAttackCollide();
+    MoveAttackCollide(1.5f);
 }
 
 void Boss::LateUpdate(float deltaTime)
@@ -86,8 +88,8 @@ void Boss::Debug(float deltaTime)
 
 void Boss::Attack()
 {
-    SpawnAttackCollider(0.5f,status_.atk);
+    SpawnAttackCollider(0.5f, GetAttackPower());
     GSuint atkHandle = gsPlayEffectEx(Effect::Slash, nullptr);
-    Effect::SetEffectParam(EffectParam(atkHandle, { 0,1,1 }, { 0,0,45 }, { 1,1,1 }), transform_);
+    Effect::SetEffectParam(EffectParam(atkHandle, { 0,1,1 }, { 0,0,155 }, { 1.5f,1.5f,1.5f },{0.75f,0,0.5f,1},1.5f), transform_);
 
 }

@@ -10,7 +10,7 @@ class Enemy : public Charactor
 {
 public:
     //コンストラクタ
-    Enemy(IWorld* world = nullptr, const GSvector3& position = {0, 0, 0}, const GSvector3& rotate = { 0, 0, 0 }, Status status = {}, GSuint mesh = Model::Enemy);
+    Enemy(IWorld* world = nullptr,float groupID = 0, const GSvector3& position = {0, 0, 0}, const GSvector3& rotate = { 0, 0, 0 }, Status status = {}, GSuint mesh = Model::Enemy);
     //デストラクタ
     ~Enemy()override;
 
@@ -23,15 +23,13 @@ public:
     virtual void React(Actor& other)override;
 
     virtual void MovePosition(float deltaTime);
-    virtual void MoveAttackCollide();
+    virtual void MoveAttackCollide(float forwardValue = 1.0f);
     virtual void OnParryHit(const GSvector3& position);
     
     void LookAtPlayer();
-    void SetCoolTime(float time);
-    float GetCoolTime();
 protected:
     //ターゲットとなるアクター(Player)を持っておく
     Charactor* player_{ nullptr };
-    float damageCoolTime_ = { 0.0f };
+    int groupID_{ 0 };
 };
 #endif

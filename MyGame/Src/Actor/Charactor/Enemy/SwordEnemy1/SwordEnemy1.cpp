@@ -13,6 +13,8 @@
 #include "../EnemyState/EnemyDamage.h"
 #include "../EnemyState/EnemyDead.h"
 
+#include "../../../../UI/EnemyUI.h"
+
 SwordEnemy1::SwordEnemy1(IWorld* world,float groupID, const GSvector3& position, const GSvector3& rotate, Status status, GSuint mesh)
     :Enemy(world, groupID, position, rotate, status, mesh)
 {
@@ -27,6 +29,9 @@ SwordEnemy1::SwordEnemy1(IWorld* world,float groupID, const GSvector3& position,
     collider_ = BoundingSphere(1);
     //攻撃処理
     mesh_->AddEvent(SwordEnemy1Motion::Attack1, 30, [=] {TestAttack(); });
+
+    ui_ = new EnemyUI(world_,this);
+    world_->AddGUI(ui_);
 }
 
 SwordEnemy1::~SwordEnemy1()

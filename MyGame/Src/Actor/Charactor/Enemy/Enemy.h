@@ -5,6 +5,7 @@
 #include <GStransform.h>
 #include "../Charactor.h"
 class GUI;
+class EnemyUI;
 
 class Enemy : public Charactor
 {
@@ -31,5 +32,6 @@ protected:
     //ターゲットとなるアクター(Player)を持っておく
     Charactor* player_{ nullptr };
     int groupID_{ 0 };
+    EnemyUI* ui_{ nullptr };
 };
 #endif

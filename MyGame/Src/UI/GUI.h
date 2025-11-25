@@ -45,6 +45,7 @@ public:
     virtual GSuint Texture()const { return 0; }
     void Independent(int indep) { independent_ = indep; }
     int Independent() { return independent_; }
+    bool IsbehindCamera() { return behindCamera_; }
 protected:
     GSvector2 position_, size_;
     GScolor color_{ 1,1,1,1 };

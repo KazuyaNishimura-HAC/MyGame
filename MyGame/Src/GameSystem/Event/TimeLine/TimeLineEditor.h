@@ -78,7 +78,7 @@ private:
     int truckListNum_{ 0 };
 	//選択中キー
 	EditKeyData* selectedKey_{ nullptr };
-	std::string selectedEventName_{"TEST1"};
+	std::string selectedEventName_{"OpenDoor1"};
     bool openSaveWindow_{ false };
     char saveEventName[256] = "";
 	TimeLine& timeLine_;

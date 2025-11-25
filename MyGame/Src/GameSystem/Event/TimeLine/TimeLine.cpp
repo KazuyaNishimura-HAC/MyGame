@@ -70,6 +70,9 @@ void TimeLine::StartTimeLine(std::string name)
 void TimeLine::EndTimeLine()
 {
     runningEvent_ = nullptr;
+    //仮でシェイクを強制終了
+    CameraShake resetShake;
+    camera_->SetShake(resetShake);
     camera_->SetPriority(CameraController::Disable);
 }
 

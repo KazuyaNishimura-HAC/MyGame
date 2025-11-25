@@ -51,3 +51,23 @@ void AttackCollider::React(Actor& other)
     attackInfo_.hitRot = owner_->Transform().localEulerAngles();
     chara->HitAttackCollider(attackInfo_);
 }
+
+void AttackCollider::SetRadius(float radius)
+{
+    collider_.Radius(radius);
+}
+
+float AttackCollider::GetRadius()
+{
+    return collider_.Radius();
+}
+
+void AttackCollider::SetOffset(const GSvector3& offset)
+{
+    colliderOffset_ = offset;
+}
+
+const GSvector3& AttackCollider::GetOffset()
+{
+    return colliderOffset_;
+}

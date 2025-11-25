@@ -20,6 +20,10 @@ public:
 	void Update(float deltTime)override;
 	void Draw()const override;
 	void React(Actor& other)override;
+    void SetRadius(float radius);
+    float GetRadius();
+    void SetOffset(const GSvector3& offset);
+    const GSvector3& GetOffset();
 private:
     //生成主
 	Charactor* owner_{ nullptr };

@@ -142,6 +142,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\GameSystem\Event\OpenDoorEvent.cpp" />
+    <ClCompile Include="Src\UI\EnemyUI.cpp" />
+    <ClCompile Include="Src\GameSystem\BattleSystem\BattleManager.cpp" />
     <ClCompile Include="Src\Actor\Charactor\Enemy\Boss\Boss.cpp" />
     <ClCompile Include="Src\Actor\Charactor\Enemy\Boss\State\BossAttack.cpp" />
     <ClCompile Include="Src\Actor\Charactor\Enemy\Boss\State\BossDamage.cpp" />
@@ -206,6 +209,10 @@
     <ClCompile Include="Src\GameSystem\Event\TimeLine\TimeLine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\GameSystem\Event\OpenDoorEvent.h" />
+    <ClInclude Include="Src\Actor\Charactor\AllCharactors.h" />
+    <ClInclude Include="Src\UI\EnemyUI.h" />
+    <ClInclude Include="Src\GameSystem\BattleSystem\BattleManager.h" />
     <ClInclude Include="Src\Actor\Charactor\Enemy\Boss\Boss.h" />
     <ClInclude Include="Src\Actor\Charactor\Enemy\Boss\BossMotion.h" />
     <ClInclude Include="Src\Actor\Charactor\Enemy\Boss\State\BossAttack.h" />

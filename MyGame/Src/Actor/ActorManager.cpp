@@ -70,7 +70,7 @@ void ActorManager::Collide()
         }
     }
     //仮で敵を倒し切ったら遷移
-    int testEnemyCount = 0;
+    /*int testEnemyCount = 0;
     for (auto chara : charactors_) {
         if (chara->GetTag() == ActorTag::Enemy) testEnemyCount++;
     }
@@ -78,7 +78,7 @@ void ActorManager::Collide()
         if (chara->GetTag() == ActorTag::Player && testEnemyCount == 0) {
             chara->World()->IsEnd(true);
         }
-    }
+    }*/
 }
 
 void ActorManager::Remove()

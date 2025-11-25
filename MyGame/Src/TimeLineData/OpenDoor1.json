@@ -1,0 +1,39 @@
+{
+    "EventName": "OpenDoor1",
+    "KeyCount": 2,
+    "EventTime": 5.0,
+    "key0": {
+        "frame": 1,
+        "Camera": {
+            "targetType": "World",
+            "position": [
+                35.0,
+                4.5,
+                0.0
+            ],
+            "target": [
+                40.0,
+                3.5,
+                0.0
+            ],
+            "fov": 45.0,
+            "IsSmooth": true,
+            "smoothTime": 20.0
+        }
+    },
+    "key1": {
+        "frame": 70,
+        "CameraShake": {
+            "timer": 180.0,
+            "strength": 1.0,
+            "decayTime": 160.0,
+            "decaySpeed": 1.0,
+            "hz": 5.0,
+            "affectVector": [
+                0.0,
+                0.029999999329447746
+            ],
+            "affectFov": 0.10000000149011612
+        }
+    }
+}

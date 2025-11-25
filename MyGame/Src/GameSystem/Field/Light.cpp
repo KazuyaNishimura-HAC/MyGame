@@ -21,12 +21,14 @@ void Light::Draw() const {
     static float position[]{ -50.0f, 80.0f, 50.0f, 1.0f }; // 点光源（月光風）
 
     // ImGuiによるパラメータ調整
+#if _DEBUG
     ImGui::Begin("Lighting");
     ImGui::ColorEdit4("ambient", ambient, ImGuiColorEditFlags_Float);
     ImGui::ColorEdit4("diffuse", diffuse, ImGuiColorEditFlags_Float);
     ImGui::ColorEdit4("specular", specular, ImGuiColorEditFlags_Float);
     ImGui::DragFloat4("position", position);
     ImGui::End();
+#endif
     //ライトのパラメータ設定
     glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);

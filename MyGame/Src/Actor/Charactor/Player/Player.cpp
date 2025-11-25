@@ -96,7 +96,10 @@ void Player::HitAttackCollider(const AttackInfo& info)
         ChangeState(PlayerState::Parry);
         return;
     }
-
+    if (IsCurrentState(PlayerState::Guard)) {
+        ChangeMotion(PlayerMotion::GuardHit1,false);
+        return;
+    }
     //ダメージ処理
     TakeDamage(info.damage);
 

@@ -13,7 +13,10 @@ void PlayerGuard::Update(float deltaTime)
     if (owner_->IsParryEnable() && parryTimer_ <= 0.0f) {
         owner_->SetParryEnable(false);
     }
-
+    //万が一違うモーションが流れていたら再度ガードモーションに
+    if (owner_->GetMesh()->IsEndMotion()) {
+        owner_->ChangeMotion(PlayerMotion::Guard);
+    }
     if (InputSystem::ButtonDetach(InputSystem::Button::Y)) {
         owner_->ChangeState(PlayerState::Idle);
     }

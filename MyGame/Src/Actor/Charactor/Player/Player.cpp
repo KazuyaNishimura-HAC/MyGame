@@ -53,16 +53,14 @@ void Player::Update(float deltaTime)
 {
     Charactor::Update(deltaTime);
     //死んでいるなら更新を止める
-    if (IsDying()) return;
-
+    if (IsDying() || world_->IsRunningEvent()) return;
     if (InputSystem::ButtonTrigger(InputSystem::Button::B)) {
         if (!IsAttack() && !IsParry() && !IsCurrentState(PlayerState::Damage)) {
             states_.ChangeState(PlayerState::Attack);
-            //camera_->SetShakeValues(30.0f, 1.0f, 160.0f, 1.0f, 20.0f, { 0.1f,0.1f }, 0.0f);
         }
     }
     
-    if (!IsAttack() && !IsParry() && InputSystem::ButtonTrigger(InputSystem::Button::A)) {
+    if (!IsParry() && IsSkillUsable() && InputSystem::ButtonTrigger(InputSystem::Button::A)) {
         states_.ChangeState(PlayerState::Ultimate);
     }
 
@@ -84,6 +82,12 @@ void Player::Draw()const
 
 void Player::React(Actor& other)
 {
+}
+
+void Player::OnAttackHit()
+{
+    if (IsCurrentState(PlayerState::Ultimate)) return;
+    skillPt_ += 5;
 }
 
 void Player::HitAttackCollider(const AttackInfo& info)
@@ -109,6 +113,8 @@ void Player::HitAttackCollider(const AttackInfo& info)
 
 void Player::MovePosition(float deltaTime)
 {
+    //イベント処理中はコントローラー移動をしない
+    if (world_->IsRunningEvent()) return;
     GSvector2 input = InputSystem::LeftStick() * 0.1f * deltaTime;
 
     GSvector3 forward = CameraTransform().forward();
@@ -170,6 +176,27 @@ void Player::SetParry(bool parry)
 bool Player::IsParry()
 {
     return isParry_;
+}
+
+bool Player::IsSkillUsable()
+{
+    return skillPt_ >= maxSkillPt_;
+}
+
+void Player::SetSkillPoint(float point)
+{
+    skillPt_ = point;
+}
+
+float Player::CurrentSkillPoint()
+{
+    skillPt_ = CLAMP(skillPt_, 0, maxSkillPt_);
+    return skillPt_;
+}
+
+float Player::MaxSkillPoint()
+{
+    return maxSkillPt_;
 }
 
 void Player::SetTimeScale(float slowTime, float affectTime)

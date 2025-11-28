@@ -24,6 +24,7 @@ public:
     void Draw()const override;
     //接触判定
     void React(Actor& other)override;
+    void OnAttackHit()override;
     void HitAttackCollider(const AttackInfo& info)override;
     void MovePosition(float deltaTime);
     void SetGuard(bool guard);
@@ -32,6 +33,11 @@ public:
     bool IsParryEnable();
     void SetParry(bool parry);
     bool IsParry();
+    bool IsSkillUsable();
+    void SetSkillPoint(float point);
+    float CurrentSkillPoint();
+    float MaxSkillPoint();
+    
 
     void SetTimeScale(float slowTime,float affectTime = 0.0f);
     //スケールがデフォルトの値か？
@@ -49,8 +55,8 @@ private:
     //カメラコントローラー
     CameraController* camera_{ nullptr };
 
-    //カメラの角度
-    GSvector3 cameraRotation_{ 0,0,0 };
+    //カメラの角度(初期値)
+    GSvector3 cameraRotation_{ 0,-90,0 };
     //カメラ初期座標
     GSvector3 cameraOffset_{ 0,2.0f,0 };
     //注視点Offset
@@ -65,10 +71,16 @@ private:
     bool isParryEnable_{ false };
     //パリィ中か
     bool isParry_{ false };
+    //必殺技を使えるか
+    bool isUltimate{ false };
 
     //パリィ判定
     ParryCollider* parryCollider_{ nullptr };
     //プレイヤーUI表示
     PlayerUI* ui_ = nullptr;
+
+    //スキルポイント
+    int skillPt_{ 50 };
+    const int maxSkillPt_{ 100 };
 };
 #endif

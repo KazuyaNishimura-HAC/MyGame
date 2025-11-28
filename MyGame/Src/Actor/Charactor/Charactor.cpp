@@ -44,6 +44,10 @@ void Charactor::SpawnAttackCollider(float time, float atk)
     attackCollider_->SetAttack(time,atk);
 }
 
+void Charactor::OnAttackHit()
+{
+}
+
 void Charactor::HitAttackCollider(const AttackInfo& atkInfo)
 {
     if (invincible_ || IsDying())return;

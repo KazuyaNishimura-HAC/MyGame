@@ -12,7 +12,7 @@ AttackCollider::AttackCollider(Charactor* owner, float radius, const GSvector3& 
 	collider_ = BoundingSphere(radius,pos); 
 	colliderOffset_ = offset;
 	collider_.Trigger(true);
-	collider_.Enable(false);
+	collider_.SetEnable(false);
 }
 
 AttackCollider::~AttackCollider()
@@ -22,7 +22,7 @@ AttackCollider::~AttackCollider()
 
 void AttackCollider::SetAttack(float time, float attack)
 {
-	collider_.Enable(true);
+	collider_.SetEnable(true);
 	duration_ = time;
 	attackInfo_.damage = attack;
 }
@@ -32,8 +32,8 @@ void AttackCollider::Update(float deltaTime)
 	collider_.Position(transform_.position() + colliderOffset_);
 	if (!collider_.Enable()) return;
 	duration_ -= deltaTime / 60.0f;
-	if(collider_.Enable()) collider_.Enable(false);
-	if (duration_ <= 0) collider_.Enable(false);
+	if(collider_.Enable()) collider_.SetEnable(false);
+	if (duration_ <= 0) collider_.SetEnable(false);
 }
 
 void AttackCollider::Draw() const
@@ -49,6 +49,9 @@ void AttackCollider::React(Actor& other)
     //攻撃者座標・回転を設定
     attackInfo_.hitPos = owner_->Transform().position();
     attackInfo_.hitRot = owner_->Transform().localEulerAngles();
+    //攻撃成功通知
+    owner_->OnAttackHit();
+    //Hit側にも通知
     chara->HitAttackCollider(attackInfo_);
 }
 

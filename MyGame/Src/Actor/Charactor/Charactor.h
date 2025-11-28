@@ -28,6 +28,7 @@ public:
 	void TakeDamage(float damage);
     //攻撃判定を有効化
     virtual void SpawnAttackCollider(float time,float atk);
+    virtual void OnAttackHit();
     //攻撃を受ける
     virtual void HitAttackCollider(const AttackInfo& atkInfo);
     //ノックバック

@@ -12,7 +12,7 @@ ParryCollider::ParryCollider(Charactor* owner, float radius, const GSvector3& po
 
     colliderOffset_ = offset;
     collider_.Trigger(true);
-    collider_.Enable(false);
+    collider_.SetEnable(false);
 }
 
 ParryCollider::~ParryCollider()
@@ -22,7 +22,7 @@ ParryCollider::~ParryCollider()
 
 void ParryCollider::IsParry(float time)
 {
-    collider_.Enable(true);
+    collider_.SetEnable(true);
     duration_ = time;
 }
 
@@ -31,8 +31,8 @@ void ParryCollider::Update(float deltaTime)
     collider_.Position(transform_.position() + colliderOffset_);
     if (!collider_.Enable()) return;
     duration_ -= deltaTime / 60.0f;
-    if (collider_.Enable()) collider_.Enable(false);
-    if (duration_ <= 0) collider_.Enable(false);
+    if (collider_.Enable()) collider_.SetEnable(false);
+    if (duration_ <= 0) collider_.SetEnable(false);
 }
 
 void ParryCollider::Draw() const

@@ -3,6 +3,7 @@
 #include "../../../World/IWorld.h"
 #include "../../../GameSystem/Camera/Camera.h"
 #include "../../../GameSystem/InputSystem/InputSystem.h"
+#include "../../../Sound/SoundManager.h"
 #include "../AttackCollider.h"
 #include "../../../UI/PlayerUI.h"
 #include "ParryCollider.h"
@@ -94,19 +95,27 @@ void Player::HitAttackCollider(const AttackInfo& info)
 {
     //無敵or死亡中なら攻撃を受けない
     if (IsInvincible() || IsDying()) return;
+    
     //パリィ可能ならパリィ処理
     if (IsParryEnable()) {
+        SoundManager::PlaySE(Sound::Parry);
         parryCollider_->IsParry(true);
         ChangeState(PlayerState::Parry);
         return;
     }
+    //ガード処理
     if (IsCurrentState(PlayerState::Guard)) {
-        ChangeMotion(PlayerMotion::GuardHit1,false);
+        SoundManager::PlaySE(Sound::Guard);
+        EffectParam param;
+        param.handle = gsPlayEffectEx(Effect::GuardHit, nullptr);
+        param.position = transform_.position() + GSvector3{ 0,1,0 };
+        Effect::SetEffectParam(param);
+        ChangeMotion(PlayerMotion::GuardHit1,false,1,0,0,true);
         return;
     }
+    SoundManager::PlaySE(Sound::Hit);
     //ダメージ処理
     TakeDamage(info.damage);
-
     if (IsDying()) ChangeState(PlayerState::Dead);
     else ChangeState(PlayerState::Damage);
 }
@@ -248,8 +257,16 @@ void Player::MoveColliders()
 
 void Player::TestAttack()
 {
+    SoundManager::PlaySE(Sound::Attack);
     camera_->SetShakeValues(10.0f, 5.0f, 160.0f, 1.0f, 5.0f, { 0.25f,0.25f }, 0.0f);
     SpawnAttackCollider(0.01f, GetAttackPower());
+}
+
+void Player::UltimateATK()
+{
+    float attack = GetAttackPower() * 3.0f;
+    camera_->SetShakeValues(10.0f, 5.0f, 160.0f, 1.0f, 5.0f, { 0.5f,0.5f }, 0.0f);
+    SpawnAttackCollider(0.01f, attack);
 }
 
 //現在のカメラの方向を取得

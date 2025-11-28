@@ -4,6 +4,7 @@
 #include "../../../../GameSystem/InputSystem/InputSystem.h"
 #include "../../AttackCollider.h"
 #include "../../../../Graphics/Effect/Effect.h"
+#include "../../../../Sound/SoundManager.h"
 
 #include "SwordEnemy1Motion.h"
 #include "../EnemyState/EnemyState.h"
@@ -73,7 +74,12 @@ void SwordEnemy1::HitAttackCollider(const AttackInfo& atkInfo)
 {
     //死亡しているならreturn
     if (IsDying()) return;
-
+    EffectParam param;
+    param.handle = gsPlayEffectEx(Effect::Hit, nullptr);
+    param.position = transform_.position() + GSvector3{ 0,1,0 };
+    param.scale = { 0.5f,0.5f,0.5f };
+    Effect::SetEffectParam(param);
+    SoundManager::PlaySE(Sound::Hit);
     TakeDamage(atkInfo.damage);
     //hpが0なら死亡
     if (IsDying()) {

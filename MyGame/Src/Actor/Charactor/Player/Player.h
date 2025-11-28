@@ -45,6 +45,7 @@ public:
     CameraController* GetPlayerCamera();
     void Debug(float deltaTime)override;
     void TestAttack();
+    void UltimateATK();
 private:
     GSvector3 GetCameraDirection();
     float GetCameraHorizontalRadian();

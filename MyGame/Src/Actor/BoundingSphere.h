@@ -15,7 +15,7 @@ public:
     float Radius()const;
     void Radius(float radius);
     bool Enable()const;
-    void Enable(bool enable);
+    void SetEnable(bool enable);
     bool Trigger()const;
     void Trigger(bool trigger);
     void Color(GSvector3 color);

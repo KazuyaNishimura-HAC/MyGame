@@ -56,7 +56,7 @@ bool BoundingSphere::Enable() const
     return enable_;
 }
 
-void BoundingSphere::Enable(bool enable)
+void BoundingSphere::SetEnable(bool enable)
 {
     enable_ = enable;
 }

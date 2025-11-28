@@ -1,5 +1,6 @@
 ﻿#include "PlayerMove.h"
 #include "../../../../GameSystem/InputSystem/InputSystem.h"
+#include "../../../../World/IWorld.h"
 PlayerMove::PlayerMove(Player* owner)
 	:PlayerState::PlayerState(owner)
 {
@@ -7,7 +8,7 @@ PlayerMove::PlayerMove(Player* owner)
 
 void PlayerMove::Update(float deltaTime)
 {
-	if (InputSystem::LeftStick() == GSvector2::zero()) owner_->ChangeState(PlayerState::Idle);
+	if (InputSystem::LeftStick() == GSvector2::zero() || owner_->World()->IsRunningEvent()) owner_->ChangeState(PlayerState::Idle);
 	owner_->MovePosition(deltaTime);
 }
 

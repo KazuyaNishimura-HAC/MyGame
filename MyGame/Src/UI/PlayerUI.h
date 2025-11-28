@@ -13,6 +13,7 @@ public:
 private:
     IWorld* world_{ nullptr };
     HorizontalGauge* healthGauge_{ nullptr };
+    HorizontalGauge* skillGauge_{ nullptr };
     Player* player_{ nullptr };
 };
 #endif

@@ -1,8 +1,9 @@
 ﻿#include "Actor.h"
-
-Actor::Actor(GSuint mesh)
+Actor::Actor(GSuint mesh,const GSvector3& position, const GSvector3& rotate)
     :mesh_{ new AnimatedMesh(mesh) }
 {
+    transform_.position(position);
+    transform_.rotate(rotate);
 }
 
 Actor::~Actor()
@@ -48,7 +49,6 @@ void Actor::Die()
 //アクティブ設定
 void Actor::SetEnable(bool enable)
 {
-
     enable_ = enable;
 }
 

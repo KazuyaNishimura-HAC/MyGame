@@ -15,7 +15,7 @@ class Actor
 {
 public:
     Actor() {};
-    Actor(GSuint mesh);
+    Actor(GSuint mesh,const GSvector3& position = { 0,0,0 },const GSvector3& rotate = { 0,0,0 });
     virtual ~Actor();
     virtual void Update(float deltaTime);
     virtual void LateUpdate(float deltaTime);

@@ -438,10 +438,16 @@ FodyWeavers.xsd
 imgui.ini
 MagFlip/Assets/Model/FieldObject/Gimmick_SignBoard.mshb
 
-#動画・画像・サウンド・メッシュ・スカイボックス
+#無視リスト一覧
+#動画・画像・サウンド・メッシュ・スキンメッシュ・スカイボックス・エフェクト・アニメーション
 *.mp4
+*.ogg
 *.png
 *.wav
 *.msh
+*sklb
 *.mshb
 *.dds
+*.efkefc
+*.oct
+*.anmb

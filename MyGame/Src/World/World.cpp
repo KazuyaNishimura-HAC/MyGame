@@ -35,7 +35,7 @@ void World::Start()
     PostEffect::Instance().Load();
     light_ = new Light(this);
     // ライトマップの読み込み
-    gsLoadLightmap(0, "Assets/Light/Lightmap.txt");
+    //gsLoadLightmap(0, "Assets/Light/Lightmap.txt");
     // リフレクションプローブの読み込み
     //gsLoadReflectionProbe(0, "Assets/RefProbe/ReflectionProbe.txt");
 }
@@ -43,6 +43,7 @@ void World::Start()
 void World::Update(float deltaTime)
 {
     time_.Update(deltaTime);
+
     GameUpdate(time_.GameDeltaTime());
     
     guiManager_.Update(deltaTime, time_.GameDeltaTime());
@@ -58,7 +59,7 @@ void World::Update(float deltaTime)
     eventManager_.Remove();
     guiManager_.Remove();
     
-    cameraManager_.Update(deltaTime);
+    if(!time_.IsPause())cameraManager_.Update(deltaTime);
 }
 
 void World::Draw() const
@@ -77,7 +78,7 @@ void World::Draw() const
         RenderTexture::EndRender();
         RenderTexture::BindRenderTexture(Rt::BaseScene,0);
         //PostEffect::Instance().Bloom(Rt::BaseScene, { 0.6f, 0.8f, 1.0f, 1.0f });
-        //PostEffect::Instance().SetIntensity(0.75f);
+        PostEffect::Instance().GaussianBlur(Rt::BaseScene);
         //PostEffect::Instance().Fog(Rt::BaseScene, { 0.1f,0.0f,0.1f,1.0f });
         RenderTexture::DrawRender(Rt::BaseScene);
     }
@@ -270,6 +271,11 @@ bool World::IsStart()
     return isStart_;
 }
 
+bool World::IsPause()
+{
+    return time_.IsPause();
+}
+
 void World::Timer(bool flg)
 {
     isTimer_ = flg;
@@ -278,6 +284,11 @@ void World::Timer(bool flg)
 bool World::Timer()
 {
     return isTimer_;
+}
+
+bool World::IsRunningEvent()
+{
+    return eventManager_.IsRunning();
 }
 
 void World::Debug(float deltaTime)
@@ -289,6 +300,7 @@ void World::Debug(float deltaTime)
     ImGui::Begin("WorldGUI");
     ImGui::Value("FPS", 60 / deltaTime);
     ImGui::Value("TimeScale", time_.GetTimeScale());
+    ImGui::Value("DeltaTime", time_.DeltaTime());
     ImGui::End();
     if (!isDebug_) return;
     actorManager_.Debug(deltaTime);
@@ -296,6 +308,7 @@ void World::Debug(float deltaTime)
     guiManager_.Debug();
     eventManager_.Debug();
     timeLineEditor_->DrawEditUI();
+    PostEffect::Instance().Debug();
 }
 
 bool World::IsDebug()
@@ -303,17 +316,18 @@ bool World::IsDebug()
     return isDebug_;
 }
 
-void World::Message(EventMessage message)
+void World::Message(WorldMessage message)
 {
     switch (message) {
-    case EventMessage::GameStart:
+    case WorldMessage::GameStart:
         break;
-    case EventMessage::GameEnd:
+    case WorldMessage::GameEnd:
+        isEnd_ = true;
         break;
-    case EventMessage::GamePause:
+    case WorldMessage::GamePause:
         time_.SetPause(true);
         break;
-    case EventMessage::PauseEnd:
+    case WorldMessage::PauseEnd:
         time_.SetPause(false);
         break;
     default:

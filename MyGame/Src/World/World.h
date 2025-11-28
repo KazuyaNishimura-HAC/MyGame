@@ -50,7 +50,7 @@ public:
     Camera* GetCamera(float id = 0)override;
     CameraController* GetCameraController(CameraController::Priority p)override;
     int GetCameraCount()override;
-
+    
     ActorManager& GetActorManager();
     FieldManager& Fields()override;
     TimeLine& GetTimeLine()override;
@@ -68,8 +68,12 @@ public:
     void IsStart(bool start)override;
     bool IsStart()override;
 
+    bool IsPause()override;
+
     void Timer(bool flg)override;
     bool Timer()override;
+
+    bool IsRunningEvent()override;
 
     //コピー禁止
     World(const World& other) = delete;
@@ -78,7 +82,7 @@ public:
     void Debug(float deltaTime);
     bool IsDebug()override;
 
-    void Message(EventMessage message)override;
+    void Message(WorldMessage message)override;
 
 private:
     //管理マネージャー

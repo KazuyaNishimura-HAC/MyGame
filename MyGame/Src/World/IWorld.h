@@ -21,7 +21,7 @@ class CameraController;
 class TimeLine;
 class BattleManager;
 
-enum class EventMessage
+enum class WorldMessage
 {
     GameStart,
     GameEnd,
@@ -68,12 +68,15 @@ public:
     virtual void IsStart(bool end) = 0;
     virtual bool IsStart() = 0;
 
+    virtual bool IsPause() = 0;
+
     virtual void Timer(bool flg) = 0;
     virtual bool Timer() = 0;
 
+    virtual bool IsRunningEvent() = 0;
     virtual bool IsDebug() = 0;
 
-    virtual void Message(EventMessage message) = 0;
+    virtual void Message(WorldMessage message) = 0;
     
 };
 

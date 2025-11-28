@@ -68,6 +68,8 @@ void LoadScene::LoadAssets() {
     loadCount_++;
     gsLoadMesh(Model::GreatSword, "Assets/Model/Object/GreatSword.mshb");
     loadCount_++;
+    gsLoadMesh(Model::Door, "Assets/Model/Object/RotateDoor.mshb");
+    loadCount_++;
     //動作チェック用
     gsLoadTexture(Texture::MenuSliderBackGround, "Assets/Texture/Menu/SliderBackGround.png");
     loadCount_++;

@@ -11,6 +11,7 @@
 #include "../EnemyState/EnemyMove.h"
 #include "State/SwordEnemy1Attack.h"
 #include "../EnemyState/EnemyDamage.h"
+#include "../EnemyState/EnemyParried.h"
 #include "../EnemyState/EnemyDead.h"
 
 #include "../../../../UI/EnemyUI.h"
@@ -24,6 +25,7 @@ SwordEnemy1::SwordEnemy1(IWorld* world,float groupID, const GSvector3& position,
     states_.AddState(EnemyState::Move, new EnemyMove(this));
     states_.AddState(EnemyState::Attack, new SwordEnemy1Attack(this));
     states_.AddState(EnemyState::Damage, new EnemyDamage(this));
+    states_.AddState(EnemyState::Parried, new EnemyParried(this));
     states_.AddState(EnemyState::Dead, new EnemyDead(this));
     states_.ChangeState(EnemyState::Idle);
     collider_ = BoundingSphere(1);
@@ -38,6 +40,8 @@ SwordEnemy1::~SwordEnemy1()
 {
     //バトルシステムに通知
     world_->BattleMessage(groupID_);
+    ui_->End();
+    ui_ = nullptr;
 }
 
 

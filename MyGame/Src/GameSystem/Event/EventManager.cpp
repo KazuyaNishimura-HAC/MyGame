@@ -14,9 +14,9 @@ void EventManager::Update(float deltaTime)
 {
     timeLine_.Update(deltaTime);
     //イベントが開始したらUpdate処理
-    if (runningEvent_ == nullptr)return;
+    if (!runningEvent_)return;
     runningEvent_->Update(deltaTime);
-    if (!runningEvent_->IsInvoke()) runningEvent_ = nullptr;
+    if (!runningEvent_->IsInvoke() || runningEvent_->IsEnd()) runningEvent_ = nullptr;
 }
 
 void EventManager::Draw() const
@@ -31,7 +31,7 @@ void EventManager::Draw() const
 void EventManager::Invoke()
 {
     //イベントの重複処理禁止
-    if (runningEvent_ != nullptr)return;
+    if (runningEvent_)return;
     for (auto ev : events_)
     {
         if (!ev->Invoke())continue;
@@ -71,6 +71,11 @@ void EventManager::Clear()
 
 void EventManager::Debug()
 {
+}
+
+bool EventManager::IsRunning()
+{
+    return runningEvent_ != nullptr;
 }
 
 TimeLine& EventManager::GetTimeLine()

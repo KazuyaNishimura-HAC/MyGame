@@ -1,4 +1,5 @@
 ﻿#include "Event.h"
+#include "../../World/IWorld.h"
 #include "../../Actor/Actor.h"
 #include "../../Actor/Charactor/Player/Player.h"
 
@@ -16,6 +17,8 @@ Event::~Event()
 
 bool Event::Invoke()
 {
+    //終了処理が入ったらreturn
+    if(isEnd_) return false;
     bool invoke;
     switch (invokeType_) {
     case InvokeType::Collision:
@@ -29,6 +32,7 @@ bool Event::Invoke()
     }
     //発火フラグが発生したら
     if (!invoke) return false;
+    isInvoke_ = invoke;
     //イベント開始
     BeginEvent();
     return true;

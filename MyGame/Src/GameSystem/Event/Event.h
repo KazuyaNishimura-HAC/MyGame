@@ -3,10 +3,10 @@
 
 #include <gslib.h>
 #include <GStransform.h>
-#include "../../World/World.h"
 
 class IWorld;
 class CameraController;
+class Actor;
 
 //接触か任意か
 struct InvokeType {

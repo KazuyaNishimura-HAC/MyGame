@@ -18,6 +18,7 @@ public:
     void Remove();
     void Clear();
     void Debug();
+    bool IsRunning();
     TimeLine& GetTimeLine();
     // コピー禁止
     EventManager(const EventManager& other) = delete;

@@ -24,8 +24,13 @@ public:
     enum ID
     {
         Slash,
+        SkillSlash,
         Aura,
         Hit,
+        GuardHit,
+        ParryBreak,
+        GroundDust,
+
     };
     //座標を指定して再生
     static void SetEffectParam(const EffectParam& param) {

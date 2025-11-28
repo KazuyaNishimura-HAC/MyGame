@@ -76,9 +76,34 @@ void LoadScene::LoadAssets() {
     gsLoadTexture(Texture::MenuSliderFill, "Assets/Texture/Menu/SliderFill.png");
     loadCount_++;
     // エフェクトファイルの読み込み
-    gsLoadEffect(Effect::Slash, "Assets/Effect/Slash/Slash02_white_gray.efkefc");
+    gsLoadEffect(Effect::Slash, "Assets/Effect/Slash02/Slash02_white_gray.efkefc");
+    loadCount_++;
+    gsLoadEffect(Effect::SkillSlash, "Assets/Effect/Slash01/Slash01.efkefc");
     loadCount_++;
     gsLoadEffect(Effect::Aura, "Assets/Effect/Aura02/Aura02_Purple.efkefc");
+    loadCount_++;
+    gsLoadEffect(Effect::Hit, "Assets/Effect/Hit02/Hit02-random-direction.efkefc");
+    loadCount_++;
+    gsLoadEffect(Effect::GuardHit, "Assets/Effect/Guard/Guard03.efkefc");
+    loadCount_++;
+    gsLoadEffect(Effect::ParryBreak, "Assets/Effect/PickUpItem/PickUpItem03.efkefc");
+    loadCount_++;
+    gsLoadEffect(Effect::GroundDust, "Assets/Effect/GroundDust/GroundDustLarge.efkefc");
+    loadCount_++;
+    //サウンド
+    gsLoadBGM(Sound::Battle, "Assets/Sound/BGM/Battle.ogg", TRUE);
+    loadCount_++;
+    gsLoadBGM(Sound::BossBattle, "Assets/Sound/BGM/BossBattle.ogg", TRUE);
+    loadCount_++;
+    gsLoadSE(Sound::Attack, "Assets/Sound/SE/Attack.wav", 3, GWAVE_DEFAULT);
+    loadCount_++;
+    gsLoadSE(Sound::Footstep, "Assets/Sound/SE/Footstep.wav", 5, GWAVE_DEFAULT);
+    loadCount_++;
+    gsLoadSE(Sound::Guard, "Assets/Sound/SE/Guard.wav", 3, GWAVE_DEFAULT);
+    loadCount_++;
+    gsLoadSE(Sound::Hit, "Assets/Sound/SE/Hit.wav", 5, GWAVE_DEFAULT);
+    loadCount_++;
+    gsLoadSE(Sound::Parry, "Assets/Sound/SE/Parry.wav", 3, GWAVE_DEFAULT);
     loadCount_++;
 }
 

@@ -15,6 +15,11 @@ void PlayerDamage::Update(float deltaTime)
 void PlayerDamage::Enter()
 {
 	owner_->ChangeMotion(PlayerMotion::Hit, false,1,0,0,true);
+    EffectParam param;
+    param.handle = gsPlayEffectEx(Effect::Hit, nullptr);
+    param.position = owner_->Transform().position() + GSvector3{0,1,0};
+    param.scale = { 0.5f,0.5f,0.5f };
+    Effect::SetEffectParam(param);
 }
 
 void PlayerDamage::Exit()

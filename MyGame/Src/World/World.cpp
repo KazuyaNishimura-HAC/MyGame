@@ -12,6 +12,7 @@
 
 #include "../GameSystem/Event/TimeLine/TimeLineEditor.h"
 #include "../GameSystem/BattleSystem/BattleManager.h"
+#include "../Sound/SoundManager.h"
 
 #include <GSeffect.h>
 #include <GSgame.h>
@@ -111,7 +112,8 @@ void World::Clear()
     isTimer_ = true;
     gsStopAllEffects();
     PostEffect::Instance().Clear();
-    //SoundManager::StopBGM();
+    SoundManager::StopBGM();
+    SoundManager::StopAll();
 }
 
 void World::GameUpdate(float deltaTime)

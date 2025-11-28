@@ -10,6 +10,7 @@
 #include "../../GameSystem/Field/FieldActor.h"
 #include "../../GameSystem/Field/Field.h"
 #include "../../GameSystem/BattleSystem/BattleManager.h"
+#include "../../Sound/SoundManager.h"
 //動作確認用
 #include "../../UI/Image.h"
 // 開始
@@ -18,6 +19,7 @@ void GamePlayScene::Start() {
     InitialSettings();
     //バトルマネージャを追加
     world_.AddBattleManager(new BattleManager(&world_));
+    SoundManager::PlayBGM(Sound::Battle);
     world_.Start();
 }
 

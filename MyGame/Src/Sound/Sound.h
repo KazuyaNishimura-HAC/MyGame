@@ -6,10 +6,10 @@ class Sound
 public:
     enum BGM
     {
-        Stage1BGM,
-        TitleBGM,
-        ResultLoseBGM,
-        ResultWinBGM
+        Battle,
+        BossBattle,
+        Title,
+        Result,
     };
     enum SE
     {
@@ -20,28 +20,11 @@ public:
         MenuConfirm,
         MenuPop,
         //[GameSE]
-        CountDown,
-        GetItem,
-        FlipStart,
-        FlipEnd,
-        CarMove,
-        ResultLose,
-        ResultWin,
-        AttackBullet,
-        PlayerDamage,
-        BodyHit,
-        GameFinish,
-        //[ItemSE]
-        BoostItem,
-        BullTankItem,
-        MagicHandItemSpawn,
-        MagicHandItemSeize,
-        PlusFlipItem,
-        ShieldItem,
-        ItemRolling,
-        ItemConfirmed,
-        //[GimmickSE]
-        Acceleration,
+        Attack,
+        Footstep,
+        Guard,
+        Hit,
+        Parry,
         //全SE取得用番号
         GetSEEnd
     };  
@@ -58,7 +41,7 @@ public:
         static int groupBegin[2]
         {
             SE::MenuSelect,
-            SE::CountDown,
+            SE::Attack,
         };
         return groupBegin[(int)group];
     }
@@ -67,7 +50,7 @@ public:
         static int groupEnd[2]
         {
             SE::MenuPop,
-            SE::ResultWin,
+            SE::Parry,
         };
         return groupEnd[(int)group];
     }

@@ -13,10 +13,12 @@ public:
 	void Fog(GSuint n, GScolor col);
 	void Dissolve(GSuint n, GSuint m);
 	void MargeShader(GSuint n, GSuint m);
+    void GaussianBlur(GSuint n);
+    void IsParryBlur(bool flg);
     void Clear();
+    void Debug();
 private:
-	const float width_ = Screen::ScreenWidth;
-	const float height_ = Screen::ScreenHeight;
+	
 	void CreateRender();
 	void LoadShader();
 
@@ -30,6 +32,9 @@ private:
     void gaussianBlur(GSuint source, GSvector2 size, GSuint blur_h, GSuint blur_v);
 
     GSvector4 zBufferParams(float near, float far);
+
+    const float width_ = Screen::ScreenWidth;
+    const float height_ = Screen::ScreenHeight;
 
     // テクセルの閾値
     float bloomThreshold_{ 0.01f };
@@ -56,6 +61,10 @@ private:
     GScolor edge_color_{ 1.0f, 1.0f, 1.0f, 1.0f };
     // エッジの輝度
     float edge_color_intensity_{ 1.0f };
+    //ブラーの強さ
+    float blurIntencity_{ 1.0f };
+
+    bool isParryBlur_{ false };
 };
 
 #endif

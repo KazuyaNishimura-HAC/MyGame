@@ -3,6 +3,8 @@
 #include "../Shader/RenderTexture.h"
 #include "../../AssetID/Graphics.h"
 
+#include <imgui/imgui.h>
+
 PostEffect& PostEffect::Instance()
 {
     static PostEffect instance;
@@ -120,6 +122,30 @@ void PostEffect::MargeShader(GSuint n, GSuint m)
     gsUnbindRenderTargetDepthEx(m, 1);
 }
 
+void PostEffect::GaussianBlur(GSuint n)
+{
+    if (!isParryBlur_) return;
+    blurIntencity_ -= 1.0f / 60.0f;
+    if (blurIntencity_ < 0.0f) {
+        blurIntencity_ = 1.0f;
+        isParryBlur_ = false;
+        return;
+    }
+    // ブラーに使う解像度（必要なら調整）
+    GSvector2 size = GSvector2{ width_, height_} / blurIntencity_;
+
+    // 1段階のガウシアンブラー
+    gaussianBlur(n, size, Rt::BlurH1, Rt::BlurV1);
+
+    // 結果の BlurV1 を画面に描画する
+    RenderTexture::BindRenderTextureEx(Rt::BlurV1, 0, 0);
+    RenderTexture::DrawRender(Rt::BlurV1);
+}
+
+void PostEffect::IsParryBlur(bool flg)
+{
+}
+
 void PostEffect::Clear()
 {
     //値を初期化
@@ -135,6 +161,16 @@ void PostEffect::Clear()
     edge_width_ = { 0.0f };
    edge_color_={ 1.0f, 1.0f, 1.0f, 1.0f };
     edge_color_intensity_={ 1.0f };
+    blurIntencity_ = { 1.0f };
+}
+
+void PostEffect::Debug()
+{
+    ImGui::Begin("PostEffect");
+    ImGui::InputFloat("BloomIntencity",&bloomIntencity_);
+    ImGui::InputFloat("BlurIntencity", &blurIntencity_);
+    ImGui::Checkbox("IsBlur", &isParryBlur_);
+    ImGui::End();
 }
 
 void PostEffect::CreateRender()

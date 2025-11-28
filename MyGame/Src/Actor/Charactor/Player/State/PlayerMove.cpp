@@ -1,9 +1,12 @@
 ﻿#include "PlayerMove.h"
 #include "../../../../GameSystem/InputSystem/InputSystem.h"
+#include "../../../../Sound/SoundManager.h"
 #include "../../../../World/IWorld.h"
 PlayerMove::PlayerMove(Player* owner)
 	:PlayerState::PlayerState(owner)
 {
+    owner_->GetMesh()->AddEvent(PlayerMotion::Run, 5, [=] { SoundManager::PlaySE(Sound::Footstep); });
+    owner_->GetMesh()->AddEvent(PlayerMotion::Run, 50, [=] { SoundManager::PlaySE(Sound::Footstep); });
 }
 
 void PlayerMove::Update(float deltaTime)

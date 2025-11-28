@@ -35,6 +35,13 @@ void PlayerParry::Update(float deltaTime)
 void PlayerParry::Enter()
 {
     owner_->ChangeMotion(PlayerMotion::ParrySuccess, false, 1.5f,20.0f);
+
+    EffectParam param;
+    param.handle = gsPlayEffectEx(Effect::ParryBreak, nullptr);
+    param.position = owner_->Transform().position() + GSvector3{ 0,1,0 };
+    param.scale = { 0.5f,0.5f,0.5f };
+    Effect::SetEffectParam(param);
+
     parryTimer_ = waitTime_;
     owner_->SetTimeScale(0.2f,waitTime_);
     owner_->SetParry(true);

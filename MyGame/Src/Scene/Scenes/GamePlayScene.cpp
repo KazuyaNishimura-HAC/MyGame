@@ -25,14 +25,11 @@ void GamePlayScene::Start() {
 void GamePlayScene::Update(float delta_time) {
     world_.Update(delta_time);
     if (InputSystem::ButtonTrigger(InputSystem::Button::Start)) {
-        world_.Message(EventMessage::GamePause);
+        if(!world_.IsPause())world_.Message(WorldMessage::GamePause);
+        else world_.Message(WorldMessage::PauseEnd);
     }
-    if (InputSystem::ButtonDetach(InputSystem::Button::Start)) {
-        world_.Message(EventMessage::PauseEnd);
-    }
-    if (world_.IsEnd()) {
-        sceneEnd_ = true;
-    }
+
+    if (world_.IsEnd()) sceneEnd_ = true;
 }
 // 描画
 void GamePlayScene::Draw() const {
@@ -85,7 +82,7 @@ void GamePlayScene::InitialSettings()
 
 void GamePlayScene::AddActors()
 {
-    world_.AddPlayer(new Player(&world_, {}, { 0,90,0 }, Status{ 100, 10 }));
+    world_.AddPlayer(new Player(&world_, {0,0,0}, { 0,90,0 }, Status{ 100, 10 }));
 }
 
 void GamePlayScene::AddFields()

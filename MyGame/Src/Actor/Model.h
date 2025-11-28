@@ -16,6 +16,7 @@ public:
         MapCollide,
         //[Object]
         GreatSword,
+        Door,
         //[Debug]
         PathObject,
         EditObject,

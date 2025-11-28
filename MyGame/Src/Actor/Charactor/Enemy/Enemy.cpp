@@ -74,8 +74,18 @@ void Enemy::MoveAttackCollide(float forwardValue)
 
 void Enemy::OnParryHit(const GSvector3& position)
 {
-    ChangeState(EnemyState::Damage);
+    ChangeState(EnemyState::Parried);
     Knockback(0.5f,position);
+}
+
+void Enemy::SetBattleMode(bool mode)
+{
+    isBattleMode_ = mode;
+}
+
+bool Enemy::IsBattleMode()
+{
+    return isBattleMode_;
 }
 
 void Enemy::LookAtPlayer()

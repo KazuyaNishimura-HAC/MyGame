@@ -7,6 +7,18 @@
 class BossState :public EnemyState
 {
 public:
+    enum State {
+        Intro,
+        Idle,
+        Move,
+        Stan,
+        Attack,
+        Damage,
+        Skill,
+        Guard,
+        Parried,
+        Dead
+    };
     BossState(Boss* owner) :EnemyState(owner), owner_{ owner } {};
     virtual void Update(float deltaTime)override {};
     virtual void Enter()override {};

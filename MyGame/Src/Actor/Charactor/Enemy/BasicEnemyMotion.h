@@ -8,7 +8,7 @@ public:
         Idle,
         Run,
         Hit,
-        ParryHit,
+        Parried,
         Die
     };
 };

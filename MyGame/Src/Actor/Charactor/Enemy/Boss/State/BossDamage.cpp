@@ -20,13 +20,3 @@ void BossDamage::Enter()
 void BossDamage::Exit()
 {
 }
-
-void BossDamage::SetID(int id)
-{
-	stateID = id;
-}
-
-int BossDamage::GetID()
-{
-	return stateID;
-}

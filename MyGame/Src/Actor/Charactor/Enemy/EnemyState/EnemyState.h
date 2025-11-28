@@ -13,7 +13,7 @@ public:
 		Move,
 		Attack,
 		Damage,
-        ParryHit,
+        Parried,
 		Dead
 	};
 	EnemyState(Enemy* owner) : owner_{ owner } {};

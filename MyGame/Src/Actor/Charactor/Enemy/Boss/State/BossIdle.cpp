@@ -10,10 +10,8 @@ BossIdle::BossIdle(Boss* owner)
 void BossIdle::Update(float deltaTime)
 {
 	if (player_->IsDying()) return;
-	float dist = GSvector3::distance(owner_->Transform().position(), player_->Transform().position());
-	if (dist < 5) {
-		owner_->ChangeState(State::Move);
-	}
+
+	if (owner_->IsBattleMode())owner_->ChangeState(State::Move);
 }
 
 void BossIdle::Enter()
@@ -23,14 +21,4 @@ void BossIdle::Enter()
 
 void BossIdle::Exit()
 {
-}
-
-void BossIdle::SetID(int id)
-{
-	stateID = id;
-}
-
-int BossIdle::GetID()
-{
-	return stateID;
 }

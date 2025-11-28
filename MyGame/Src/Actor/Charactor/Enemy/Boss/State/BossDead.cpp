@@ -20,13 +20,3 @@ void BossDead::Enter()
 void BossDead::Exit()
 {
 }
-
-void BossDead::SetID(int id)
-{
-	stateID = id;
-}
-
-int BossDead::GetID()
-{
-	return stateID;
-}

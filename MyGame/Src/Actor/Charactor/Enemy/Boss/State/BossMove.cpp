@@ -19,12 +19,3 @@ void BossMove::Exit()
 {
 }
 
-void BossMove::SetID(int id)
-{
-	stateID = id;
-}
-
-int BossMove::GetID()
-{
-	return stateID;
-}

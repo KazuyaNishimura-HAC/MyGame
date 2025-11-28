@@ -13,6 +13,8 @@ void EnemyIdle::Update(float deltaTime)
 	if (player_->IsDying()) return;
 	float dist = GSvector3::distance(owner_->Transform().position(), player_->Transform().position());
 	if (dist < 10) {
+        //戦闘モードに切替
+        owner_->SetBattleMode(true);
 		owner_->ChangeState(State::Move);
 	}
 }

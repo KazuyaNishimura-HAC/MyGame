@@ -7,10 +7,12 @@
 
 #include "BossMotion.h"
 #include "State/BossState.h"
+#include "State/BossIntro.h"
 #include "State/BossIdle.h"
 #include "State/BossMove.h"
 #include "State/BossAttack.h"
 #include "State/BossDamage.h"
+#include "State/BossParried.h"
 #include "State/BossDead.h"
 
 Boss::Boss(IWorld* world, float groupID, const GSvector3& position, const GSvector3& rotate, Status status, GSuint mesh)
@@ -18,10 +20,12 @@ Boss::Boss(IWorld* world, float groupID, const GSvector3& position, const GSvect
 {
     name_ = ActorName::Boss;
     //ステートの追加
+    states_.AddState(BossState::Intro, new BossIntro(this));
     states_.AddState(BossState::Idle, new BossIdle(this));
     states_.AddState(BossState::Move, new BossMove(this));
     states_.AddState(BossState::Attack, new BossAttack(this));
     states_.AddState(BossState::Damage, new BossDamage(this));
+    states_.AddState(BossState::Parried, new BossParried(this));
     states_.AddState(BossState::Dead, new BossDead(this));
     states_.ChangeState(BossState::Idle);
     collider_ = BoundingSphere(1);
@@ -34,7 +38,7 @@ Boss::Boss(IWorld* world, float groupID, const GSvector3& position, const GSvect
 
 Boss::~Boss()
 {
-    world_->IsEnd(true);
+    world_->Message(WorldMessage::GameEnd);
 }
 
 
@@ -65,6 +69,12 @@ void Boss::React(Actor& other)
     }
 }
 
+void Boss::OnParryHit(const GSvector3& position)
+{
+    ChangeState(BossState::Parried);
+    Knockback(0.2f, position);
+}
+
 void Boss::HitAttackCollider(const AttackInfo& atkInfo)
 {
     //死亡しているならreturn
@@ -76,6 +86,16 @@ void Boss::HitAttackCollider(const AttackInfo& atkInfo)
     else ChangeState(BossState::Damage);
 }
 
+void Boss::SetIntro(bool intro)
+{
+    isIntro_ = intro;
+}
+
+bool Boss::IsIntro()
+{
+    return isIntro_;
+}
+
 void Boss::Debug(float deltaTime)
 {
     /*mesh_->Debug("Boss");
@@ -84,6 +104,20 @@ void Boss::Debug(float deltaTime)
     ImGui::Value("HP", status_.hp);
     ImGui::Value("ATK", status_.atk);
     ImGui::End();*/
+}
+
+void Boss::BeginIntro()
+{
+    ChangeState(BossState::Intro);
+}
+
+void Boss::fallEvent()
+{
+    GSvector3 updatePos = transform_.position();
+    // 前進する（ローカル座標基準）
+    transform_.translate(0.0f, -0.5f, 0.0f);
+    updatePos.y = CLAMP(transform_.position().y, 0, 512);
+    transform_.position(updatePos);
 }
 
 void Boss::Attack()

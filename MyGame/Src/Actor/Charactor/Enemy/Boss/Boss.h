@@ -15,9 +15,16 @@ public:
     //描画
     void Draw()const override;
     void React(Actor& other)override;
+    void OnParryHit(const GSvector3& position)override;
     void HitAttackCollider(const AttackInfo& atkInfo)override;
+    void SetIntro(bool intro);
+    bool IsIntro();
+    void BeginIntro();
+    void fallEvent();
     void Debug(float deltaTime)override;
+    
 private:
+    bool isIntro_{ false };
     void Attack();
 };
 

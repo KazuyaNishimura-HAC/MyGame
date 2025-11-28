@@ -26,6 +26,8 @@ public:
     virtual void MovePosition(float deltaTime);
     virtual void MoveAttackCollide(float forwardValue = 1.0f);
     virtual void OnParryHit(const GSvector3& position);
+    virtual void SetBattleMode(bool mode);
+    virtual bool IsBattleMode();
     
     void LookAtPlayer();
 protected:
@@ -33,5 +35,6 @@ protected:
     Charactor* player_{ nullptr };
     int groupID_{ 0 };
     EnemyUI* ui_{ nullptr };
+    bool isBattleMode_{ false };
 };
 #endif

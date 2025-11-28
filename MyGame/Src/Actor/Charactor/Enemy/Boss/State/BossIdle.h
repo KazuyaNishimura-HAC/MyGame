@@ -11,8 +11,6 @@ public:
 	void Update(float deltaTime)override;
 	void Enter()override;
 	void Exit()override;
-	void SetID(int id = 0)override;
-	int GetID()override;
 private:
 	Player* player_{ nullptr };
 };

@@ -1,8 +1,10 @@
 ﻿#ifndef OPEN_DOOR_EVENT_H_
 #define OPEN_DOOR_EVENT_H_
 #include "Event.h"
-
+#include <vector>
 class GUI;
+class Player;
+class Field;
 
 class OpenDoorEvent : public Event
 {
@@ -16,6 +18,11 @@ private:
 
     Player* player_{ nullptr };
     int eventNumber_{ 0 };
+    std::vector<Actor*> doors_;
+    Field* barrier_{ nullptr };
+    float waitTimer_{ 1.2f };
+    const float rotateSpeed_{ 0.6f };
+
 };
 
 #endif

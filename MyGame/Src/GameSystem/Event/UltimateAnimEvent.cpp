@@ -1,4 +1,6 @@
 ﻿#include "UltimateAnimEvent.h"
+#include "../../World/IWorld.h"
+#include "../../GameSystem/Camera/Camera.h"
 #include "../../GameSystem/Camera/CameraController.h"
 #include "../../Actor/Charactor/Player/Player.h"
 #include "../../Graphics/Effect/PostEffect.h"

@@ -82,7 +82,7 @@ void TimeLine::LoadFile()
     runningEvent_ = nullptr;
     //念のため一回クリアする
     KeyDataClear();
-    auto files = GetJsonFilesWin("Src/TimeLineData");
+    auto files = GetJsonFilesWin("Assets/TimeLineData");
     for (auto& fileName : files) {
         std::ifstream ifs(fileName);
         //使用可能なファイルか？

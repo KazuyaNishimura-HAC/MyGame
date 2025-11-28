@@ -358,7 +358,7 @@ void TimeLineEditor::Save()
     //今保存したファイルを選択
     selectedEventName_ = saveName;
     // ファイルにJSONデータを書き込む
-    std::ofstream of("Src/TimeLineData/" + saveName + ".json");
+    std::ofstream of("Assets/TimeLineData/" + saveName + ".json");
     of << saveFile.dump(4);
     of.close();
     //更新後データ読み込み

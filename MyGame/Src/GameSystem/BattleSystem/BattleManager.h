@@ -4,6 +4,7 @@
 class IWorld;
 class Enemy;
 class Event;
+class Boss;
 
 class BattleManager
 {
@@ -16,6 +17,7 @@ public:
 private:
     void BeginEvent(int group);
     std::vector<std::vector<Enemy*>> groupEnemis_;
+    Boss* boss_{ nullptr };
     std::vector<int>groupCount_;
     IWorld* world_{ nullptr };
     std::vector<Event*> openDoorEvents_;

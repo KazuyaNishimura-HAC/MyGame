@@ -2,17 +2,20 @@
 #include "../../World/IWorld.h"
 #include "../../Actor/Charactor/AllCharactors.h"
 #include "../../GameSystem/Event/OpenDoorEvent.h"
+#include "../../GameSystem/Event/BossBattleStartEvent.h"
 BattleManager::BattleManager(IWorld* world)
 {
     world_ = world;
-    openDoorEvents_.push_back(new OpenDoorEvent(world_, InvokeType::Manual,1));
-    openDoorEvents_.push_back(new OpenDoorEvent(world_, InvokeType::Manual,2));
-    openDoorEvents_.push_back(new OpenDoorEvent(world_, InvokeType::Manual,3));
+    SpawnEnemis();
+    openDoorEvents_.push_back(new OpenDoorEvent(world_, InvokeType::Manual,1, { 48,0,0 }));
+    openDoorEvents_.push_back(new OpenDoorEvent(world_, InvokeType::Manual,2, { 94,0,0 }));
+    openDoorEvents_.push_back(new OpenDoorEvent(world_, InvokeType::Manual,3, { 140,0,0 }));
     for (auto& event : openDoorEvents_) {
         battleEventCount_++;
         world_->AddEvent(event);
     }
-    SpawnEnemis();
+    world_->AddEvent(new BossBattleStartEvent(world, boss_,InvokeType::Collision,{ 165,0,0 },{ 3,10 }));
+    
 }
 
 BattleManager::~BattleManager()
@@ -40,7 +43,8 @@ void BattleManager::SpawnEnemis()
     groupEnemis_[4].push_back(new SwordEnemy1(world_, 4, { 180,0,5 }, { 0,270,0 }, Status{ 120, 5 }));
     groupEnemis_[4].push_back(new SwordEnemy1(world_, 4, { 180,0,-10 }, { 0,270,0 }, Status{ 120, 5 }));
     groupEnemis_[4].push_back(new SwordEnemy1(world_, 4, { 180,0,10 }, { 0,270,0 }, Status{ 120, 5 }));
-    groupEnemis_[4].push_back(new Boss(world_, 4, { 185,0,0 }, { 0,270,0 }, Status{ 500, 30 }));
+    boss_ = new Boss(world_, 4, { 185,40,0 }, { 0,270,0 }, Status{ 500, 30 });
+    groupEnemis_[4].push_back(boss_);
     for (int i = 0; i < enemyGroupCount_ + 1;++i) {
         groupCount_[i] = groupEnemis_[i].size();
         for (auto& enemy : groupEnemis_[i]) {

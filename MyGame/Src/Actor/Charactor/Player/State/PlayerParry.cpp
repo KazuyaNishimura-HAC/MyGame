@@ -39,7 +39,6 @@ void PlayerParry::Enter()
     EffectParam param;
     param.handle = gsPlayEffectEx(Effect::ParryBreak, nullptr);
     param.position = owner_->Transform().position() + GSvector3{ 0,1,0 };
-    param.scale = { 0.5f,0.5f,0.5f };
     Effect::SetEffectParam(param);
 
     parryTimer_ = waitTime_;

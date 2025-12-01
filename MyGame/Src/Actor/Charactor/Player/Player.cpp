@@ -19,6 +19,8 @@
 #include "State/PlayerGuardBreak.h"
 #include "State/PlayerParry.h"
 
+#include "../../../GameSystem/BattleSystem/BattleManager.h"
+
 Player::Player(IWorld* world, const GSvector3& position, const GSvector3& rotate, Status status, GSuint mesh)
     :Charactor(world, position, rotate, status, mesh)
 {
@@ -55,6 +57,9 @@ Player::~Player()
 void Player::Update(float deltaTime)
 {
     Charactor::Update(deltaTime);
+    if (battleManager_->IsBossDead()) {
+        ui_->Enable(false);
+    }
     //死んでいるなら更新を止める
     if (IsDying() || world_->IsRunningEvent()) return;
     if (InputSystem::ButtonTrigger(InputSystem::Button::B)) {
@@ -101,6 +106,7 @@ void Player::HitAttackCollider(const AttackInfo& info)
     
     //パリィ可能ならパリィ処理
     if (CanUseParry()) {
+        camera_->SetShakeValues(30.0f, 5.0f, 160.0f, 1.0f, 5.0f, { 0.5f,0.5f }, 0.0f);
         SoundManager::PlaySE(Sound::Parry);
         parryCollider_->IsParry(true);
         ChangeState(PlayerState::Parry);
@@ -115,7 +121,10 @@ void Player::HitAttackCollider(const AttackInfo& info)
         Effect::SetEffectParam(param);
 
         ReduceGuardPoint(1);
-        if (IsGuardBroken()) ChangeState(PlayerState::GuardBreak);
+        if (IsGuardBroken()) {
+            ChangeState(PlayerState::GuardBreak);
+            SoundManager::PlaySE(Sound::Parry);
+        }
         else {
             ChangeMotion(PlayerMotion::GuardHit1, false, 1, 0, 0, true);
             return;
@@ -133,7 +142,6 @@ void Player::MovePosition(float deltaTime)
     //イベント処理中はコントローラー移動をしない
     if (world_->IsRunningEvent()) return;
     GSvector2 input = InputSystem::LeftStick() * 0.1f * deltaTime;
-
     GSvector3 forward = CameraTransform().forward();
     GSvector3 right = CameraTransform().right();
     // Y成分は無視してXZ平面に投影

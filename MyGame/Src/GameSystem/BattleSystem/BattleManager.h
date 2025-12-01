@@ -13,6 +13,8 @@ public:
     ~BattleManager();
     void Update(float deltaTime);
     void EnemyDeadMessage(int group);
+    void BossDeadMessage();
+    bool IsBossDead() const;
 private:
     void SpawnPlayer();
     void SpawnEnemis();
@@ -25,6 +27,7 @@ private:
     std::vector<Event*> openDoorEvents_;
     const int enemyGroupCount_{ 4 };
     int battleEventCount_{ 0 };
+    bool bossDead_{ false };
 };
 
 #endif

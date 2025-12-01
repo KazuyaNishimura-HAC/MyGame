@@ -23,7 +23,9 @@ void BattleManager::Update(float deltaTime)
 
 void BattleManager::SpawnPlayer()
 {
-    world_->AddPlayer(new Player(world_, { 0,0,0 }, { 0,90,0 }, Status{ 100, 10 }));
+    Player* player = new Player(world_, { 0,0,0 }, { 0,90,0 }, Status{ 100, 10 });
+    player->Init(this);
+    world_->AddPlayer(player);
 }
 
 void BattleManager::SpawnEnemis()
@@ -74,6 +76,16 @@ void BattleManager::EnemyDeadMessage(int group)
     //敵カウントを減らす
     groupCount_[group] -= 1;
     if (groupCount_[group] <= 0) BeginEvent(group);
+}
+
+void BattleManager::BossDeadMessage()
+{
+    bossDead_ = true;
+}
+
+bool BattleManager::IsBossDead() const
+{
+    return bossDead_;
 }
 
 void BattleManager::BeginEvent(int group)

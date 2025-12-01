@@ -1,6 +1,7 @@
 ﻿#ifndef BOSS_H_
 #define BOSS_H_
 #include "../Enemy.h"
+class BossUI;
 class Boss : public Enemy
 {
 public:
@@ -25,6 +26,7 @@ public:
     
 private:
     bool isIntro_{ false };
+    BossUI* ui_{ nullptr };
     void Attack();
 };
 

@@ -16,6 +16,9 @@
 #include "State/BossParried.h"
 #include "State/BossDead.h"
 
+#include "../../../../UI/BossUI.h"
+#include "../../../../GameSystem/BattleSystem/BattleManager.h"
+
 Boss::Boss(IWorld* world, float groupID, const GSvector3& position, const GSvector3& rotate, Status status, GSuint mesh)
     :Enemy(world,groupID, position, rotate, status, mesh)
 {
@@ -34,12 +37,16 @@ Boss::Boss(IWorld* world, float groupID, const GSvector3& position, const GSvect
     
     //攻撃処理
     mesh_->AddEvent(BossMotion::Attack1, 40, [=] {Attack(); });
+    ui_ = new BossUI(world,this);
+    world_->AddGUI(ui_);
     SetVisible(false);
 }
 
 Boss::~Boss()
 {
-    world_->Message(WorldMessage::GameEnd);
+    if (battleManager_ != nullptr) battleManager_->BossDeadMessage();
+    ui_->End();
+    ui_ = nullptr;
 }
 
 

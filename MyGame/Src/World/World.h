@@ -41,7 +41,6 @@ public:
     void AddEvent(Event* newEvent)override;
     void AddCamera(Camera* camera)override;
     void AddCameraController(CameraController* controller)override;
-    void AddBattleManager(BattleManager* battleManager);
 
     Player* GetPlayer()override;
     Actor* GetAllActor(std::string name)override;
@@ -54,8 +53,6 @@ public:
     ActorManager& GetActorManager();
     FieldManager& Fields()override;
     TimeLine& GetTimeLine()override;
-
-    void BattleMessage(int group)override;
 
     void SetTimeScale(TimeScale timeScale)override;
     //ゲームデルタタイムの影響を受けないデルタタイム
@@ -91,7 +88,6 @@ private:
     FieldManager fieldManager_;
     EventManager eventManager_;
     CameraManager cameraManager_;
-    BattleManager* battleManager_{ nullptr };
     //エディター
     TimeLineEditor* timeLineEditor_{ nullptr };
     Time time_;

@@ -78,7 +78,7 @@ void World::Draw() const
         gsDrawEffect();
         RenderTexture::EndRender();
         RenderTexture::BindRenderTexture(Rt::BaseScene,0);
-        //PostEffect::Instance().Bloom(Rt::BaseScene, { 0.6f, 0.8f, 1.0f, 1.0f });
+        //PostEffect::Instance().Bloom(Rt::BaseScene, { 1, 1, 1, 1.0f });
         PostEffect::Instance().GaussianBlur(Rt::BaseScene);
         //PostEffect::Instance().Fog(Rt::BaseScene, { 0.1f,0.0f,0.1f,1.0f });
         RenderTexture::DrawRender(Rt::BaseScene);
@@ -104,8 +104,6 @@ void World::Clear()
     eventManager_.Clear();
     guiManager_.Clear();
     cameraManager_.Clear();
-    delete battleManager_;
-    battleManager_ = nullptr;
     time_.SetPause(false);
     isEnd_ = false;
     isStart_ = false;
@@ -186,12 +184,6 @@ TimeLine& World::GetTimeLine()
     return eventManager_.GetTimeLine();
 }
 
-void World::BattleMessage(int group)
-{
-    if (!battleManager_) return;
-    battleManager_->EnemyDeadMessage(group);
-}
-
 Camera* World::GetCamera(float id)
 {
     return cameraManager_.GetCamera(id);
@@ -230,12 +222,6 @@ void World::AddCamera(Camera* camera)
 void World::AddCameraController(CameraController* controller)
 {
     cameraManager_.AddController(controller);
-}
-
-void World::AddBattleManager(BattleManager* battleManager)
-{
-    if (battleManager_) return;
-    battleManager_ = battleManager;
 }
 
 void World::SetTimeScale(TimeScale timeScale)

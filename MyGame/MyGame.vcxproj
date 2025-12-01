@@ -142,6 +142,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\UI\BossUI.cpp" />
+    <ClCompile Include="Src\UI\ResultUI.cpp" />
+    <ClCompile Include="Src\UI\ButtonList\Button.cpp" />
+    <ClCompile Include="Src\UI\ButtonList\ButtonSlider.cpp" />
+    <ClCompile Include="Src\UI\ButtonList\HorizontalButtonList.cpp" />
+    <ClCompile Include="Src\UI\ButtonList\SelectButton.cpp" />
+    <ClCompile Include="Src\UI\ButtonList\VerticalButtonList.cpp" />
+    <ClCompile Include="Src\UI\SoundMenu.cpp" />
     <ClCompile Include="Src\Actor\Charactor\Player\State\PlayerGuardBreak.cpp" />
     <ClCompile Include="Src\Actor\Charactor\Enemy\Boss\State\BossIntro.cpp" />
     <ClCompile Include="Src\GameSystem\Event\BossBattleStartEvent.cpp" />
@@ -214,6 +222,14 @@
     <ClCompile Include="Src\GameSystem\Event\TimeLine\TimeLine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\UI\BossUI.h" />
+    <ClInclude Include="Src\UI\ResultUI.h" />
+    <ClInclude Include="Src\UI\ButtonList\Button.h" />
+    <ClInclude Include="Src\UI\ButtonList\ButtonSlider.h" />
+    <ClInclude Include="Src\UI\ButtonList\HorizontalButtonList.h" />
+    <ClInclude Include="Src\UI\ButtonList\SelectButton.h" />
+    <ClInclude Include="Src\UI\ButtonList\VerticalButtonList.h" />
+    <ClInclude Include="Src\UI\SoundMenu.h" />
     <ClInclude Include="Src\Actor\Charactor\Player\State\PlayerGuardBreak.h" />
     <ClInclude Include="Src\Actor\Charactor\Enemy\Boss\State\BossIntro.h" />
     <ClInclude Include="Src\GameSystem\Event\BossBattleStartEvent.h" />

@@ -33,7 +33,7 @@ void OpenDoorEvent::Update(float deltaTime)
         int velocity = 0;
         if (i == 0) velocity = 1;
         else velocity = -1;
-        doors_[i]->Transform().rotate({0,rotateSpeed_ * velocity,0});
+        doors_[i]->Transform().rotate({0,rotateSpeed_ * velocity * deltaTime,0});
     }
     if (!world_->GetTimeLine().IsRunning()) {
         EndEvent();

@@ -28,9 +28,12 @@ void EnemyUI::Update(float deltaTime)
     float health = enemy_->GetCurrentHealth() / enemy_->GetMaxHealth();
     healthGauge_->FillAmount(health);
     GSvector3 gaugePos = enemy_->Transform().position() + GSvector3{ 0,2,0 };
-    if(isScreenPos) healthGauge_->Transform(&gaugePos);
-    if (healthGauge_->IsbehindCamera()) healthGauge_->Enable(false);
-    else healthGauge_->Enable(true);
+    //スクリーン描画をするか
+    if (isScreenPos_) {
+        healthGauge_->Transform(&gaugePos);
+        if (healthGauge_->IsbehindCamera()) healthGauge_->Enable(false);
+        else healthGauge_->Enable(true);
+    }
 }
 
 void EnemyUI::Draw() const

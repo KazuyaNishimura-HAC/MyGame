@@ -14,6 +14,6 @@ private:
     IWorld* world_{ nullptr };
     HorizontalGauge* healthGauge_{ nullptr };
     Enemy* enemy_{ nullptr };
-    bool isScreenPos{ true };
+    bool isScreenPos_{ true };
 };
 #endif

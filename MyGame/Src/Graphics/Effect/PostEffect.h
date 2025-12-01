@@ -14,7 +14,7 @@ public:
 	void Dissolve(GSuint n, GSuint m);
 	void MargeShader(GSuint n, GSuint m);
     void GaussianBlur(GSuint n);
-    void IsParryBlur(bool flg);
+    void IsBlur(bool blur);
     void Clear();
     void Debug();
 private:
@@ -64,7 +64,7 @@ private:
     //ブラーの強さ
     float blurIntencity_{ 1.0f };
 
-    bool isParryBlur_{ false };
+    bool isBlur_{ false };
 };
 
 #endif

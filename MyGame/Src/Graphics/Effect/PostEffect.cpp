@@ -124,13 +124,7 @@ void PostEffect::MargeShader(GSuint n, GSuint m)
 
 void PostEffect::GaussianBlur(GSuint n)
 {
-    if (!isParryBlur_) return;
-    blurIntencity_ -= 1.0f / 60.0f;
-    if (blurIntencity_ < 0.0f) {
-        blurIntencity_ = 1.0f;
-        isParryBlur_ = false;
-        return;
-    }
+    if (!isBlur_) return;
     // ブラーに使う解像度（必要なら調整）
     GSvector2 size = GSvector2{ width_, height_} / blurIntencity_;
 
@@ -142,8 +136,9 @@ void PostEffect::GaussianBlur(GSuint n)
     RenderTexture::DrawRender(Rt::BlurV1);
 }
 
-void PostEffect::IsParryBlur(bool flg)
+void PostEffect::IsBlur(bool flg)
 {
+    isBlur_ = flg;
 }
 
 void PostEffect::Clear()
@@ -169,7 +164,7 @@ void PostEffect::Debug()
     ImGui::Begin("PostEffect");
     ImGui::InputFloat("BloomIntencity",&bloomIntencity_);
     ImGui::InputFloat("BlurIntencity", &blurIntencity_);
-    ImGui::Checkbox("IsBlur", &isParryBlur_);
+    ImGui::Checkbox("IsBlur", &isBlur_);
     ImGui::End();
 }
 

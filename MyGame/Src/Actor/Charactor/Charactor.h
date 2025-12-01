@@ -7,6 +7,7 @@
 #include "AttackCollider.h"
 
 class AttackCollider;
+class BattleManager;
 
 struct Status {
     Status(float maxHP, float atk) :maxHP{ maxHP }, hp{ maxHP }, atk{ atk } {};
@@ -46,21 +47,32 @@ public:
 	float GetMaxHealth();
 
 	//====================各状態フラグ====================
-	void SetAttack(bool isAttack);
-	bool IsAttack();
-	void SetInvincible(bool isInvincible);
-	bool IsInvincible();
+    void SetVisible(bool visible);
+    bool IsVisible() const;
+	void SetAttack(bool attack);
+	bool IsAttack() const;
+	void SetInvincible(bool invincible);
+	bool IsInvincible() const;
+    void SetHit(bool hit);
+    bool IsHit() const;
 	bool IsDying();
 
 	virtual IWorld* World();
 protected:
 	StateMachine states_;
     AttackCollider* attackCollider_{ nullptr };
+    BattleManager* battleManager_{ nullptr };
     //loop再生用エフェクトハンドル
     std::unordered_map <Effect::ID, GSuint> effectHandles_;
 	Status status_{};
+    //描画するか？
+    bool isVisible_{ true };
+    //攻撃するか？
 	bool isAttack_{ false };
-	bool invincible_{ false };
+    //無敵か？
+	bool isInvincible_{ false };
+    //攻撃を食らっているか
+    bool isHit_{ false };
 };
 
 #endif

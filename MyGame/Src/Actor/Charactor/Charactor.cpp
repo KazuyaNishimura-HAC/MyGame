@@ -28,6 +28,7 @@ void Charactor::LateUpdate(float deltaTime)
 
 void Charactor::Draw() const
 {
+    if (!isVisible_) return;
 	Actor::Draw();
 }
 
@@ -50,7 +51,7 @@ void Charactor::OnAttackHit()
 
 void Charactor::HitAttackCollider(const AttackInfo& atkInfo)
 {
-    if (invincible_ || IsDying())return;
+    if (isInvincible_ || IsDying())return;
     TakeDamage(atkInfo.damage);
 }
 
@@ -106,23 +107,41 @@ float Charactor::GetMaxHealth()
 {
 	return status_.maxHP;
 }
-void Charactor::SetAttack(bool isAttack)
+void Charactor::SetVisible(bool visible)
 {
-	isAttack_ = isAttack;
+    isVisible_ = visible;
 }
-bool Charactor::IsAttack()
+bool Charactor::IsVisible() const
+{
+    return isVisible_;
+}
+void Charactor::SetAttack(bool attack)
+{
+	isAttack_ = attack;
+}
+bool Charactor::IsAttack() const
 {
 	return isAttack_;
 }
 
-void Charactor::SetInvincible(bool isInvincible)
+void Charactor::SetInvincible(bool invincible)
 {
-	invincible_ = isInvincible;
+    isInvincible_ = invincible;
 }
 
-bool Charactor::IsInvincible()
+bool Charactor::IsInvincible() const
 {
-	return invincible_;
+	return isInvincible_;
+}
+
+void Charactor::SetHit(bool hit)
+{
+    isHit_ = hit;
+}
+
+bool Charactor::IsHit() const
+{
+    return isHit_;
 }
 
 bool Charactor::IsDying()

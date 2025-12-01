@@ -7,6 +7,8 @@
 #include <gslib.h>
 
 class DebugCamera;
+class SoundMenu;
+class ResultUI;
 
 // プレイ中シーン
 class GamePlayScene : public IScene {
@@ -33,7 +35,9 @@ private:
     void InitialSettings();
     void AddFields();
     World world_;
-
+    SoundMenu* pauseMenu_{ nullptr };
+    ResultUI* resultUI_{ nullptr };
+    BattleManager* battleManager_{ nullptr };
     DebugCamera* debugCamera_{ nullptr };
 };
 

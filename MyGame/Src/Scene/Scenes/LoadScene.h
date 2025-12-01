@@ -35,7 +35,7 @@ private:
     void LoadAssets();
     void LoadEnd();
     int loadCount_{ 0 };
-    int totalAssetsCount_{ 23 };
+    int totalAssetsCount_{ 30 };
     SimpleHorizontalGauge* loadingGauge_;
     GUIManager guiManager_;
     Image* text_{ nullptr };

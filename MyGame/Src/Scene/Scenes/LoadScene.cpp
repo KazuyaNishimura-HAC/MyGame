@@ -75,6 +75,20 @@ void LoadScene::LoadAssets() {
     loadCount_++;
     gsLoadTexture(Texture::MenuSliderFill, "Assets/Texture/Menu/SliderFill.png");
     loadCount_++;
+    gsLoadTexture(Texture::SoundAll, "Assets/Texture/Menu/Sound/All.png");
+    loadCount_++;
+    gsLoadTexture(Texture::SoundBGM, "Assets/Texture/Menu/Sound/BGM.png");
+    loadCount_++;
+    gsLoadTexture(Texture::SoundSE, "Assets/Texture/Menu/Sound/GameSE.png");
+    loadCount_++;
+    gsLoadTexture(Texture::BossMenuSliderBG, "Assets/Texture/GamePlay/BossSliderBG.png");
+    loadCount_++;
+    gsLoadTexture(Texture::BossSliderFill, "Assets/Texture/GamePlay/BossSliderFill.png");
+    loadCount_++;
+    gsLoadTexture(Texture::ResultText, "Assets/Texture/Menu/Result/ScoreText.png");
+    loadCount_++;
+    gsLoadTexture(Texture::ScoreRankS, "Assets/Texture/Menu/Result/RankS.png");
+    loadCount_++;
     // エフェクトファイルの読み込み
     gsLoadEffect(Effect::Slash, "Assets/Effect/Slash02/Slash02_white_gray.efkefc");
     loadCount_++;

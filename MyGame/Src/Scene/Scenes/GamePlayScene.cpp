@@ -11,8 +11,9 @@
 #include "../../GameSystem/Field/Field.h"
 #include "../../GameSystem/BattleSystem/BattleManager.h"
 #include "../../Sound/SoundManager.h"
-//動作確認用
-#include "../../UI/Image.h"
+#include "../../UI/SoundMenu.h"
+#include "../../UI/ResultUI.h"
+
 // 開始
 void GamePlayScene::Start() {
     debugCamera_ = new DebugCamera(&world_);
@@ -23,11 +24,21 @@ void GamePlayScene::Start() {
 // 更新
 void GamePlayScene::Update(float delta_time) {
     world_.Update(delta_time);
-    if (InputSystem::ButtonTrigger(InputSystem::Button::Start)) {
-        if(!world_.IsPause())world_.Message(WorldMessage::GamePause);
-        else world_.Message(WorldMessage::PauseEnd);
+    //ポーズ画面描画処理
+    if (!resultUI_->Enable() && InputSystem::ButtonTrigger(InputSystem::Button::Start)) {
+        if (!world_.IsPause()) {
+            pauseMenu_->BeginSoundSetting();
+            world_.Message(WorldMessage::GamePause);
+        }
+        else {
+            pauseMenu_->EndSoundSetting();
+            world_.Message(WorldMessage::PauseEnd);
+        }
     }
-
+    //ボスが死んでResult画面が出ていないなら描画
+    if (battleManager_->IsBossDead() && !resultUI_->Enable()) {
+        resultUI_->BeginResult();
+    }
     if (world_.IsEnd()) sceneEnd_ = true;
 }
 // 描画
@@ -43,7 +54,7 @@ bool GamePlayScene::IsEnd() const {
 
 // 次のシーンを返す
 SceneIndex GamePlayScene::Next() const {
-    return SceneIndex::ResultScene;
+    return SceneIndex::TitleScene;
 }
 
 // 終了
@@ -51,6 +62,8 @@ void GamePlayScene::End() {
     world_.Clear();
     delete debugCamera_;
     debugCamera_ = nullptr;
+    delete battleManager_;
+    battleManager_ = nullptr;
     sceneEnd_ = false;
 }
 
@@ -72,12 +85,21 @@ void GamePlayScene::Debug(float delta_time)
 
 void GamePlayScene::InitialSettings()
 {
-    //カメラ追加
+    //カメラ生成
     world_.AddCamera(new Camera(&world_));
     //ステージ生成
     AddFields();
-    //バトルマネージャを追加
-    world_.AddBattleManager(new BattleManager(&world_));
+    //バトルマネージャ生成
+    battleManager_ = new BattleManager(&world_);
+    //ポーズ画面
+    pauseMenu_ = new SoundMenu();
+    //描画更新処理はmanager側で行う
+    world_.AddGUI(pauseMenu_);
+
+    //リザルト画面
+    resultUI_ = new ResultUI(&world_);
+    world_.AddGUI(resultUI_);
+
     SoundManager::PlayBGM(Sound::Battle);
 }
 

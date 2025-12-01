@@ -8,6 +8,7 @@
 #include <vector>
 #include <list>
 
+class Player;
 class Actor;
 class Charactor;
 class GUI;
@@ -42,6 +43,7 @@ public:
     virtual CameraController* GetCameraController(CameraController::Priority p) = 0;
     virtual int GetCameraCount() = 0;
 
+    virtual void AddPlayer(Player* player) = 0;
     virtual void AddActor(Actor* actor) = 0;
     virtual void AddCharactor(Charactor* charactor) = 0;
     virtual void AddGUI(GUI* gui) = 0;

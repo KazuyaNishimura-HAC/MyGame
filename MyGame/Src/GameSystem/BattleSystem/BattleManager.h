@@ -12,9 +12,11 @@ public:
     BattleManager(IWorld* world);
     ~BattleManager();
     void Update(float deltaTime);
-    void SpawnEnemis();
     void EnemyDeadMessage(int group);
 private:
+    void SpawnPlayer();
+    void SpawnEnemis();
+    void AddBattleEvent();
     void BeginEvent(int group);
     std::vector<std::vector<Enemy*>> groupEnemis_;
     Boss* boss_{ nullptr };

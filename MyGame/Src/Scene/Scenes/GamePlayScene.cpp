@@ -17,9 +17,6 @@
 void GamePlayScene::Start() {
     debugCamera_ = new DebugCamera(&world_);
     InitialSettings();
-    //バトルマネージャを追加
-    world_.AddBattleManager(new BattleManager(&world_));
-    SoundManager::PlayBGM(Sound::Battle);
     world_.Start();
 }
 
@@ -77,14 +74,11 @@ void GamePlayScene::InitialSettings()
 {
     //カメラ追加
     world_.AddCamera(new Camera(&world_));
-    //Actor生成
-    AddActors();
+    //ステージ生成
     AddFields();
-}
-
-void GamePlayScene::AddActors()
-{
-    world_.AddPlayer(new Player(&world_, {0,0,0}, { 0,90,0 }, Status{ 100, 10 }));
+    //バトルマネージャを追加
+    world_.AddBattleManager(new BattleManager(&world_));
+    SoundManager::PlayBGM(Sound::Battle);
 }
 
 void GamePlayScene::AddFields()

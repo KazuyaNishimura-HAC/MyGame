@@ -31,7 +31,7 @@ public:
     void Clear();
 
     void GameUpdate(float deltaTime);
-    void AddPlayer(Player* player);
+    void AddPlayer(Player* player)override;
     void AddActor(Actor* actor)override;
     void AddCharactor(Charactor* charactor)override;
     void AddField(FieldActor* field)override;

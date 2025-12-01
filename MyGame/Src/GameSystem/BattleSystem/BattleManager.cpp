@@ -6,16 +6,9 @@
 BattleManager::BattleManager(IWorld* world)
 {
     world_ = world;
+    SpawnPlayer();
     SpawnEnemis();
-    openDoorEvents_.push_back(new OpenDoorEvent(world_, InvokeType::Manual,1, { 48,0,0 }));
-    openDoorEvents_.push_back(new OpenDoorEvent(world_, InvokeType::Manual,2, { 94,0,0 }));
-    openDoorEvents_.push_back(new OpenDoorEvent(world_, InvokeType::Manual,3, { 140,0,0 }));
-    for (auto& event : openDoorEvents_) {
-        battleEventCount_++;
-        world_->AddEvent(event);
-    }
-    world_->AddEvent(new BossBattleStartEvent(world, boss_,InvokeType::Collision,{ 165,0,0 },{ 3,10 }));
-    
+    AddBattleEvent();
 }
 
 BattleManager::~BattleManager()
@@ -26,6 +19,11 @@ BattleManager::~BattleManager()
 
 void BattleManager::Update(float deltaTime)
 {
+}
+
+void BattleManager::SpawnPlayer()
+{
+    world_->AddPlayer(new Player(world_, { 0,0,0 }, { 0,90,0 }, Status{ 100, 10 }));
 }
 
 void BattleManager::SpawnEnemis()
@@ -48,12 +46,26 @@ void BattleManager::SpawnEnemis()
     for (int i = 0; i < enemyGroupCount_ + 1;++i) {
         groupCount_[i] = groupEnemis_[i].size();
         for (auto& enemy : groupEnemis_[i]) {
+            //各エネミーにbattleManagerアドレスを渡す
+            enemy->Init(this);
             world_->AddCharactor(enemy);
             //追加したらActorManagerに権利を渡す
             enemy = nullptr;
         }
     }
     groupEnemis_.clear();
+}
+
+void BattleManager::AddBattleEvent()
+{
+    openDoorEvents_.push_back(new OpenDoorEvent(world_, InvokeType::Manual, 1, { 48,0,0 }));
+    openDoorEvents_.push_back(new OpenDoorEvent(world_, InvokeType::Manual, 2, { 94,0,0 }));
+    openDoorEvents_.push_back(new OpenDoorEvent(world_, InvokeType::Manual, 3, { 140,0,0 }));
+    for (auto& event : openDoorEvents_) {
+        battleEventCount_++;
+        world_->AddEvent(event);
+    }
+    world_->AddEvent(new BossBattleStartEvent(world_, boss_, InvokeType::Collision, { 165,0,0 }, { 3,10 }));
 }
 
 void BattleManager::EnemyDeadMessage(int group)

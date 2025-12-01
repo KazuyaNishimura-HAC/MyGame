@@ -31,7 +31,6 @@ public:
 private:
 
     void InitialSettings();
-    void AddActors();
     void AddFields();
     World world_;
 

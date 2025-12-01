@@ -18,22 +18,26 @@ void PlayerAttack::Update(float deltaTime)
 	}
     //攻撃が終わる40フレーム前に攻撃処理が入ったら追加攻撃
 	int time = owner_->GetMesh()->MotionEndTime() - 100.0f;
-	if (InputSystem::ButtonTrigger(InputSystem::Button::B) && time < owner_->GetMesh()->MotionTime()) {
-		switch (attackCount_) {
-			case 0:
-				owner_->ChangeMotion(PlayerMotion::Attack2, false, 1.5f);
-				break;
-			case 1:
-				owner_->ChangeMotion(PlayerMotion::Attack3, false, 1.5f);
-				break;
+    if (time < owner_->GetMesh()->MotionTime()) {
+        if (InputSystem::ButtonTrigger(InputSystem::Button::B)) {
+            switch (attackCount_) {
+            case 0:
+                owner_->ChangeMotion(PlayerMotion::Attack2, false, 1.5f);
+                break;
+            case 1:
+                owner_->ChangeMotion(PlayerMotion::Attack3, false, 1.5f);
+                break;
             case 2:
                 owner_->ChangeMotion(PlayerMotion::Attack4, false, 1.5f);
                 break;
-			default:
-				break;
-		}
-        attackCount_++;
-	}
+            default:
+                break;
+            }
+            attackCount_++;
+        }
+        //ガード入力ならガード
+        if(InputSystem::ButtonIsPress(InputSystem::Button::Y)) owner_->ChangeState(PlayerState::Guard);
+    }
 }
 
 void PlayerAttack::Enter()
@@ -47,6 +51,8 @@ void PlayerAttack::Enter()
 void PlayerAttack::Exit()
 {
 	owner_->SetAttack(false);
+    attackCount_ = 0;
+    combo_ = 0;
 }
 
 void PlayerAttack::ComboAttack()

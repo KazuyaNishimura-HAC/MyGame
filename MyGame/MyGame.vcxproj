@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Actor\Charactor\Player\State\PlayerGuardBreak.cpp" />
     <ClCompile Include="Src\Actor\Charactor\Enemy\Boss\State\BossIntro.cpp" />
     <ClCompile Include="Src\GameSystem\Event\BossBattleStartEvent.cpp" />
     <ClCompile Include="Src\Actor\Charactor\Enemy\Boss\State\BossParried.cpp" />
@@ -213,6 +214,7 @@
     <ClCompile Include="Src\GameSystem\Event\TimeLine\TimeLine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Actor\Charactor\Player\State\PlayerGuardBreak.h" />
     <ClInclude Include="Src\Actor\Charactor\Enemy\Boss\State\BossIntro.h" />
     <ClInclude Include="Src\GameSystem\Event\BossBattleStartEvent.h" />
     <ClInclude Include="Src\Actor\Charactor\Enemy\Boss\State\BossParried.h" />

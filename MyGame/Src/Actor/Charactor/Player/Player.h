@@ -27,31 +27,51 @@ public:
     void OnAttackHit()override;
     void HitAttackCollider(const AttackInfo& info)override;
     void MovePosition(float deltaTime);
+    //============以下プレイヤー状態管理============
     void SetGuard(bool guard);
     bool IsGuard();
+
     void SetParryEnable(bool enable);
-    bool IsParryEnable();
+    bool CanUseParry();
+
     void SetParry(bool parry);
     bool IsParry();
+
     bool IsSkillUsable();
+    void AddSkillPoint(float point);
+    void ReduceSkillPoint(float point);
     void SetSkillPoint(float point);
-    float CurrentSkillPoint();
-    float MaxSkillPoint();
+    float CurrentSkillPoint() const;
+    float MaxSkillPoint() const;
+
+    void AddGuardPoint(float point);
+    void ReduceGuardPoint(float point);
+    void ResetGuardPoint();
+    float CurrentGuardPoint() const;
+    float MaxGuardPoint() const;
     
+    bool IsGuardBroken() const;
 
     void SetTimeScale(float slowTime,float affectTime = 0.0f);
     //スケールがデフォルトの値か？
     bool IsTimeScaleDefault();
     CameraController* GetPlayerCamera();
     void Debug(float deltaTime)override;
+    //攻撃処理
     void TestAttack();
     void UltimateATK();
+    //ガードブレイクUIを表示するか？
+    bool IsDrawGuardBreakUI() const;
+    //ガード回復可能時間をリセット
+    void ResetGuardHealTime();
 private:
     GSvector3 GetCameraDirection();
     float GetCameraHorizontalRadian();
     GStransform& CameraTransform();
     void MoveCamera(float deltaTime);
     void MoveColliders();
+    bool CanHealGuardPoint() const;
+    void RegenerateGuard(float deltaTime);
     
     //カメラコントローラー
     CameraController* camera_{ nullptr };
@@ -69,19 +89,25 @@ private:
     //ガード中か
     bool isGuard_{ false };
     //パリィ可能か
-    bool isParryEnable_{ false };
+    bool canUseParry_{ false };
     //パリィ中か
     bool isParry_{ false };
-    //必殺技を使えるか
-    bool isUltimate{ false };
-
+    //ガード耐久値を回復できるか
+    bool canHealGuard_;
+    //ガード回復できるようになる時間
+    float guardHealTimer_{ 0.0f };
+    const float guardHealDelay_{ 2.0f };
     //パリィ判定
     ParryCollider* parryCollider_{ nullptr };
     //プレイヤーUI表示
     PlayerUI* ui_ = nullptr;
 
     //スキルポイント
-    int skillPt_{ 50 };
-    const int maxSkillPt_{ 100 };
+    float skillPt_{ 50 };
+    const float maxSkillPt_{ 100 };
+
+    //ガード耐久値
+    float guardPt_{ 10 };
+    const float maxGuardPt_{ 10 };
 };
 #endif

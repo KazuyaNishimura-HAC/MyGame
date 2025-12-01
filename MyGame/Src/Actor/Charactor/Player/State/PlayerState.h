@@ -16,6 +16,7 @@ public:
 		Skill,
 		Ultimate,
         Guard,
+        GuardBreak,
         Parry,
 		Dead
 	};

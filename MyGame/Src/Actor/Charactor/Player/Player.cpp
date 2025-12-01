@@ -16,6 +16,7 @@
 #include "State/PlayerAttack.h"
 #include "State/PlayerUltimateSkill.h"
 #include "State/PlayerGuard.h"
+#include "State/PlayerGuardBreak.h"
 #include "State/PlayerParry.h"
 
 Player::Player(IWorld* world, const GSvector3& position, const GSvector3& rotate, Status status, GSuint mesh)
@@ -29,6 +30,7 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& rotate
     states_.AddState(PlayerState::Damage, new PlayerDamage(this));
     states_.AddState(PlayerState::Dead, new PlayerDead(this));
     states_.AddState(PlayerState::Guard, new PlayerGuard(this));
+    states_.AddState(PlayerState::GuardBreak, new PlayerGuardBreak(this));
     states_.AddState(PlayerState::Parry, new PlayerParry(this));
     states_.AddState(PlayerState::Attack, new PlayerAttack(this));
     states_.AddState(PlayerState::Ultimate, new PlayerUltimateSkill(this));
@@ -68,6 +70,7 @@ void Player::Update(float deltaTime)
     if (!IsAttack() && !IsParry() && InputSystem::ButtonTrigger(InputSystem::Button::Y)) ChangeState(PlayerState::Guard);
 
     MoveCamera(deltaTime);
+    RegenerateGuard(deltaTime);
     MoveColliders();
 }
 void Player::LateUpdate(float deltaTime)
@@ -88,7 +91,7 @@ void Player::React(Actor& other)
 void Player::OnAttackHit()
 {
     if (IsCurrentState(PlayerState::Ultimate)) return;
-    skillPt_ += 5;
+    AddSkillPoint(5);
 }
 
 void Player::HitAttackCollider(const AttackInfo& info)
@@ -97,7 +100,7 @@ void Player::HitAttackCollider(const AttackInfo& info)
     if (IsInvincible() || IsDying()) return;
     
     //パリィ可能ならパリィ処理
-    if (IsParryEnable()) {
+    if (CanUseParry()) {
         SoundManager::PlaySE(Sound::Parry);
         parryCollider_->IsParry(true);
         ChangeState(PlayerState::Parry);
@@ -110,8 +113,13 @@ void Player::HitAttackCollider(const AttackInfo& info)
         param.handle = gsPlayEffectEx(Effect::GuardHit, nullptr);
         param.position = transform_.position() + GSvector3{ 0,1,0 };
         Effect::SetEffectParam(param);
-        ChangeMotion(PlayerMotion::GuardHit1,false,1,0,0,true);
-        return;
+
+        ReduceGuardPoint(1);
+        if (IsGuardBroken()) ChangeState(PlayerState::GuardBreak);
+        else {
+            ChangeMotion(PlayerMotion::GuardHit1, false, 1, 0, 0, true);
+            return;
+        }
     }
     SoundManager::PlaySE(Sound::Hit);
     //ダメージ処理
@@ -169,12 +177,12 @@ bool Player::IsGuard()
 
 void Player::SetParryEnable(bool enable)
 {
-    isParryEnable_ = enable;
+    canUseParry_ = enable;
 }
 
-bool Player::IsParryEnable()
+bool Player::CanUseParry()
 {
-    return isParryEnable_;
+    return canUseParry_;
 }
 
 void Player::SetParry(bool parry)
@@ -192,20 +200,63 @@ bool Player::IsSkillUsable()
     return skillPt_ >= maxSkillPt_;
 }
 
-void Player::SetSkillPoint(float point)
+void Player::AddSkillPoint(float point)
 {
-    skillPt_ = point;
+    skillPt_ += point;
+    if (skillPt_ > maxSkillPt_) skillPt_ = maxSkillPt_;
 }
 
-float Player::CurrentSkillPoint()
+void Player::ReduceSkillPoint(float point)
 {
-    skillPt_ = CLAMP(skillPt_, 0, maxSkillPt_);
+    skillPt_ -= point;
+    if (skillPt_ < 0.0f) skillPt_ = 0.0f;
+}
+
+void Player::SetSkillPoint(float point)
+{
+    skillPt_ = CLAMP(point, 0, maxSkillPt_);
+}
+
+float Player::CurrentSkillPoint() const
+{
     return skillPt_;
 }
 
-float Player::MaxSkillPoint()
+float Player::MaxSkillPoint() const
 {
     return maxSkillPt_;
+}
+
+void Player::AddGuardPoint(float point)
+{
+    guardPt_ += point;
+    if (guardPt_ > maxGuardPt_) guardPt_ = maxGuardPt_;
+}
+
+void Player::ReduceGuardPoint(float point)
+{
+    guardPt_ -= point;
+    if (guardPt_ < 0.0f) guardPt_ = 0.0f;
+}
+
+void Player::ResetGuardPoint()
+{
+    guardPt_ = maxGuardPt_;
+}
+
+float Player::CurrentGuardPoint() const
+{
+    return guardPt_;
+}
+
+float Player::MaxGuardPoint() const
+{
+    return maxGuardPt_;
+}
+
+bool Player::IsGuardBroken() const
+{
+    return guardPt_ <= 0.0f;
 }
 
 void Player::SetTimeScale(float slowTime, float affectTime)
@@ -255,6 +306,24 @@ void Player::MoveColliders()
     parryCollider_->Transform().position(transform_.position());
 }
 
+bool Player::CanHealGuardPoint() const
+{
+    return guardHealTimer_ >= guardHealDelay_ && guardPt_ < maxGuardPt_;
+}
+
+void Player::RegenerateGuard(float deltaTime)
+{
+    if (IsGuard() || IsAttack()) return;
+    if (CanHealGuardPoint()) {
+        //全回復まで2.5秒
+        float healRate = maxGuardPt_ / 2.5f;
+        AddGuardPoint( healRate * (deltaTime / 60.0f));
+        return;
+    }
+    //タイマー加算
+    guardHealTimer_ += deltaTime / 60.0f;
+}
+
 void Player::TestAttack()
 {
     SoundManager::PlaySE(Sound::Attack);
@@ -267,6 +336,16 @@ void Player::UltimateATK()
     float attack = GetAttackPower() * 3.0f;
     camera_->SetShakeValues(10.0f, 5.0f, 160.0f, 1.0f, 5.0f, { 0.5f,0.5f }, 0.0f);
     SpawnAttackCollider(0.01f, attack);
+}
+
+bool Player::IsDrawGuardBreakUI() const
+{
+    return guardPt_ < maxGuardPt_;
+}
+
+void Player::ResetGuardHealTime()
+{
+    guardHealTimer_ = 0.0f;
 }
 
 //現在のカメラの方向を取得
@@ -294,7 +373,7 @@ void Player::Debug(float deltaTime)
     ImGui::Value("ATK", status_.atk);
     ImGui::Value("isATK", IsAttack());
     ImGui::Value("isGuard", IsGuard());
-    ImGui::Value("isParryEnable", IsParryEnable());
+    ImGui::Value("canUseParry", CanUseParry());
     ImGui::Value("isParrying", IsParry());
     ImGui::Value("isDying", IsDying());
     ImGui::End();

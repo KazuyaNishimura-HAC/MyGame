@@ -11,9 +11,13 @@ public:
     void Update(float deltaTime)override;
     void Draw()const override;
 private:
+    void UpdateHealthGauge();
+    void UpdateSkillGauge();
+    void UpdateGuardGauge();
     IWorld* world_{ nullptr };
     HorizontalGauge* healthGauge_{ nullptr };
     HorizontalGauge* skillGauge_{ nullptr };
+    HorizontalGauge* guardBreakGauge_{ nullptr };
     Player* player_{ nullptr };
 };
 #endif

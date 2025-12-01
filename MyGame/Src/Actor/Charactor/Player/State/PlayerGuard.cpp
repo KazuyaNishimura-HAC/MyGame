@@ -10,7 +10,7 @@ void PlayerGuard::Update(float deltaTime)
 {
     parryTimer_ -= deltaTime / 60.0f;
     //パリィ可能時間が切れたら無効化
-    if (owner_->IsParryEnable() && parryTimer_ <= 0.0f) {
+    if (owner_->CanUseParry() && parryTimer_ <= 0.0f) {
         owner_->SetParryEnable(false);
     }
     //万が一違うモーションが流れていたら再度ガードモーションに
@@ -34,5 +34,6 @@ void PlayerGuard::Exit()
 {
     owner_->SetGuard(false);
     owner_->SetParryEnable(false);
+    owner_->ResetGuardHealTime();
 }
 

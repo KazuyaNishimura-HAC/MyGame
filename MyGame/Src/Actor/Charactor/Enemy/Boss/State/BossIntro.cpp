@@ -25,6 +25,7 @@ void BossIntro::Enter()
     owner_->ChangeMotion(BossMotion::Jump, false,0.1f,60.0f);
     owner_->SetIntro(true);
     waitTimer = 2.0f;
+    owner_->SetEnable(true);
 }
 
 void BossIntro::Exit()

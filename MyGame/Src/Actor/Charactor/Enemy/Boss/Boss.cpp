@@ -31,10 +31,10 @@ Boss::Boss(IWorld* world, float groupID, const GSvector3& position, const GSvect
     states_.ChangeState(BossState::Idle);
     collider_ = BoundingSphere(1);
     attackCollider_->SetRadius(1.5f);
-    //エフェクト生成（登録）
-    effectHandles_[Effect::Aura] = gsPlayEffectEx(Effect::Aura, nullptr);
+    
     //攻撃処理
     mesh_->AddEvent(BossMotion::Attack1, 40, [=] {Attack(); });
+    SetVisible(false);
 }
 
 Boss::~Boss()
@@ -58,6 +58,7 @@ void Boss::LateUpdate(float deltaTime)
 
 void Boss::Draw() const
 {
+    if (!IsVisible()) return;
     Enemy::Draw();
     //手につけるモデルとボーンID
     mesh_->WeaponDraw(Model::GreatSword,47);
@@ -115,6 +116,9 @@ void Boss::Debug(float deltaTime)
 
 void Boss::BeginIntro()
 {
+    SetVisible(true);
+    //エフェクト生成（登録）
+    effectHandles_[Effect::Aura] = gsPlayEffectEx(Effect::Aura, nullptr);
     ChangeState(BossState::Intro);
 }
 

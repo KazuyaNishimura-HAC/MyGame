@@ -11,9 +11,13 @@ public:
     void Update(float deltaTime) override;
     void Draw()const override;
 private:
+    void StopBGM();
     void BeginEvent()override;
     void EndEvent()override;
     Boss* boss_{ nullptr };
+    float prevVolume_{ 0.5f };
+    float currentVolume_{ 0.5f };
+    bool bgmReset_{ false };
 };
 
 #endif

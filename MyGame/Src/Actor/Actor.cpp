@@ -14,20 +14,20 @@ Actor::~Actor()
 
 void Actor::Update(float deltaTime)
 {
-    if (!mesh_) return;
+    if (mesh_ == nullptr) return;
     mesh_->Update(deltaTime);
 }
 
 void Actor::LateUpdate(float deltaTime)
 {
-    if (!mesh_) return;
+    if (mesh_ == nullptr) return;
     //現在座標をメッシュに反映
     mesh_->Transform(transform_.localToWorldMatrix());
 }
 
 void Actor::Draw() const
 {
-    if (!mesh_) return;
+    if (mesh_ == nullptr) return;
     mesh_->Draw();
 }
 
@@ -62,7 +62,7 @@ std::string Actor::GetTag()
     return tag_;
 }
 
-bool Actor::GetEnable() const
+bool Actor::IsEnable() const
 {
     return enable_;
 }

@@ -267,7 +267,7 @@ void ActorManager::CharactorListDraw(std::vector<Charactor*> actors, bool isShad
 
 void ActorManager::ActorCollide(Actor& other1, Actor& other2)
 {
-    if (!(other1.GetEnable() && other2.GetEnable()))return;
+    if (!(other1.IsEnable() && other2.IsEnable()))return;
     bool enableCollider = other1.Collider().Enable() && other2.Collider().Enable();
     if (!enableCollider)return;
     float collideDistance = other1.Collider().Radius() + other2.Collider().Radius();

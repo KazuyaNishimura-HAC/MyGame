@@ -34,7 +34,7 @@ public:
     void SetEnable(bool enable);
     std::string GetName();
     std::string GetTag();
-    bool GetEnable()const;
+    bool IsEnable()const;
 
     Actor(const Actor& other) = delete;
     Actor& operator=(const Actor& other) = delete;

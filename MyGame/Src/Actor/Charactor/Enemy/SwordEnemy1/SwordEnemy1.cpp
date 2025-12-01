@@ -16,6 +16,7 @@
 #include "../EnemyState/EnemyDead.h"
 
 #include "../../../../UI/EnemyUI.h"
+#include "../../../../GameSystem/BattleSystem/BattleManager.h"
 
 SwordEnemy1::SwordEnemy1(IWorld* world,float groupID, const GSvector3& position, const GSvector3& rotate, Status status, GSuint mesh)
     :Enemy(world, groupID, position, rotate, status, mesh)
@@ -40,7 +41,7 @@ SwordEnemy1::SwordEnemy1(IWorld* world,float groupID, const GSvector3& position,
 SwordEnemy1::~SwordEnemy1()
 {
     //バトルシステムに通知
-    world_->BattleMessage(groupID_);
+    if(battleManager_ != nullptr) battleManager_->EnemyDeadMessage(groupID_);
     ui_->End();
     ui_ = nullptr;
 }

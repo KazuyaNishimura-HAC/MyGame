@@ -25,6 +25,7 @@ public:
 	virtual void Update(float deltaTime)override;
 	virtual void LateUpdate(float deltaTime)override;
 	virtual void Draw() const override;
+    virtual void Init(BattleManager* manager);
     //ダメージを受ける
 	void TakeDamage(float damage);
     //攻撃判定を有効化

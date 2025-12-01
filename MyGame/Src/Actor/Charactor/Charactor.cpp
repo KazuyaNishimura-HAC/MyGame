@@ -32,6 +32,12 @@ void Charactor::Draw() const
 	Actor::Draw();
 }
 
+void Charactor::Init(BattleManager* manager)
+{
+    if (battleManager_ != nullptr) return;
+    battleManager_ = manager;
+}
+
 void Charactor::TakeDamage(float damage)
 {
 	status_.hp -= damage;

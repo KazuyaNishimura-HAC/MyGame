@@ -9,6 +9,8 @@
 #include "../GameSystem/Field/FieldManager.h"
 #include "../GameSystem/Event/EventManager.h"
 #include "../GameSystem/Camera/CameraManager.h"
+#include "../GameSystem/Vibration/VibrationManager.h"
+
 class GUI;
 class Player;
 class Event;
@@ -72,6 +74,9 @@ public:
 
     bool IsRunningEvent()override;
 
+    // シャドウマップの描画用の関数
+    static void shadow_map_callback(void* param, const GSmatrix4*, const GSmatrix4*);
+
     //コピー禁止
     World(const World& other) = delete;
     World& operator=(const World& other) = delete;
@@ -88,6 +93,7 @@ private:
     FieldManager fieldManager_;
     EventManager eventManager_;
     CameraManager cameraManager_;
+    VibrationManager vibrationManager_;
     //エディター
     TimeLineEditor* timeLineEditor_{ nullptr };
     Time time_;

@@ -26,7 +26,10 @@ enum class WorldMessage
     GameStart,
     GameEnd,
     GamePause,
-    PauseEnd
+    PauseEnd,
+    GUIEnableTrue,
+    GUIEnableFalse,
+    ResultStart
 };
 
 class IWorld

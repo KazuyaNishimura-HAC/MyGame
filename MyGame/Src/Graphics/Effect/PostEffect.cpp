@@ -168,6 +168,12 @@ void PostEffect::Debug()
     ImGui::End();
 }
 
+void PostEffect::SetBloomParam(BloomEffectParam param)
+{
+    bloomIntencity_ = param.intencity;
+    bloomThreshold_ = param.threshold;
+}
+
 void PostEffect::CreateRender()
 {
     // 元シーン用のレンダーターゲットの作成

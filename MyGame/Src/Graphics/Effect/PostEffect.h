@@ -1,6 +1,13 @@
 ﻿#ifndef POSTEFFECT_H_
 #define POSTEFFECT_H_
 #include "../../Screen.h"
+struct BloomEffectParam {
+    // テクセルの閾値
+    float threshold{ 0.01f };
+    // エフェクトの強さ
+    float intencity{ 0.35f };
+};
+
 class PostEffect
 {
 public:
@@ -17,6 +24,7 @@ public:
     void IsBlur(bool blur);
     void Clear();
     void Debug();
+    void SetBloomParam(BloomEffectParam param);
 private:
 	
 	void CreateRender();

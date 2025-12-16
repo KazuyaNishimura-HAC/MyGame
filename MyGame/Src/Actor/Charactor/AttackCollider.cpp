@@ -20,11 +20,11 @@ AttackCollider::~AttackCollider()
 
 }
 
-void AttackCollider::SetAttack(float time, float attack)
+void AttackCollider::SetAttackInfo(float time, float damage)
 {
 	collider_.SetEnable(true);
 	duration_ = time;
-	attackInfo_.damage = attack;
+	attackInfo_.damage = damage;
 }
 
 void AttackCollider::Update(float deltaTime)
@@ -43,16 +43,16 @@ void AttackCollider::Draw() const
 }
 void AttackCollider::React(Actor& other)
 {
-	Charactor* chara = dynamic_cast<Charactor*>(&other);
+	Charactor* reactCharactor = dynamic_cast<Charactor*>(&other);
 	// Charactor以外もしくは攻撃主ならreturn
-	if (!chara || owner_ == chara || owner_->GetTag() == chara->GetTag()) return;
+	if (!reactCharactor || owner_ == reactCharactor || owner_->GetTag() == reactCharactor->GetTag()) return;
     //攻撃者座標・回転を設定
     attackInfo_.hitPos = owner_->Transform().position();
     attackInfo_.hitRot = owner_->Transform().localEulerAngles();
     //攻撃成功通知
     owner_->OnAttackHit();
     //Hit側にも通知
-    chara->HitAttackCollider(attackInfo_);
+    reactCharactor->HitAttackCollider(attackInfo_);
 }
 
 void AttackCollider::SetRadius(float radius)

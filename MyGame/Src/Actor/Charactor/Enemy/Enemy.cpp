@@ -74,6 +74,7 @@ void Enemy::MoveAttackCollide(float forwardValue)
 
 void Enemy::OnParryHit(const GSvector3& position)
 {
+    AddBreakPoint(50);
     ChangeState(EnemyState::Parried);
     Knockback(0.5f,position);
 }
@@ -88,7 +89,48 @@ bool Enemy::IsBattleMode()
     return isBattleMode_;
 }
 
+void Enemy::AddBreakPoint(float point)
+{
+    breakPt_ += point;
+    if (breakPt_ > maxBreakPt_) breakPt_ = maxBreakPt_;
+}
+
+void Enemy::SetBreakPoint(float point)
+{
+    breakPt_ = CLAMP(point,0,maxBreakPt_);
+}
+
+void Enemy::ResetBreakPoint()
+{
+    breakPt_ = 0.0f;
+}
+
+float Enemy::CurrentBreakPoint() const
+{
+    return breakPt_;
+}
+
+void Enemy::SetMaxBreakPoint(float point)
+{
+    maxBreakPt_ = point;
+}
+
+float Enemy::MaxBreakPoint() const
+{
+    return maxBreakPt_;
+}
+
+bool Enemy::IsBroken()
+{
+    return breakPt_ >= maxBreakPt_;
+}
+
 void Enemy::LookAtPlayer()
 {
     transform_.lookAt(player_->Transform().position());
+}
+
+Charactor* Enemy::GetPlayer() const
+{
+    return player_;
 }

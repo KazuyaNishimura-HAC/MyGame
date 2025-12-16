@@ -26,15 +26,30 @@ public:
     virtual void MovePosition(float deltaTime);
     virtual void MoveAttackCollide(float forwardValue = 1.0f);
     virtual void OnParryHit(const GSvector3& position);
-    virtual void SetBattleMode(bool mode);
-    virtual bool IsBattleMode();
-    
+    //戦闘モードに移行するか
+    void SetBattleMode(bool mode);
+    bool IsBattleMode();
+    //ブレイク値設定
+    void AddBreakPoint(float point);
+    void SetBreakPoint(float point);
+    void ResetBreakPoint();
+    float CurrentBreakPoint() const;
+    //最大ブレイク値設定
+    void SetMaxBreakPoint(float point);
+    float MaxBreakPoint() const;
+    //ブレイク可能か
+    bool IsBroken();
+    //プレイヤ方向を向く
     void LookAtPlayer();
+    Charactor* GetPlayer()const;
 protected:
     //ターゲットとなるアクター(Player)を持っておく
     Charactor* player_{ nullptr };
+    //どのフィールドグループに属しているか
     int groupID_{ 0 };
     EnemyUI* ui_{ nullptr };
     bool isBattleMode_{ false };
+    float breakPt_{ 0 };
+    float maxBreakPt_{ 100.0f };
 };
 #endif

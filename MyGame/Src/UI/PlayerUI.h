@@ -3,6 +3,8 @@
 #include "GUI.h"
 class HorizontalGauge;
 class Player;
+class Image;
+class ValueText;
 
 class PlayerUI : public GUI{
 public:
@@ -18,6 +20,9 @@ private:
     HorizontalGauge* healthGauge_{ nullptr };
     HorizontalGauge* skillGauge_{ nullptr };
     HorizontalGauge* guardBreakGauge_{ nullptr };
+    Image* ultIcon_{ nullptr };
+    ValueText* comboText_{ nullptr };
+    Image* hitText_{ nullptr };
     Player* player_{ nullptr };
 };
 #endif

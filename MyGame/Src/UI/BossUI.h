@@ -13,6 +13,7 @@ public:
 private:
     IWorld* world_{ nullptr };
     HorizontalGauge* healthGauge_{ nullptr };
+    HorizontalGauge* breakGauge_{ nullptr };
     Boss* boss_{ nullptr };
 };
 #endif

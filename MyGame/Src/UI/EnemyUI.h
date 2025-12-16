@@ -13,7 +13,9 @@ public:
 private:
     IWorld* world_{ nullptr };
     HorizontalGauge* healthGauge_{ nullptr };
+    HorizontalGauge* breakGauge_{ nullptr };
     Enemy* enemy_{ nullptr };
+    GSvector2 breakGaugeOffset_{ 15,6 };
     bool isScreenPos_{ true };
 };
 #endif

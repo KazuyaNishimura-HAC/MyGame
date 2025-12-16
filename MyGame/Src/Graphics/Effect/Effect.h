@@ -35,16 +35,26 @@ public:
     //座標を指定して再生
     static void SetEffectParam(const EffectParam& param) {
         GSmatrix4 matrix = GSmatrix4::TRS(param.position, GSquaternion::euler(param.rotation), param.scale);
-        gsSetEffectMatrix(param.handle, &matrix);
-        gsSetEffectSpeed(param.handle, param.speed);
-        gsSetEffectColor(param.handle, &param.color);
+        GSuint handle = gsPlayEffectEx(param.handle, nullptr);
+        gsSetEffectMatrix(handle, &matrix);
+        gsSetEffectSpeed(handle, param.speed);
+        gsSetEffectColor(handle, &param.color);
     };
     //ローカル追従
     static void SetEffectParam(const EffectParam& param, const GStransform& transform) {
         GSmatrix4 matrix = GSmatrix4::TRS(param.position, GSquaternion::euler(param.rotation), param.scale);
         matrix *= transform.localToWorldMatrix();
-        gsSetEffectMatrix(param.handle,&matrix);
-        gsSetEffectSpeed(param.handle,param.speed);
+        GSuint handle = gsPlayEffectEx(param.handle, nullptr);
+        gsSetEffectMatrix(handle,&matrix);
+        gsSetEffectSpeed(handle,param.speed);
+        gsSetEffectColor(handle, &param.color);
+    };
+
+    static void LoopEffectParam(const EffectParam& param, const GStransform& transform) {
+        GSmatrix4 matrix = GSmatrix4::TRS(param.position, GSquaternion::euler(param.rotation), param.scale);
+        matrix *= transform.localToWorldMatrix();
+        gsSetEffectMatrix(param.handle, &matrix);
+        gsSetEffectSpeed(param.handle, param.speed);
         gsSetEffectColor(param.handle, &param.color);
     };
 

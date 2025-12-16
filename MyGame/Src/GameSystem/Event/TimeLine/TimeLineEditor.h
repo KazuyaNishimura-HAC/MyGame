@@ -56,7 +56,7 @@ private:
 	float timeFillScale_ = 2.5f;
 	float timeFillOffset_ = 0.0f;
 	//タイムライン最大時間
-	float eventTime_{ 5.0f };
+	float eventTime_{ 0.0f };
 	//ImGui描画領域
 	ImVec2 canvasPos;
 	ImVec2 canvasSize;

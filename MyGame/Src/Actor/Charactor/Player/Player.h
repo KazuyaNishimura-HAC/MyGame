@@ -4,10 +4,12 @@
 #include <vector>
 #include <GStransform.h>
 #include "../Charactor.h"
+#include "../../../GameSystem/BattleSystem/BattleManager.h"
 class GUI;
 class PlayerUI;
 class CameraController;
 class ParryCollider;
+class EnemyDetectionCollider;
 class Player : public Charactor
 {
 public:
@@ -27,6 +29,7 @@ public:
     void OnAttackHit()override;
     void HitAttackCollider(const AttackInfo& info)override;
     void MovePosition(float deltaTime);
+    void MoveCamera(float deltaTime);
     //============以下プレイヤー状態管理============
     void SetGuard(bool guard);
     bool IsGuard();
@@ -52,23 +55,41 @@ public:
     
     bool IsGuardBroken() const;
 
+    void SetEnemyNearby(bool flg);
+    bool IsEnemyNearby() const;
+
     void SetTimeScale(float slowTime,float affectTime = 0.0f);
     //スケールがデフォルトの値か？
     bool IsTimeScaleDefault();
     CameraController* GetPlayerCamera();
     void Debug(float deltaTime)override;
     //攻撃処理
-    void TestAttack();
+    void NormalAttack();
     void UltimateATK();
     //ガードブレイクUIを表示するか？
     bool IsDrawGuardBreakUI() const;
     //ガード回復可能時間をリセット
     void ResetGuardHealTime();
+    //攻撃時の前進移動
+    void AttackMove(float deltaTime);
+    //今向いている方向に前進
+    void MoveForward(float value);
+    //入力の方向取得
+    GSvector3 GetInputDirection() const;
+    //一番近くの敵座標を設定
+    void SetNearbyEnemyPos(GSvector3 position);
+    //一番近い敵との距離
+    float NearstEnemyDist() const;
+    //瞬間的に向く方向を決める
+    void UpdateDirection();
+    //コンボ数取得
+    int GetCurrentCombo() const;
+    int GetMaxCombo() const;
+    void ResetCombo();
 private:
-    GSvector3 GetCameraDirection();
+    GSvector3 GetCameraDirection() const;
     float GetCameraHorizontalRadian();
-    GStransform& CameraTransform();
-    void MoveCamera(float deltaTime);
+    GStransform& CameraTransform() const;
     void MoveColliders();
     bool CanHealGuardPoint() const;
     void RegenerateGuard(float deltaTime);
@@ -84,8 +105,10 @@ private:
     GSvector3 cameraFocusOffset_{ 0,1.5f,0 };
     //注視点までの距離
     float cameraDepth_{ 5.5f };
+    //カメラの回転速度
+    float cameraRotateSpeed_{ 3.0f };
     //以下プレイヤー動作値
-    float moveSpeed_{ 1.5f };
+    float moveSpeed_{ 0.15f };
     //ガード中か
     bool isGuard_{ false };
     //パリィ可能か
@@ -93,7 +116,7 @@ private:
     //パリィ中か
     bool isParry_{ false };
     //ガード耐久値を回復できるか
-    bool canHealGuard_;
+    bool canHealGuard_{ false };
     //ガード回復できるようになる時間
     float guardHealTimer_{ 0.0f };
     const float guardHealDelay_{ 2.0f };
@@ -109,5 +132,20 @@ private:
     //ガード耐久値
     float guardPt_{ 10 };
     const float maxGuardPt_{ 10 };
+
+    //周辺に敵がいるか
+    bool isEnemyNearby_{ false };
+    //範囲内で一番近い敵の座標
+    GSvector3 nearbyEnemyPos_{ 0,0,0 };
+    GSvector3 forwardPosition_{ 0,0,0 };
+    //標的検知コライダー
+    EnemyDetectionCollider* detectionCollider_;
+
+    //コンボ数
+    int combo_{ 0 };
+    //最大コンボ数
+    int maxCombo_{ 0 };
+
+    ResultData resultData_{};
 };
 #endif

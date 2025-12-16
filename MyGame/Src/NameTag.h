@@ -36,6 +36,7 @@ namespace NameTag {
 		static constexpr const char* PlayerATKCollider = "PlayerATKCollider";
 		static constexpr const char* EnemyATKCollider = "EnemyATKCollider";
         static constexpr const char* ParryCollider = "ParryCollider";
+        static constexpr const char* DetectionCollider = "DetectionCollider";
 	};
 	struct PostEffect {
 		static constexpr const char* Bloom = "Bloom";

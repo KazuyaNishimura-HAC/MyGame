@@ -7,6 +7,7 @@
 #include "../AttackCollider.h"
 #include "../../../UI/PlayerUI.h"
 #include "ParryCollider.h"
+#include "EnemyDetectionCollider.h"
 #include "PlayerMotion.h"
 //ステートヘッダー
 #include "State/PlayerIdle.h"
@@ -42,39 +43,64 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& rotate
     camera_ = new CameraController(CameraController::Player);
     world_->AddCameraController(camera_);
     camera_->SetSmooth(true);
+    //各コライダー生成
     attackCollider_ = new AttackCollider(this,1,{},colliderOffset_);
     world_->AddActor(attackCollider_);
     parryCollider_ = new ParryCollider(this,2.5f,{}, colliderOffset_);
     world_->AddActor(parryCollider_);
+    detectionCollider_ = new EnemyDetectionCollider(this, 4.0f, {}, colliderOffset_);
+    world_->AddActor(detectionCollider_);
+    //専用UI生成
     ui_ = new PlayerUI(world,this);
     world_->AddGUI(ui_);
+
+    //エフェクトバグ回避用
+    EffectParam param;
+    param.handle = Effect::GuardHit;
+    param.position = transform_.position() + GSvector3{ 0,1,0 };
+    Effect::SetEffectParam(param);
 }
 Player::~Player()
 {
-
+    //プレイヤーが死んだ事を伝える
+    if (battleManager_ != nullptr) {
+        battleManager_->PlayerDeadMessage();
+    }
+    ui_->End();
+    ui_ = nullptr;
+    resultData_.playerDead = true;
+    battleManager_->SetResultData(resultData_);
 }
 
 void Player::Update(float deltaTime)
 {
     Charactor::Update(deltaTime);
-    if (battleManager_->IsBossDead()) {
-        ui_->Enable(false);
-    }
-    //死んでいるなら更新を止める
-    if (IsDying() || world_->IsRunningEvent()) return;
-    if (InputSystem::ButtonTrigger(InputSystem::Button::B)) {
-        if (!IsAttack() && !IsParry() && !IsCurrentState(PlayerState::Damage)) {
-            states_.ChangeState(PlayerState::Attack);
-        }
+    if (IsAttack()) {
+        AttackMove(deltaTime);
     }
     
-    if (!IsParry() && IsSkillUsable() && InputSystem::ButtonTrigger(InputSystem::Button::A)) {
-        states_.ChangeState(PlayerState::Ultimate);
+    resultData_.maxCombo = maxCombo_;
+    battleManager_->SetResultData(resultData_);
+    //死んでいるなら更新を止める
+    if (IsDying()) return;
+    //イベント中は入力処理を止める
+    if (!world_->IsRunningEvent()) {
+        if (InputSystem::ButtonTrigger(InputSystem::Button::B)) {
+            //攻撃処理
+            if (!IsAttack() && !IsParry() && !IsCurrentState(PlayerState::Damage)) {
+                ChangeState(PlayerState::Attack);
+                UpdateDirection();
+                if (IsEnemyNearby()) MoveForward(NearstEnemyDist() - 1.5f);
+                MoveForward(2);
+            }
+        }
+
+        if (!IsParry() && IsSkillUsable() && InputSystem::RightTriggerWeight() == 1.0f) {
+            ChangeState(PlayerState::Ultimate);
+        }
+        if (!IsAttack() && !IsParry() && InputSystem::ButtonTrigger(InputSystem::Button::LShoulder)) ChangeState(PlayerState::Guard);
+        MoveCamera(deltaTime);
     }
-
-    if (!IsAttack() && !IsParry() && InputSystem::ButtonTrigger(InputSystem::Button::Y)) ChangeState(PlayerState::Guard);
-
-    MoveCamera(deltaTime);
     RegenerateGuard(deltaTime);
     MoveColliders();
 }
@@ -95,6 +121,11 @@ void Player::React(Actor& other)
 
 void Player::OnAttackHit()
 {
+    //コンボ加算
+    combo_++;
+    if (maxCombo_ < combo_) maxCombo_ = combo_;
+
+    //必殺技はゲージをためない
     if (IsCurrentState(PlayerState::Ultimate)) return;
     AddSkillPoint(5);
 }
@@ -109,17 +140,20 @@ void Player::HitAttackCollider(const AttackInfo& info)
         camera_->SetShakeValues(30.0f, 5.0f, 160.0f, 1.0f, 5.0f, { 0.5f,0.5f }, 0.0f);
         SoundManager::PlaySE(Sound::Parry);
         parryCollider_->IsParry(true);
+        //攻撃方向に身体を向ける
+        transform_.lookAt(info.hitPos);
         ChangeState(PlayerState::Parry);
+        resultData_.parryCount += 1;
         return;
     }
     //ガード処理
     if (IsCurrentState(PlayerState::Guard)) {
         SoundManager::PlaySE(Sound::Guard);
         EffectParam param;
-        param.handle = gsPlayEffectEx(Effect::GuardHit, nullptr);
+        param.handle = Effect::GuardHit;
         param.position = transform_.position() + GSvector3{ 0,1,0 };
         Effect::SetEffectParam(param);
-
+        //耐久値を減らす
         ReduceGuardPoint(1);
         if (IsGuardBroken()) {
             ChangeState(PlayerState::GuardBreak);
@@ -131,6 +165,8 @@ void Player::HitAttackCollider(const AttackInfo& info)
         }
     }
     SoundManager::PlaySE(Sound::Hit);
+    SetHitReactTime();
+    ResetCombo();
     //ダメージ処理
     TakeDamage(info.damage);
     if (IsDying()) ChangeState(PlayerState::Dead);
@@ -141,22 +177,13 @@ void Player::MovePosition(float deltaTime)
 {
     //イベント処理中はコントローラー移動をしない
     if (world_->IsRunningEvent()) return;
-    GSvector2 input = InputSystem::LeftStick() * 0.1f * deltaTime;
-    GSvector3 forward = CameraTransform().forward();
-    GSvector3 right = CameraTransform().right();
-    // Y成分は無視してXZ平面に投影
-    forward.y = 0;
-    right.y = 0;
-    forward.normalize();
-    right.normalize();
-
+    GSvector2 input = InputSystem::LeftStick() * deltaTime;
     // 入力をカメラ方向に変換
-    GSvector3 moveDirection = (forward * input.y) + (right * input.x);
-    moveDirection.normalize();
+    GSvector3 moveDirection = GetInputDirection();
     //入力rawを移動の強さにする
     //float magnitude = input.magnitude();
 
-    GSvector3 moveVector = moveDirection * 0.1f * moveSpeed_ * deltaTime;
+    GSvector3 moveVector = moveDirection * moveSpeed_ * deltaTime;
 
     //プレイヤーを滑らかに回転
     if (input != GSvector2::zero())
@@ -172,6 +199,32 @@ void Player::MovePosition(float deltaTime)
     // 平行移動する（ワールド基準）
     transform_.translate(moveVector, GStransform::Space::World);
 }
+
+
+void Player::MoveCamera(float deltaTime)
+{
+    float yaw = 0, pitch = 0;
+    yaw = InputSystem::RightStick().x * cameraRotateSpeed_ * deltaTime;
+    pitch = InputSystem::RightStick().y * cameraRotateSpeed_ * deltaTime;
+    cameraRotation_.y -= yaw;
+    cameraRotation_.x -= pitch;
+    //上下移動の限界値
+    cameraRotation_.x = CLAMP(cameraRotation_.x, -10.0f, 45.0f);
+
+    float yawRad = DEG_TO_RAD(cameraRotation_.y);
+    float pitchRad = DEG_TO_RAD(cameraRotation_.x);
+
+    GSvector3 offset;
+    offset.x = cos(pitchRad) * sin(yawRad);
+    offset.y = sin(pitchRad);
+    offset.z = cos(pitchRad) * cos(yawRad);
+
+    GSvector3 cameraPos = transform_.position() + cameraOffset_ + (offset * cameraDepth_);
+    GSvector3 target = transform_.position() + cameraFocusOffset_;
+
+    camera_->SetView(cameraPos, target);
+}
+
 
 void Player::SetGuard(bool guard)
 {
@@ -267,6 +320,16 @@ bool Player::IsGuardBroken() const
     return guardPt_ <= 0.0f;
 }
 
+void Player::SetEnemyNearby(bool flg)
+{
+    isEnemyNearby_ = flg;
+}
+
+bool Player::IsEnemyNearby() const
+{
+    return isEnemyNearby_;
+}
+
 void Player::SetTimeScale(float slowTime, float affectTime)
 {
     world_->SetTimeScale(TimeScale{ slowTime,affectTime });
@@ -282,29 +345,6 @@ CameraController* Player::GetPlayerCamera()
     return camera_;
 }
 
-void Player::MoveCamera(float deltaTime)
-{
-    float yaw = 0, pitch = 0;
-    yaw = InputSystem::RightStick().x  * 3 * deltaTime;
-    pitch = InputSystem::RightStick().y * 3 * deltaTime;
-    cameraRotation_.y -= yaw;
-    cameraRotation_.x -= pitch;
-    cameraRotation_.x = CLAMP(cameraRotation_.x, 0.0f, 30.0f);
-
-    float yawRad = DEG_TO_RAD(cameraRotation_.y);
-    float pitchRad = DEG_TO_RAD(cameraRotation_.x);
-
-    GSvector3 offset;
-    offset.x = cos(pitchRad) * sin(yawRad);
-    offset.y = sin(pitchRad);
-    offset.z = cos(pitchRad) * cos(yawRad);
-
-    GSvector3 cameraPos = transform_.position() + cameraOffset_ + (offset * cameraDepth_);
-    GSvector3 target = transform_.position() + cameraFocusOffset_;
-    
-    camera_->SetView(cameraPos,target);
-}
-
 void Player::MoveColliders()
 {
     GSvector3 forward = transform_.forward() * 1.0f;
@@ -312,6 +352,9 @@ void Player::MoveColliders()
     attackCollider_->Transform().position(transform_.position() + forward);
     //パリィ専用判定を追従
     parryCollider_->Transform().position(transform_.position());
+    //敵検知判定を追従
+    detectionCollider_->Transform().position(transform_.position());
+
 }
 
 bool Player::CanHealGuardPoint() const
@@ -332,11 +375,12 @@ void Player::RegenerateGuard(float deltaTime)
     guardHealTimer_ += deltaTime / 60.0f;
 }
 
-void Player::TestAttack()
+void Player::NormalAttack()
 {
     SoundManager::PlaySE(Sound::Attack);
     camera_->SetShakeValues(10.0f, 5.0f, 160.0f, 1.0f, 5.0f, { 0.25f,0.25f }, 0.0f);
     SpawnAttackCollider(0.01f, GetAttackPower());
+    resultData_.totalDamage += GetAttackPower();
 }
 
 void Player::UltimateATK()
@@ -344,6 +388,7 @@ void Player::UltimateATK()
     float attack = GetAttackPower() * 3.0f;
     camera_->SetShakeValues(10.0f, 5.0f, 160.0f, 1.0f, 5.0f, { 0.5f,0.5f }, 0.0f);
     SpawnAttackCollider(0.01f, attack);
+    resultData_.totalDamage += attack;
 }
 
 bool Player::IsDrawGuardBreakUI() const
@@ -356,18 +401,93 @@ void Player::ResetGuardHealTime()
     guardHealTimer_ = 0.0f;
 }
 
+void Player::AttackMove(float deltaTime)
+{
+    float smoothTime = 5.0f;
+    float maxSpeed = 100.0f ;
+    GSvector3 pos = GSvector3::smoothDamp(transform_.position(), forwardPosition_, velocity_, smoothTime, maxSpeed, deltaTime);
+    transform_.position(pos);
+}
+
+void Player::MoveForward(float value)
+{
+    forwardPosition_ = transform_.position() + (transform_.forward() * value);
+}
+
+GSvector3 Player::GetInputDirection() const
+{
+    GSvector2 input = InputSystem::LeftStick() * world_->DeltaTime();
+    GSvector3 forwards = CameraTransform().forward();
+    GSvector3 right = CameraTransform().right();
+    // Y成分は無視してXZ平面に投影
+    forwards.y = 0;
+    right.y = 0;
+    forwards.normalize();
+    right.normalize();
+
+    // 入力をカメラ方向に変換
+    GSvector3 moveDirection = (forwards * input.y) + (right * input.x);
+    moveDirection.normalize();
+
+    //入力がないなら0を返す
+    if (input == GSvector2::zero()) return GSvector3::zero();
+
+    return moveDirection;
+}
+
+void Player::SetNearbyEnemyPos(GSvector3 position)
+{
+    nearbyEnemyPos_ = position;
+}
+
+float Player::NearstEnemyDist() const
+{
+    return GSvector3::distance(transform_.position(),nearbyEnemyPos_);
+}
+
+void Player::UpdateDirection()
+{
+    //周辺に敵がいるなら敵を見る
+    if (IsEnemyNearby()) {
+        transform_.lookAt(nearbyEnemyPos_);
+    }
+    else {
+        // 入力方向を取得
+        GSvector3 moveDirection = GetInputDirection();
+        //スティック入力があればその方向に向く
+        if (InputSystem::LeftStick() != GSvector2::zero())
+        {
+            transform_.rotation(GSquaternion::lookRotation(moveDirection));
+        }
+    }
+}
+
+int Player::GetCurrentCombo() const
+{
+    return combo_;
+}
+
+int Player::GetMaxCombo() const
+{
+    return maxCombo_;
+}
+
+void Player::ResetCombo()
+{
+    combo_ = 0;
+}
+
 //現在のカメラの方向を取得
-GSvector3 Player::GetCameraDirection()
+GSvector3 Player::GetCameraDirection() const
 {
     return GSvector3(sin(DEG_TO_RAD(cameraRotation_.y)), sin(DEG_TO_RAD(cameraRotation_.x)), cos(DEG_TO_RAD(cameraRotation_.y))).normalized();
 }
-
 float Player::GetCameraHorizontalRadian()
 {
     return DEG_TO_RAD(world_->GetCamera()->Transform().eulerAngles().y);
 }
 
-GStransform& Player::CameraTransform()
+GStransform& Player::CameraTransform() const
 {
     return world_->GetCamera()->Transform();
 }
@@ -378,7 +498,7 @@ void Player::Debug(float deltaTime)
     ImGui::Begin("Playerstatus");
     ImGui::Value("MaxHP", status_.maxHP);
     ImGui::Value("HP", status_.hp);
-    ImGui::Value("ATK", status_.atk);
+    ImGui::Value("ATK", status_.attack);
     ImGui::Value("isATK", IsAttack());
     ImGui::Value("isGuard", IsGuard());
     ImGui::Value("canUseParry", CanUseParry());

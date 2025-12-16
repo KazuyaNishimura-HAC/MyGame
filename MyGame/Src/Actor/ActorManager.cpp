@@ -53,6 +53,11 @@ void ActorManager::Draw() const
     CharactorListDraw(charactors_);
 }
 
+void ActorManager::ShadowDraw() const
+{
+    CharactorListDraw(charactors_);
+}
+
 //プレイヤーとの衝突判定実行
 void ActorManager::Collide()
 {
@@ -168,7 +173,10 @@ Charactor* ActorManager::GetCharactor(std::string name)
     }
     return nullptr;
 }
-
+std::vector<Charactor*> ActorManager::GetCharactorList()
+{
+    return charactors_;
+}
 void ActorManager::Debug(float deltaTime)
 {
     const std::string buttonText = debugCollide_ ? "ON" : "OFF";

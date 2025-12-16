@@ -22,6 +22,7 @@ public:
     void Update(float deltaTime);
     void LateUpdate(float deltaTime);
     void Draw()const;
+    void ShadowDraw()const;
 
     void Collide();
     void Remove();
@@ -36,7 +37,7 @@ public:
     Actor* GetActor(int index);
     Actor* GetActor(std::string name);
     Charactor* GetCharactor(std::string name);
-
+    std::vector<Charactor*> GetCharactorList();
     void Debug(float deltaTime);
     void ColliderView(bool enable);
 private:

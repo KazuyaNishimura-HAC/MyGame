@@ -29,14 +29,23 @@ World::~World()
 void World::Start()
 {
     time_ = Time{};
-    gsLoadTexture(SkyBox::GamePlay, "Assets/SkyBox/gameSkyBox.dds");
+    
     GetTimeLine().SetIWorld(this);
     timeLineEditor_ = new TimeLineEditor(this,GetTimeLine());
     GetTimeLine().LoadFile();
     PostEffect::Instance().Load();
     light_ = new Light(this);
+    // シャドウマップの作成
+    static const GSuint shadow_map_size[] = { 2048, 2048 };
+    gsCreateShadowMap(2, shadow_map_size, GS_TRUE);
+    // シャドウマップを適用する距離(視点からの距離）
+    gsSetShadowMapDistance(60.0f);
+    // カスケードシャドウマップの分割位置を調整（デフォルトは0.5）
+    gsSetShadowMapCascadeLamda(0.7f);
+    // シャドウの濃さを設定(0.0:濃い～1.0:薄い)
+    gsSetShadowMapAttenuation(0.5f);
     // ライトマップの読み込み
-    //gsLoadLightmap(0, "Assets/Light/Lightmap.txt");
+    gsLoadLightmap(0, "Assets/Light/Lightmap.txt");
     // リフレクションプローブの読み込み
     //gsLoadReflectionProbe(0, "Assets/RefProbe/ReflectionProbe.txt");
 }
@@ -46,12 +55,16 @@ void World::Update(float deltaTime)
     time_.Update(deltaTime);
 
     GameUpdate(time_.GameDeltaTime());
-    
+
+    vibrationManager_.Update(deltaTime);
     guiManager_.Update(deltaTime, time_.GameDeltaTime());
     
     //当たり判定
     actorManager_.Collide();
-    if(GetPlayer())fieldManager_.CollideActor(GetPlayer()->Transform());
+    actorManager_.LateUpdate(time_.GameDeltaTime());
+    for (auto& chara : actorManager_.GetCharactorList()) {
+        fieldManager_.CollideActor(chara->Transform());
+    }
     if(GetCamera())fieldManager_.CollideCamera(GetCamera()->Transform(), cameraManager_.GetActiveController()->GetViewTarget());
     eventManager_.Invoke();
 
@@ -65,22 +78,28 @@ void World::Update(float deltaTime)
 
 void World::Draw() const
 {
+    
     for (auto camera : cameraManager_.GetCameras()) {
         RenderTexture::BeginRender(Rt::BaseScene);
         //バッファクリア（色と深度）
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         camera->Draw();
         gsDrawSkyboxCubemap(SkyBox::GamePlay);
+        gsDrawOctree(Model::DefaultMap);
         light_->Draw();
         fieldManager_.Draw(camera);
+        // シャドウマップの描画
+        gsDrawShadowMap(shadow_map_callback, (void*)this);
         actorManager_.Draw();
         eventManager_.Draw();
         gsDrawEffect();
         RenderTexture::EndRender();
         RenderTexture::BindRenderTexture(Rt::BaseScene,0);
-        //PostEffect::Instance().Bloom(Rt::BaseScene, { 1, 1, 1, 1.0f });
+        PostEffect::Instance().SetBloomParam(BloomEffectParam{0.1f,0.2f});
+        PostEffect::Instance().Bloom(Rt::BaseScene, { 1, 1, 1, 1.0f });
         PostEffect::Instance().GaussianBlur(Rt::BaseScene);
         //PostEffect::Instance().Fog(Rt::BaseScene, { 0.1f,0.0f,0.1f,1.0f });
+        //ベースシーンを描画
         RenderTexture::DrawRender(Rt::BaseScene);
     }
     //描画範囲を画面全体にリセット
@@ -119,7 +138,6 @@ void World::GameUpdate(float deltaTime)
     if (time_.IsPause()) return;
     fieldManager_.Update(deltaTime);
     actorManager_.Update(deltaTime);
-    actorManager_.LateUpdate(deltaTime);
     eventManager_.Update(deltaTime);
     gsUpdateEffect(deltaTime);
 }
@@ -278,6 +296,13 @@ bool World::IsRunningEvent()
 {
     return eventManager_.IsRunning();
 }
+// シャドウマップの描画用の関数
+void World::shadow_map_callback(void* param, const GSmatrix4*, const GSmatrix4*)
+{
+    World* self = (World*)param;
+    // シャドウマップにはアクターのみ描画
+    self->actorManager_.ShadowDraw();
+}
 
 void World::Debug(float deltaTime)
 {
@@ -317,6 +342,15 @@ void World::Message(WorldMessage message)
         break;
     case WorldMessage::PauseEnd:
         time_.SetPause(false);
+        break;
+    case WorldMessage::GUIEnableTrue:
+        guiManager_.Enable(true);
+        break;
+    case WorldMessage::GUIEnableFalse:
+        guiManager_.Enable(false);
+        break;
+    case WorldMessage::ResultStart:
+        guiManager_.Enable(false);
         break;
     default:
         break;

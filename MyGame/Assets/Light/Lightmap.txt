@@ -1,26 +1,3 @@
-25
-7 Lightmap@Color0.dds Lightmap@Dir0.dds Lightmap@ShadowMask0.dds
-7 Lightmap@Color1.dds Lightmap@Dir1.dds Lightmap@ShadowMask1.dds
-7 Lightmap@Color2.dds Lightmap@Dir2.dds Lightmap@ShadowMask2.dds
-7 Lightmap@Color3.dds Lightmap@Dir3.dds Lightmap@ShadowMask3.dds
-7 Lightmap@Color4.dds Lightmap@Dir4.dds Lightmap@ShadowMask4.dds
-7 Lightmap@Color5.dds Lightmap@Dir5.dds Lightmap@ShadowMask5.dds
-7 Lightmap@Color6.dds Lightmap@Dir6.dds Lightmap@ShadowMask6.dds
-7 Lightmap@Color7.dds Lightmap@Dir7.dds Lightmap@ShadowMask7.dds
-7 Lightmap@Color8.dds Lightmap@Dir8.dds Lightmap@ShadowMask8.dds
-7 Lightmap@Color9.dds Lightmap@Dir9.dds Lightmap@ShadowMask9.dds
-7 Lightmap@Color10.dds Lightmap@Dir10.dds Lightmap@ShadowMask10.dds
-7 Lightmap@Color11.dds Lightmap@Dir11.dds Lightmap@ShadowMask11.dds
-7 Lightmap@Color12.dds Lightmap@Dir12.dds Lightmap@ShadowMask12.dds
-7 Lightmap@Color13.dds Lightmap@Dir13.dds Lightmap@ShadowMask13.dds
-7 Lightmap@Color14.dds Lightmap@Dir14.dds Lightmap@ShadowMask14.dds
-7 Lightmap@Color15.dds Lightmap@Dir15.dds Lightmap@ShadowMask15.dds
-7 Lightmap@Color16.dds Lightmap@Dir16.dds Lightmap@ShadowMask16.dds
-7 Lightmap@Color17.dds Lightmap@Dir17.dds Lightmap@ShadowMask17.dds
-7 Lightmap@Color18.dds Lightmap@Dir18.dds Lightmap@ShadowMask18.dds
-7 Lightmap@Color19.dds Lightmap@Dir19.dds Lightmap@ShadowMask19.dds
-7 Lightmap@Color20.dds Lightmap@Dir20.dds Lightmap@ShadowMask20.dds
-7 Lightmap@Color21.dds Lightmap@Dir21.dds Lightmap@ShadowMask21.dds
-7 Lightmap@Color22.dds Lightmap@Dir22.dds Lightmap@ShadowMask22.dds
-7 Lightmap@Color23.dds Lightmap@Dir23.dds Lightmap@ShadowMask23.dds
-7 Lightmap@Color24.dds Lightmap@Dir24.dds Lightmap@ShadowMask24.dds
+2
+3 Lightmap@Color0.dds Lightmap@Dir0.dds 
+3 Lightmap@Color1.dds Lightmap@Dir1.dds 

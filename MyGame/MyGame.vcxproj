@@ -142,6 +142,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Actor\Charactor\Enemy\Boss\State\BossJumpAttack.cpp" />
+    <ClCompile Include="Src\Actor\Charactor\Player\EnemyDetectionCollider.cpp" />
+    <ClCompile Include="Src\Actor\Charactor\Enemy\EnemyState\EnemyStun.cpp" />
+    <ClCompile Include="Src\GameSystem\Vibration\VibrationManager.cpp" />
     <ClCompile Include="Src\UI\BossUI.cpp" />
     <ClCompile Include="Src\UI\ResultUI.cpp" />
     <ClCompile Include="Src\UI\ButtonList\Button.cpp" />
@@ -216,12 +220,17 @@
     <ClCompile Include="Src\UI\Image.cpp" />
     <ClCompile Include="Src\UI\PlayerUI.cpp" />
     <ClCompile Include="Src\UI\SimpleHorizontalGauge.cpp" />
+    <ClCompile Include="Src\UI\ValueText.cpp" />
     <ClCompile Include="Src\World\World.cpp" />
     <ClCompile Include="Src\GameSystem\Event\UltimateAnimEvent.cpp" />
     <ClCompile Include="Src\GameSystem\Event\TimeLine\TimeLineEditor.cpp" />
     <ClCompile Include="Src\GameSystem\Event\TimeLine\TimeLine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Actor\Charactor\Enemy\Boss\State\BossJumpAttack.h" />
+    <ClInclude Include="Src\Actor\Charactor\Player\EnemyDetectionCollider.h" />
+    <ClInclude Include="Src\Actor\Charactor\Enemy\EnemyState\EnemyStun.h" />
+    <ClInclude Include="Src\GameSystem\Vibration\VibrationManager.h" />
     <ClInclude Include="Src\UI\BossUI.h" />
     <ClInclude Include="Src\UI\ResultUI.h" />
     <ClInclude Include="Src\UI\ButtonList\Button.h" />
@@ -330,6 +339,7 @@
     <ClInclude Include="Src\UI\PlayerUI.h" />
     <ClInclude Include="Src\UI\SimpleHorizontalGauge.h" />
     <ClInclude Include="Src\UI\Texture.h" />
+    <ClInclude Include="Src\UI\ValueText.h" />
     <ClInclude Include="Src\World\IWorld.h" />
     <ClInclude Include="Src\World\World.h">
       <DeploymentContent>false</DeploymentContent>

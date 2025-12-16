@@ -46,9 +46,9 @@ void BossBattleStartEvent::StopBGM()
 
 void BossBattleStartEvent::BeginEvent()
 {
+    world_->Message(WorldMessage::GUIEnableFalse);
     world_->GetTimeLine().StartTimeLine("BossBattleStart");
     boss_->BeginIntro();
-
     prevVolume_ = SoundManager::GetBGMVolume();
     currentVolume_ = prevVolume_;
     
@@ -56,6 +56,7 @@ void BossBattleStartEvent::BeginEvent()
 
 void BossBattleStartEvent::EndEvent()
 {
+    world_->Message(WorldMessage::GUIEnableTrue);
     SoundManager::PlayBGM(Sound::BossBattle);
     //一度きりで終了（完全削除）
     isEnd_ = true;

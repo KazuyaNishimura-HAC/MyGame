@@ -23,43 +23,37 @@ void UltimateAnimEvent::Update(float deltaTime)
 	intensity -= deltaTime / 120.0f;
 	intensity = CLAMP(intensity,0.0f,1.0f);
 	if (timer_ < 30) {
+        //プレイヤーを敵に近づける
+        player_->UpdateDirection();
+        if (player_->IsEnemyNearby()) player_->MoveForward(player_->NearstEnemyDist() - 1.5f);
+        else player_->MoveForward(2);
+
 		distanceBack = 1.0f;
 		distanceSide = -2.0f;
 		height = 0.3f;
+        camera_->SetShakeValues(50.0f, 5.0f, 160.0f, 1.0f, 20.0f, { 0.1f,0.1f }, 0.0f);
 	}
-	else if (timer_ < 60) {
-		distanceBack = 3.0f;
-		distanceSide = -1.0f;
-		height = 1.5f;
-		intensity = 0.8f;
-	}
-	else if (timer_ < 80) {
-		distanceBack = 3.0f;
-		distanceSide = 1.0f;
-		height = 1.5f;
-	}
-	else if (timer_ < 100) {
-		distanceBack = 3.0f;
-		distanceSide = -1.0f;
-		height = 1.5f;
-	}
-	else if (timer_ < 120) {
-		distanceBack = 3.0f;
-		distanceSide = 1.0f;
-		height = 1.5f;
-		intensity = 0.8f;
-	}
-	else if (timer_ < 170) {
-		distanceBack = 3.0f;
-		distanceSide = -1.0f;
-		height = 1.5f;
-	}
-	else if (timer_ < 180) {
-		distanceBack = 4.5f;
-		distanceSide = 0.0f;
-		height = 1.5f;
-		intensity = 0.8f;
-	}
+    else {
+        distanceBack = 5.0f;
+        height = 3.0f;
+        if (timer_ < 60) {
+            camera_->SetShake(shakeValues);
+        }
+        else if (timer_ < 80) {
+        }
+        else if (timer_ < 100) {
+            camera_->SetShake(shakeValues);
+        }
+        else if (timer_ < 120) {
+        }
+        else if (timer_ < 170) {
+            camera_->SetShake(shakeValues);
+        }
+        else if (timer_ < 180) {
+            
+        }
+    }
+    
 
 	// カメラ位置を計算
 	GSvector3 cameraPos = playerPos + (forward * -distanceBack) + (up * height) + (right * -distanceSide);

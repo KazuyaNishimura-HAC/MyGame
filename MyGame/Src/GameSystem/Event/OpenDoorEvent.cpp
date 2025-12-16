@@ -47,12 +47,14 @@ void OpenDoorEvent::Draw() const
 void OpenDoorEvent::BeginEvent()
 {
     std::string eventName = "OpenDoor" + std::to_string(eventNumber_);
+    world_->Message(WorldMessage::GUIEnableFalse);
     world_->GetTimeLine().StartTimeLine(eventName);
-    
+
 }
 
 void OpenDoorEvent::EndEvent()
 {
+    world_->Message(WorldMessage::GUIEnableTrue);
     SetInvoke(false);
     barrier_->Die();
     //一度きりで終了（完全削除）

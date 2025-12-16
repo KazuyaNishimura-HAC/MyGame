@@ -13,7 +13,6 @@
 #include "../../Sound/SoundManager.h"
 #include "../../UI/SoundMenu.h"
 #include "../../UI/ResultUI.h"
-
 // 開始
 void GamePlayScene::Start() {
     debugCamera_ = new DebugCamera(&world_);
@@ -25,19 +24,21 @@ void GamePlayScene::Start() {
 void GamePlayScene::Update(float delta_time) {
     world_.Update(delta_time);
     //ポーズ画面描画処理
-    if (!resultUI_->Enable() && InputSystem::ButtonTrigger(InputSystem::Button::Start)) {
+    if (!battleManager_->GameEnd() && InputSystem::ButtonTrigger(InputSystem::Button::Start)) {
         if (!world_.IsPause()) {
+            world_.Message(WorldMessage::GUIEnableFalse);
             pauseMenu_->BeginSoundSetting();
             world_.Message(WorldMessage::GamePause);
         }
         else {
+            world_.Message(WorldMessage::GUIEnableTrue);
             pauseMenu_->EndSoundSetting();
             world_.Message(WorldMessage::PauseEnd);
         }
     }
-    //ボスが死んでResult画面が出ていないなら描画
-    if (battleManager_->IsBossDead() && !resultUI_->Enable()) {
-        resultUI_->BeginResult();
+    //戦闘が終わりResult画面が出ていないなら描画
+    if (battleManager_->GameEnd() && !resultUI_->IsResult() && !world_.IsEnd()) {
+        resultUI_->BeginResult(battleManager_->GetResultData());
     }
     if (world_.IsEnd()) sceneEnd_ = true;
 }
@@ -105,7 +106,7 @@ void GamePlayScene::InitialSettings()
 
 void GamePlayScene::AddFields()
 {
-    world_.AddField(new FieldActor({ 0,0,0 }, Model::DefaultMap, Model::MapCollide));
+    //world_.AddField(new FieldActor({ 0,0,0 }, Model::DefaultMap, Model::MapCollide));
     //テスト
     world_.AddField(new Field({ -7,0,0 }, { 1,10,30 }));
     world_.AddField(new Field({ 5,0,6 }, { 30,10,2 }));

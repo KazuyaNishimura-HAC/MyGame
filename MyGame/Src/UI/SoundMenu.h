@@ -21,6 +21,7 @@ private:
     void SoundSettings();
     VerticalButtonList* soundMenu_;
     GUIManager guiManager_;
+    bool isMenuOpen_{ false };
     bool gameEnd_{ false };
 };
 #endif

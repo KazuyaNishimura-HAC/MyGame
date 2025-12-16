@@ -13,14 +13,15 @@ SoundMenu::SoundMenu()
 
 void SoundMenu::Draw()const
 {
-    if (!enable_)return;
+    if (!enable_ || !isMenuOpen_) return;
     guiManager_.Draw();
 }
 
 void SoundMenu::Update(float deltaTime)
 {
-    if (!enable_)return;
+    if (!enable_ || !isMenuOpen_) return;
     guiManager_.Update(deltaTime, deltaTime);
+    
 }
 
 void SoundMenu::SoundSettings()
@@ -31,17 +32,20 @@ void SoundMenu::SoundSettings()
     soundMenu_->AddButton(new ButtonSlider(Texture::SoundSE, [](float v) {SoundManager::SetAllSEVolume(v); }, SoundManager::GetSEAllVolume(), 0.1f, 0, 1));
     guiManager_.AddGUI(soundMenu_);
     enable_ = false;
+    isMenuOpen_ = false;
 }
 
 void SoundMenu::BeginSoundSetting()
 {
     enable_ = true;
+    isMenuOpen_ = true;
     PostEffect::Instance().IsBlur(true);
 }
 
 void SoundMenu::EndSoundSetting()
 {
     enable_ = false;
+    isMenuOpen_ = false;
     PostEffect::Instance().IsBlur(false);
 }
 

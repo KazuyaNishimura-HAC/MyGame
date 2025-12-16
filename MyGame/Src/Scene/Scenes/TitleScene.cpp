@@ -1,11 +1,21 @@
 ﻿#include "TitleScene.h"
 #include "../../GameSystem/InputSystem/InputSystem.h"
 #include "../../UI/Image.h"
+#include "../../Sound/SoundManager.h"
 // 開始
 void TitleScene::Start() {
-	gsLoadTexture(Texture::TitleText, "Assets/Texture/Scene/TitleText.png");
-	text_ = new Image({ 150,50 },Texture::TitleText);
+    gsLoadTexture(Texture::TitleBGImage, "Assets/Texture/Scene/TitleBGImage.png");
+    bgImage_ = new Image({ Screen::HalfWidth,Screen::HalfHeight }, Texture::TitleBGImage);
+    guiManager_.AddGUI(bgImage_);
+	gsLoadTexture(Texture::TitleLogo, "Assets/Texture/Scene/Titlelogo.png");
+	text_ = new Image({ Screen::HalfWidth,Screen::HalfHeight - 300 },Texture::TitleLogo,{0.75f,0.75f});
 	guiManager_.AddGUI(text_);
+    gsLoadTexture(Texture::PressButtonText, "Assets/Texture/TextImage/PressBButtonText.png");
+    buttonText_ = new Image({ Screen::HalfWidth,Screen::ScreenHeight - 200  }, Texture::PressButtonText, { 0.25f,0.25f });
+    guiManager_.AddGUI(buttonText_);
+    
+    gsLoadBGM(Sound::Title, "Assets/Sound/BGM/Title.ogg", TRUE);
+    SoundManager::PlayBGM(Sound::Title);
 }
 
 // 更新
@@ -30,7 +40,7 @@ SceneIndex TitleScene::Next() const {
 
 // 終了
 void TitleScene::End() {
-	gsDeleteTexture(Texture::TitleText);
+	gsDeleteTexture(Texture::TitleLogo);
 	sceneEnd_ = false;
 	guiManager_.Clear();
 }

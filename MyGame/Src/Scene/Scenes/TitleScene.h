@@ -30,6 +30,8 @@ public:
 private:
     GUIManager guiManager_;
     Image* text_{ nullptr };
+    Image* buttonText_{ nullptr };
+    Image* bgImage_{ nullptr };
 };
 
 #endif

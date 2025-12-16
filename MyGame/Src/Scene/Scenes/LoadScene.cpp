@@ -5,16 +5,21 @@
 #include "../../AssetID/Assets.h"
 #include "../../UI/Image.h"
 #include "../../UI/SimpleHorizontalGauge.h"
+#include "../../Sound/SoundManager.h"
 // 開始
 void LoadScene::Start() {
 
-    loadingGauge_ = new SimpleHorizontalGauge({ Screen::HalfWidth,Screen::ScreenHeight - 172 }, { 256,16 });
+    bgImage_ = new Image({ Screen::HalfWidth,Screen::HalfHeight }, Texture::TitleBGImage);
+    guiManager_.AddGUI(bgImage_);
+
+    loadingGauge_ = new SimpleHorizontalGauge({ Screen::ScreenWidth - 200,Screen::ScreenHeight - 172 }, { 256,16 });
     loadingGauge_->FillAmount(0);
     loadCount_ = 0;
     guiManager_.AddGUI(loadingGauge_);
-    gsLoadTexture(Texture::LoadingText, "Assets/Texture/Scene/LoadingText.png");
-    text_ = new Image({ 150,50 }, Texture::LoadingText);
+    gsLoadTexture(Texture::LoadingText, "Assets/Texture/TextImage/LoadingText.png");
+    text_ = new Image({ Screen::ScreenWidth - 200,Screen::ScreenHeight - 250 }, Texture::LoadingText,{0.25f,0.25f});
     guiManager_.AddGUI(text_);
+    
     gslib::Game::run_thread([=] { LoadAssets(); });
     
 }
@@ -47,6 +52,7 @@ SceneIndex LoadScene::Next() const {
 void LoadScene::End() {
     gsDeleteTexture(Texture::LoadingText);
     sceneEnd_ = false;
+    SoundManager::StopBGM();
     guiManager_.Clear();
 }
 
@@ -55,14 +61,16 @@ void LoadScene::Debug(float delta_time)
 }
 
 void LoadScene::LoadAssets() {
-    //メッシュ読み込み
+    //メッシュ読み込み8
+    gsLoadTexture(SkyBox::GamePlay, "Assets/SkyBox/gameSkyBox.dds");
+    loadCount_++;
     gsLoadSkinMesh(Model::Player, "Assets/Model/Charactor/Player/Player.mshb");
     loadCount_++;
     gsLoadSkinMesh(Model::Enemy, "Assets/Model/Charactor/Enemy/Enemy1.mshb");
     loadCount_++;
-    gsLoadMesh(Model::DefaultMap, "Assets/Model/Stage/Stage1.mshb");
+    gsLoadOctree(Model::DefaultMap, "Assets/Model/Stage/Tutorial/TutorialStage.oct");
     loadCount_++;
-    gsLoadMesh(Model::MapCollide, "Assets/Model/Stage/StageCollider.mshb");
+    gsLoadOctree(Model::MapCollide, "Assets/Model/Stage/Tutorial/TutorialStage.oct");
     loadCount_++;
     gsLoadSkinMesh(Model::Boss, "Assets/Model/Charactor/Boss/Boss.mshb");
     loadCount_++;
@@ -70,7 +78,9 @@ void LoadScene::LoadAssets() {
     loadCount_++;
     gsLoadMesh(Model::Door, "Assets/Model/Object/RotateDoor.mshb");
     loadCount_++;
-    //動作チェック用
+    //動作チェック用24
+    gsLoadTexture(Texture::NumberText, "Assets/Texture/TextImage/NumberText.png");
+    loadCount_++;
     gsLoadTexture(Texture::MenuSliderBackGround, "Assets/Texture/Menu/SliderBackGround.png");
     loadCount_++;
     gsLoadTexture(Texture::MenuSliderFill, "Assets/Texture/Menu/SliderFill.png");
@@ -85,11 +95,41 @@ void LoadScene::LoadAssets() {
     loadCount_++;
     gsLoadTexture(Texture::BossSliderFill, "Assets/Texture/GamePlay/BossSliderFill.png");
     loadCount_++;
-    gsLoadTexture(Texture::ResultText, "Assets/Texture/Menu/Result/ScoreText.png");
+
+    gsLoadTexture(Texture::HitText, "Assets/Texture/TextImage/HitText.png");
     loadCount_++;
-    gsLoadTexture(Texture::ScoreRankS, "Assets/Texture/Menu/Result/RankS.png");
+    gsLoadTexture(Texture::ResultText, "Assets/Texture/TextImage/RankText.png");
     loadCount_++;
-    // エフェクトファイルの読み込み
+    gsLoadTexture(Texture::RankText, "Assets/Texture/TextImage/RankText.png");
+    loadCount_++;
+    gsLoadTexture(Texture::RankS, "Assets/Texture/GamePlay/RankS.png");
+    loadCount_++;
+    gsLoadTexture(Texture::RankA, "Assets/Texture/GamePlay/RankA.png");
+    loadCount_++;
+    gsLoadTexture(Texture::RankB, "Assets/Texture/GamePlay/RankB.png");
+    loadCount_++;
+    gsLoadTexture(Texture::RankC, "Assets/Texture/GamePlay/RankC.png");
+    loadCount_++;
+    gsLoadTexture(Texture::MaxComboText, "Assets/Texture/TextImage/MaxComboText.png");
+    loadCount_++;
+    gsLoadTexture(Texture::ParryCountText, "Assets/Texture/TextImage/ParryCountText.png");
+    loadCount_++;
+    gsLoadTexture(Texture::TotalDamageText, "Assets/Texture/TextImage/TotalDamageText.png");
+    loadCount_++;
+
+    gsLoadTexture(Texture::HPGaugeBG, "Assets/Texture/GamePlay/HPGaugeBG.png");
+    loadCount_++;
+    gsLoadTexture(Texture::HPGaugeFill, "Assets/Texture/GamePlay/HPGaugeFill.png");
+    loadCount_++;
+    gsLoadTexture(Texture::SkillGaugeBG, "Assets/Texture/GamePlay/SkillGaugeBG.png");
+    loadCount_++;
+    gsLoadTexture(Texture::SkillGaugeFill, "Assets/Texture/GamePlay/SkillGaugeFill.png");
+    loadCount_++;
+    gsLoadTexture(Texture::UltimateIconBG, "Assets/Texture/GamePlay/UltmateIcon.png");
+    loadCount_++;
+    gsLoadTexture(Texture::UltimateIconFill, "Assets/Texture/GamePlay/UltmateIcon.png");
+    loadCount_++;
+    // エフェクトファイルの読み込み7
     gsLoadEffect(Effect::Slash, "Assets/Effect/Slash02/Slash02_white_gray.efkefc");
     loadCount_++;
     gsLoadEffect(Effect::SkillSlash, "Assets/Effect/Slash01/Slash01.efkefc");
@@ -104,7 +144,7 @@ void LoadScene::LoadAssets() {
     loadCount_++;
     gsLoadEffect(Effect::GroundDust, "Assets/Effect/GroundDust/GroundDustLarge.efkefc");
     loadCount_++;
-    //サウンド
+    //サウンド7
     gsLoadBGM(Sound::Battle, "Assets/Sound/BGM/Battle.ogg", TRUE);
     loadCount_++;
     gsLoadBGM(Sound::BossBattle, "Assets/Sound/BGM/BossBattle.ogg", TRUE);

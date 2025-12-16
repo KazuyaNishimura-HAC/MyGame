@@ -33,12 +33,34 @@ public:
         MenuSliderBackGround,
         MenuSliderFill,
 
-        //Scene
-        TitleText,
+        //Game
+        NumberText,
+        BossMenuSliderBG,
+        BossSliderFill,
+        HPGaugeBG,
+        HPGaugeFill,
+        SkillGaugeBG,
+        SkillGaugeFill,
+        UltimateIconBG,
+        UltimateIconFill,
+        HitText,
+        
+        //Title
+        TitleLogo,
+        PressButtonText,
+        TitleBGImage,
+        //Loading
         LoadingText,
-        ResultText
-
-
+        //Result
+        ResultText,
+        RankText,
+        RankS,
+        RankA,
+        RankB,
+        RankC,
+        MaxComboText,
+        ParryCountText,
+        TotalDamageText,
     };
     static GSvector2 GetSize(int id)
     {
@@ -74,9 +96,29 @@ public:
             {Name::SoundSE,{126,50}},
             {Name::MenuSliderBackGround,{256,42}},
             {Name::MenuSliderFill,{256,42}},
-            {Name::TitleText,{180,67}},
-            {Name::LoadingText,{257,69}},
-            {Name::ResultText,{109,68}}
+            {Name::NumberText,{2240,256}},
+            {Name::BossMenuSliderBG,{256,42}},
+            {Name::BossSliderFill,{256,42}},
+            {Name::HPGaugeBG,{256,42}},
+            {Name::HPGaugeFill,{256,42}},
+            {Name::SkillGaugeBG,{183,20}},
+            {Name::SkillGaugeFill,{183,20}},
+            {Name::UltimateIconBG,{256,256}},
+            {Name::UltimateIconFill,{256,256}},
+            {Name::HitText,{643,397} },
+            {Name::TitleLogo,{2048,512} },
+            {Name::PressButtonText,{2520/*2862*/,397} },
+            {Name::TitleBGImage,{1920,1080} },
+            {Name::LoadingText,{1231,397} },
+            {Name::ResultText,{129,397}},
+            {Name::RankText,{816,397}},
+            {Name::RankS,{1024,1024}},
+            {Name::RankA,{1024,1024}},
+            {Name::RankB,{1024,1024}},
+            {Name::RankC,{1024,1024}},
+            {Name::MaxComboText,{1628,397}},
+            {Name::ParryCountText,{1940,397}},
+            {Name::TotalDamageText,{2192,397}}
 
         };
         return data[id].size_;

@@ -20,6 +20,7 @@ void PlayerAttack::Update(float deltaTime)
 	int time = owner_->GetMesh()->MotionEndTime() - 100.0f;
     if (time < owner_->GetMesh()->MotionTime()) {
         if (InputSystem::ButtonTrigger(InputSystem::Button::B)) {
+            bool attackEnd = false;
             switch (attackCount_) {
             case 0:
                 owner_->ChangeMotion(PlayerMotion::Attack2, false, 1.5f);
@@ -31,12 +32,19 @@ void PlayerAttack::Update(float deltaTime)
                 owner_->ChangeMotion(PlayerMotion::Attack4, false, 1.5f);
                 break;
             default:
+                attackEnd = true;
                 break;
+            }
+            //攻撃が終了していないなら前進
+            if (!attackEnd) {
+                owner_->UpdateDirection();
+                if (owner_->IsEnemyNearby()) owner_->MoveForward(owner_->NearstEnemyDist() - 1.5f);
+                else owner_->MoveForward(2);
             }
             attackCount_++;
         }
         //ガード入力ならガード
-        if(InputSystem::ButtonIsPress(InputSystem::Button::Y)) owner_->ChangeState(PlayerState::Guard);
+        if(InputSystem::ButtonIsPress(InputSystem::Button::LShoulder)) owner_->ChangeState(PlayerState::Guard);
     }
 }
 
@@ -57,10 +65,8 @@ void PlayerAttack::Exit()
 
 void PlayerAttack::ComboAttack()
 {
-    GSuint atkHandle = gsPlayEffectEx(Effect::Slash, nullptr);
-    effectParams[combo_].handle = atkHandle;
     Effect::SetEffectParam(effectParams[combo_], owner_->Transform());
-    owner_->TestAttack();
+    owner_->NormalAttack();
     combo_++;
 }
 

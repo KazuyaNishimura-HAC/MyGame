@@ -24,6 +24,6 @@ public:
     void HitAttackCollider(const AttackInfo& atkInfo)override;
     virtual void Debug(float deltaTime)override;
 private:
-    void TestAttack();
+    void NormalAttack();
 };
 #endif

@@ -1,6 +1,7 @@
 ﻿#include "PlayerParry.h"
 #include "../../../../World/IWorld.h"
 #include "../../../../GameSystem/InputSystem/InputSystem.h"
+#include "../../../../GameSystem/Vibration/VibrationManager.h"
 PlayerParry::PlayerParry(Player* owner)
     :PlayerState::PlayerState(owner)
 {
@@ -35,9 +36,9 @@ void PlayerParry::Update(float deltaTime)
 void PlayerParry::Enter()
 {
     owner_->ChangeMotion(PlayerMotion::ParrySuccess, false, 1.5f,20.0f);
-
+    VibrationManager::SetVibration({ 1,30 }, { 1,30 });
     EffectParam param;
-    param.handle = gsPlayEffectEx(Effect::ParryBreak, nullptr);
+    param.handle = Effect::ParryBreak;
     param.position = owner_->Transform().position() + GSvector3{ 0,1,0 };
     Effect::SetEffectParam(param);
 
@@ -58,8 +59,6 @@ void PlayerParry::Exit()
 
 void PlayerParry::Attack(int count)
 {
-    GSuint atkHandle = gsPlayEffectEx(Effect::Slash, nullptr);
-    effectParams[count].handle = atkHandle;
     Effect::SetEffectParam(effectParams[count], owner_->Transform());
-    owner_->TestAttack();
+    owner_->NormalAttack();
 }

@@ -10,7 +10,6 @@ void PlayerDead::Update(float deltaTime)
 {
 	if (!owner_->GetMesh()->IsEndMotion()) return;
 	owner_->Die();
-	owner_->World()->IsEnd(true);
 }
 
 void PlayerDead::Enter()

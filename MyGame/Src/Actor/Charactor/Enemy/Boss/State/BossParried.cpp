@@ -13,7 +13,7 @@ void BossParried::Update(float deltaTime)
 
 void BossParried::Enter()
 {
-    owner_->ChangeMotion(BasicEnemyMotion::Parried, false, 1, 0, 0, true);
+    owner_->ChangeMotion(BossMotion::ParryHit, false, 1, 0, 0, true);
 }
 
 void BossParried::Exit()

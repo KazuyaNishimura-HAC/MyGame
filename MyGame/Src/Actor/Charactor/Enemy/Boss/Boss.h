@@ -22,12 +22,16 @@ public:
     bool IsIntro();
     void BeginIntro();
     void fallEvent();
+    void UpDown(float value);
+    void NormalAttack();
     void Debug(float deltaTime)override;
     
 private:
     bool isIntro_{ false };
-    BossUI* ui_{ nullptr };
-    void Attack();
+    BossUI* bossUI_{ nullptr };
+    float randomTimer_{ 0.0f };
+    const float randomDuration_{ 1.0f };
+    
 };
 
 #endif

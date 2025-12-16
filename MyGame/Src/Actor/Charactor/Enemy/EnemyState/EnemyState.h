@@ -14,6 +14,7 @@ public:
 		Attack,
 		Damage,
         Parried,
+        Stun,
 		Dead
 	};
 	EnemyState(Enemy* owner) : owner_{ owner } {};

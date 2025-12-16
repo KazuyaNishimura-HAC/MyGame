@@ -9,6 +9,12 @@ public:
 	void Update(float deltaTime)override;
 	void Enter()override;
 	void Exit()override;
+private:
+    void Attack();
+    EffectParam currentEffect_{};
+    //ランダムモーション
+    std::vector<int> randomMotion{ BossMotion::Attack1,BossMotion::Attack2 ,BossMotion::Attack3 };
+    int motionIndex_{ 0 };
 };
 
 #endif

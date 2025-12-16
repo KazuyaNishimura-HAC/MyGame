@@ -21,7 +21,7 @@ void EnemyIdle::Update(float deltaTime)
 
 void EnemyIdle::Enter()
 {
-	owner_->ChangeMotion(BasicEnemyMotion::Idle, true);
+	owner_->ChangeMotion(BasicEnemyMotion::Idle);
 }
 
 void EnemyIdle::Exit()

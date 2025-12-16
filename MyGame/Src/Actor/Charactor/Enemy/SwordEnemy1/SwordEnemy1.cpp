@@ -13,6 +13,7 @@
 #include "State/SwordEnemy1Attack.h"
 #include "../EnemyState/EnemyDamage.h"
 #include "../EnemyState/EnemyParried.h"
+#include "../EnemyState/EnemyStun.h"
 #include "../EnemyState/EnemyDead.h"
 
 #include "../../../../UI/EnemyUI.h"
@@ -28,11 +29,12 @@ SwordEnemy1::SwordEnemy1(IWorld* world,float groupID, const GSvector3& position,
     states_.AddState(EnemyState::Attack, new SwordEnemy1Attack(this));
     states_.AddState(EnemyState::Damage, new EnemyDamage(this));
     states_.AddState(EnemyState::Parried, new EnemyParried(this));
+    states_.AddState(EnemyState::Stun, new EnemyStun(this));
     states_.AddState(EnemyState::Dead, new EnemyDead(this));
     states_.ChangeState(EnemyState::Idle);
     collider_ = BoundingSphere(1);
     //攻撃処理
-    mesh_->AddEvent(SwordEnemy1Motion::Attack1, 30, [=] {TestAttack(); });
+    mesh_->AddEvent(SwordEnemy1Motion::Attack1, 30, [=] {NormalAttack(); });
 
     ui_ = new EnemyUI(world_,this);
     world_->AddGUI(ui_);
@@ -52,6 +54,9 @@ void SwordEnemy1::Update(float deltaTime)
     Enemy::Update(deltaTime);
     //基底クラスの処理を実行
     MoveAttackCollide(0.8f);
+    if (IsBroken() && !IsStun()) {
+        ChangeState(EnemyState::Stun);
+    }
 }
 
 void SwordEnemy1::LateUpdate(float deltaTime)
@@ -66,7 +71,8 @@ void SwordEnemy1::Draw() const
 
 void SwordEnemy1::React(Actor& other)
 {
-    if (other.GetName() == ActorName::Player && CurrentState() != EnemyState::Damage) {
+    if (IsStun()) return;
+    if (other.GetName() == ActorName::Player && !IsCurrentState(EnemyState::Damage)) {
         ChangeState(EnemyState::Attack);
     }
 }
@@ -76,17 +82,21 @@ void SwordEnemy1::HitAttackCollider(const AttackInfo& atkInfo)
     //死亡しているならreturn
     if (IsDying()) return;
     EffectParam param;
-    param.handle = gsPlayEffectEx(Effect::Hit, nullptr);
+    param.handle = Effect::Hit;
     param.position = transform_.position() + GSvector3{ 0,1,0 };
     param.scale = { 0.5f,0.5f,0.5f };
     Effect::SetEffectParam(param);
     SoundManager::PlaySE(Sound::Hit);
+    //デフォルトでHitタイマ設定
+    SetHitReactTime();
+    AddBreakPoint(2);
     TakeDamage(atkInfo.damage);
+    
     //hpが0なら死亡
     if (IsDying()) {
         ChangeState(EnemyState::Dead);
     }
-    else ChangeState(EnemyState::Damage);
+    if(!IsDying() && !IsStun() && atkInfo.damage > GetDefense())ChangeState(EnemyState::Damage);
 }
 
 void SwordEnemy1::Debug(float deltaTime)
@@ -98,9 +108,8 @@ void SwordEnemy1::Debug(float deltaTime)
     ImGui::End();*/
 }
 
-void SwordEnemy1::TestAttack()
+void SwordEnemy1::NormalAttack()
 {
     SpawnAttackCollider(0.5f, GetAttackPower());
-    GSuint atkHandle = gsPlayEffectEx(Effect::Slash, nullptr);
-    Effect::SetEffectParam(EffectParam(atkHandle, { 0,1,1 }, { 0,0,45 }, { 1,1,1 }), transform_);
+    Effect::SetEffectParam(EffectParam(Effect::Slash, { 0,1,1 }, { 0,0,45 }, { 1,1,1 }), transform_);
 }

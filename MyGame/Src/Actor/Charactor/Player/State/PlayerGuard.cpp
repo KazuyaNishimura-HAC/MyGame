@@ -17,7 +17,7 @@ void PlayerGuard::Update(float deltaTime)
     if (owner_->GetMesh()->IsEndMotion()) {
         owner_->ChangeMotion(PlayerMotion::Guard);
     }
-    if (InputSystem::ButtonDetach(InputSystem::Button::Y)) {
+    if (InputSystem::ButtonDetach(InputSystem::Button::LShoulder)) {
         owner_->ChangeState(PlayerState::Idle);
     }
 }

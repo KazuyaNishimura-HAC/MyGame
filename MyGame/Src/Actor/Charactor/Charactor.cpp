@@ -1,4 +1,5 @@
 ﻿#include "Charactor.h"
+#include <math.h>
 
 Charactor::Charactor(IWorld* world, const GSvector3& position, const GSvector3& rotate,Status status, GSuint mesh)
 	:Actor(mesh)
@@ -19,6 +20,12 @@ void Charactor::Update(float deltaTime)
 	Actor::Update(deltaTime);
 	states_.Update(deltaTime);
 	collider_.Position(transform_.position() + colliderOffset_);
+    //ヒットしていたら経過時間を進める
+    if (IsHit()) {
+        hitReactTimer_ -= deltaTime / 60.0f;
+        //0以下にならないようにクランプ
+        hitReactTimer_ = std::max(0.0f, hitReactTimer_);
+    }
 }
 
 void Charactor::LateUpdate(float deltaTime)
@@ -48,7 +55,7 @@ void Charactor::TakeDamage(float damage)
 void Charactor::SpawnAttackCollider(float time, float atk)
 {
     if (!attackCollider_) return;
-    attackCollider_->SetAttack(time,atk);
+    attackCollider_->SetAttackInfo(time,atk);
 }
 
 void Charactor::OnAttackHit()
@@ -96,12 +103,22 @@ const Status& Charactor::GetStatus()
 
 void Charactor::SetAttackPower(float attack)
 {
-	status_.atk = attack;
+	status_.attack = attack;
 }
 
 float Charactor::GetAttackPower()
 {
-	return status_.atk;
+	return status_.attack;
+}
+
+void Charactor::SetDefense(float defense)
+{
+    status_.defense = defense;
+}
+
+float Charactor::GetDefense() const
+{
+    return status_.defense;
 }
 
 float Charactor::GetCurrentHealth()
@@ -140,14 +157,29 @@ bool Charactor::IsInvincible() const
 	return isInvincible_;
 }
 
-void Charactor::SetHit(bool hit)
+void Charactor::SetHitReactTime()
 {
-    isHit_ = hit;
+    hitReactTimer_ = hitReactDuration_;
+}
+
+void Charactor::SetHitReactTime(float time)
+{
+    hitReactTimer_ = std::max(hitReactDuration_, time);
 }
 
 bool Charactor::IsHit() const
 {
-    return isHit_;
+    return hitReactTimer_ > 0.0f;
+}
+
+void Charactor::SetStun(bool stun)
+{
+    isStun_ = stun;
+}
+
+bool Charactor::IsStun() const
+{
+    return isStun_;
 }
 
 bool Charactor::IsDying()

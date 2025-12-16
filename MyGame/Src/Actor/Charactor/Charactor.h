@@ -10,12 +10,13 @@ class AttackCollider;
 class BattleManager;
 
 struct Status {
-    Status(float maxHP, float atk) :maxHP{ maxHP }, hp{ maxHP }, atk{ atk } {};
+    Status(float maxHP, float attack, float defense) :maxHP{ maxHP }, hp{ maxHP }, attack{ attack }, defense{ defense } {};
     //ステータス初期設定
-	Status() : Status(100, 10) {};
+	Status() : Status(100, 10, 0) {};
     float maxHP;
     float hp;
-	float atk;
+	float attack;
+    float defense;
 };
 class Charactor : public Actor
 {
@@ -44,6 +45,8 @@ public:
 	const Status& GetStatus();
 	void SetAttackPower(float attack);
 	float GetAttackPower();
+    void SetDefense(float defense);
+    float GetDefense() const;
 	float GetCurrentHealth();
 	float GetMaxHealth();
 
@@ -54,8 +57,11 @@ public:
 	bool IsAttack() const;
 	void SetInvincible(bool invincible);
 	bool IsInvincible() const;
-    void SetHit(bool hit);
+    void SetHitReactTime();
+    void SetHitReactTime(float time);
     bool IsHit() const;
+    void SetStun(bool stun);
+    bool IsStun() const;
 	bool IsDying();
 
 	virtual IWorld* World();
@@ -64,7 +70,7 @@ protected:
     AttackCollider* attackCollider_{ nullptr };
     BattleManager* battleManager_{ nullptr };
     //loop再生用エフェクトハンドル
-    std::unordered_map <Effect::ID, GSuint> effectHandles_;
+    std::unordered_map<Effect::ID,GSuint> effectHandles_;
 	Status status_{};
     //描画するか？
     bool isVisible_{ true };
@@ -72,8 +78,11 @@ protected:
 	bool isAttack_{ false };
     //無敵か？
 	bool isInvincible_{ false };
-    //攻撃を食らっているか
-    bool isHit_{ false };
+    //攻撃を食らったか？（isHit有効時間）
+    float hitReactTimer_{ 0.0f };
+    const float hitReactDuration_{ 0.05f };
+    //行動不能か？
+    bool isStun_{ false };
 };
 
 #endif

@@ -42,9 +42,6 @@ void PlayerUltimateSkill::Exit()
 
 void PlayerUltimateSkill::Attack(int count)
 {
-    GSuint atkHandle = gsPlayEffectEx(Effect::SkillSlash, nullptr);
-    effectParams[count].handle = atkHandle;
-    effectParams[count].scale = { 1.5f,1.5f,1.5f };
     Effect::SetEffectParam(effectParams[count], owner_->Transform());
     owner_->UltimateATK();
 }

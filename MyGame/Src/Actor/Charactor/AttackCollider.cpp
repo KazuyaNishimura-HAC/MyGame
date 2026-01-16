@@ -20,11 +20,12 @@ AttackCollider::~AttackCollider()
 
 }
 
-void AttackCollider::SetAttackInfo(float time, float damage)
+void AttackCollider::SetAttackInfo(float damage, float knockback, float time)
 {
-	collider_.SetEnable(true);
-	duration_ = time;
-	attackInfo_.damage = damage;
+    collider_.SetEnable(true);
+    attackInfo_.damage = damage;
+    attackInfo_.knockbackPower = knockback;
+    duration_ = time;
 }
 
 void AttackCollider::Update(float deltaTime)

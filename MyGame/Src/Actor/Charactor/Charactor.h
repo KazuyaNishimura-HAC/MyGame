@@ -30,7 +30,7 @@ public:
     //ダメージを受ける
 	void TakeDamage(float damage);
     //攻撃判定を有効化
-    virtual void SpawnAttackCollider(float time,float atk);
+    virtual void SpawnAttackCollider(float damage = 0.0f, float knockback = 0.0f, float time = 0.01f);
     virtual void OnAttackHit();
     //攻撃を受ける
     virtual void HitAttackCollider(const AttackInfo& atkInfo);

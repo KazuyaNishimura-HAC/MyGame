@@ -76,6 +76,7 @@ void Enemy::OnParryHit(const GSvector3& position)
 {
     AddBreakPoint(50);
     ChangeState(EnemyState::Parried);
+    //固定値て吹っ飛ばす
     Knockback(0.5f,position);
 }
 

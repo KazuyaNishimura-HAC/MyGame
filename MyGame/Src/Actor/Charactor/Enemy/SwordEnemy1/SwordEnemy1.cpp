@@ -90,6 +90,7 @@ void SwordEnemy1::HitAttackCollider(const AttackInfo& atkInfo)
     //デフォルトでHitタイマ設定
     SetHitReactTime();
     AddBreakPoint(2);
+    Knockback(atkInfo.knockbackPower,atkInfo.hitPos);
     TakeDamage(atkInfo.damage);
     
     //hpが0なら死亡
@@ -110,6 +111,6 @@ void SwordEnemy1::Debug(float deltaTime)
 
 void SwordEnemy1::NormalAttack()
 {
-    SpawnAttackCollider(0.5f, GetAttackPower());
+    SpawnAttackCollider(GetAttackPower(), 0, 0.5f);
     Effect::SetEffectParam(EffectParam(Effect::Slash, { 0,1,1 }, { 0,0,45 }, { 1,1,1 }), transform_);
 }

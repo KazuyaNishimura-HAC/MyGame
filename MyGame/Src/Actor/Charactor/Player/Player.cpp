@@ -379,7 +379,7 @@ void Player::NormalAttack()
 {
     SoundManager::PlaySE(Sound::Attack);
     camera_->SetShakeValues(10.0f, 5.0f, 160.0f, 1.0f, 5.0f, { 0.25f,0.25f }, 0.0f);
-    SpawnAttackCollider(0.01f, GetAttackPower());
+    SpawnAttackCollider(GetAttackPower(), 0, 0.01f);
     resultData_.totalDamage += GetAttackPower();
 }
 
@@ -387,7 +387,7 @@ void Player::UltimateATK()
 {
     float attack = GetAttackPower() * 3.0f;
     camera_->SetShakeValues(10.0f, 5.0f, 160.0f, 1.0f, 5.0f, { 0.5f,0.5f }, 0.0f);
-    SpawnAttackCollider(0.01f, attack);
+    SpawnAttackCollider(attack, 0, 0.01f);
     resultData_.totalDamage += attack;
 }
 

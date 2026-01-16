@@ -183,5 +183,5 @@ void Boss::UpDown(float value)
 void Boss::NormalAttack()
 {
     SoundManager::PlaySE(Sound::Attack);
-    SpawnAttackCollider(0.5f, GetAttackPower());
+    SpawnAttackCollider(GetAttackPower(),0, 0.5f);
 }

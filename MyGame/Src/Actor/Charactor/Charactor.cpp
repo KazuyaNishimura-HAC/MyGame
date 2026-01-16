@@ -52,10 +52,10 @@ void Charactor::TakeDamage(float damage)
     if (status_.hp < 0.0f) status_.hp = CLAMP(status_.hp,0,status_.maxHP);
 }
 
-void Charactor::SpawnAttackCollider(float time, float atk)
+void Charactor::SpawnAttackCollider(float damage, float knockback, float time)
 {
     if (!attackCollider_) return;
-    attackCollider_->SetAttackInfo(time,atk);
+    attackCollider_->SetAttackInfo(damage,knockback,time);
 }
 
 void Charactor::OnAttackHit()

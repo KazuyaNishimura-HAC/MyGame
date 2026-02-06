@@ -1,36 +1,38 @@
 #version 330
 layout(location = 0) out vec4 out_FragColor;
 
-// ƒeƒNƒXƒ`ƒƒÀ•W
+// ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™
 in vec2 v_TexCoord;
 
-// ƒŒƒ“ƒ_[ƒeƒNƒXƒ`ƒƒ 
+// ãƒ¬ãƒ³ãƒ€ãƒ¼ãƒ†ã‚¯ã‚¹ãƒãƒ£ 
 uniform sampler2D u_RenderTexture;
-// ‹P“x‚Ì‚µ‚«‚¢’l
-uniform float u_BloomThreshold = 1.0f;
+// è¼åº¦ã®ã—ãã„å€¤
+uniform float u_BloomThreshold = 1.0;
 
-// ƒuƒ‹[ƒ€ƒJƒ‰[iƒfƒtƒH”’j
-uniform vec4 u_BloomColor = vec4(1.0f,1.0f,1.0f,1.0f);
+// ãƒ–ãƒ«ãƒ¼ãƒ ã‚«ãƒ©ãƒ¼ï¼ˆãƒ‡ãƒ•ã‚©ç™½ï¼‰
+uniform vec4 u_BloomColor = vec4(1.0,1.0,1.0,1.0);
 
-// ƒKƒ“ƒ}ƒJƒ‰[‹óŠÔ‚©‚çƒŠƒjƒAƒJƒ‰[‹óŠÔ‚É•ÏŠ·
+// ã‚¬ãƒ³ãƒã‚«ãƒ©ãƒ¼ç©ºé–“ã‹ã‚‰ãƒªãƒ‹ã‚¢ã‚«ãƒ©ãƒ¼ç©ºé–“ã«å¤‰æ›
 vec3 GammaToLinearSpace(vec3 color) {
     return pow(color, vec3(2.2));
 }
 
 
 void main(void) {
-    // ƒŒƒ“ƒ_[ƒeƒNƒXƒ`ƒƒ‚ÌƒJƒ‰[‚ğæ“¾
+    // ãƒ¬ãƒ³ãƒ€ãƒ¼ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ã‚«ãƒ©ãƒ¼ã‚’å–å¾—
     vec4 color = texture(u_RenderTexture, v_TexCoord);
-    // ƒŠƒjƒAƒJƒ‰[‹óŠÔ‚É•ÏŠ·
+    // ãƒªãƒ‹ã‚¢ã‚«ãƒ©ãƒ¼ç©ºé–“ã«å¤‰æ›
     color.rgb = GammaToLinearSpace(color.rgb);
-    // ƒeƒNƒZƒ‹‚Ì‹P“x‚ğ‹‚ß‚é
+    // ãƒ†ã‚¯ã‚»ãƒ«ã®è¼åº¦ã‚’æ±‚ã‚ã‚‹
     float luminance = dot(color.rgb, vec3(0.33, 0.34, 0.33));
-    // w’è‚µ‚½‹P“x‚ÌˆÈã‚ÌƒsƒNƒZƒ‹‚¾‚¯c‚·
+    // æŒ‡å®šã—ãŸè¼åº¦ã®ä»¥ä¸Šã®ãƒ”ã‚¯ã‚»ãƒ«ã ã‘æ®‹ã™
     luminance = max(0.0, luminance - u_BloomThreshold);
-    // sign‚Íƒvƒ‰ƒX‚Ì’l‚Ìê‡‚Í1.0,ƒ[ƒ‚Ìê‡‚Í0.0‚Æ‚È‚é‚Ì‚ÅA‚µ‚«‚¢’lˆÈ‰º‚Í•‚É‚È‚é
+    // signã¯ãƒ—ãƒ©ã‚¹ã®å€¤ã®å ´åˆã¯1.0,ã‚¼ãƒ­ã®å ´åˆã¯0.0ã¨ãªã‚‹ã®ã§ã€ã—ãã„å€¤ä»¥ä¸‹ã¯é»’ã«ãªã‚‹
     color.rgb *= sign(luminance);
-    // ”­Œõ‚ÉƒJƒ‰[‚ğæZ
+    // ç™ºå…‰ã«ã‚«ãƒ©ãƒ¼ã‚’ä¹—ç®—
     color.rgb *= u_BloomColor.rgb * u_BloomColor.a;
-    // ÅIƒJƒ‰[‚Ìo—Í
+    //ã‚¯ãƒ©ãƒ³ãƒ—
+    color.rgb = clamp(color.rgb,0.0,100.0);
+    // æœ€çµ‚ã‚«ãƒ©ãƒ¼ã®å‡ºåŠ›
     out_FragColor = vec4(color.rgb, 1.0);
 }

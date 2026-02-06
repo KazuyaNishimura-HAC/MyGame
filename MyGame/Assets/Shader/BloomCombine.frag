@@ -2,18 +2,18 @@
 layout(location = 0) out vec4 out_FragColor;
 in vec2 v_TexCoord;
 
-// ƒV[ƒ“‚ÌƒeƒNƒXƒ`ƒƒ
+// ã‚·ãƒ¼ãƒ³ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£
 uniform sampler2D u_BaseTexture;
-// ƒuƒ‰[ƒeƒNƒXƒ`ƒƒ
+// ãƒ–ãƒ©ãƒ¼ãƒ†ã‚¯ã‚¹ãƒãƒ£
 uniform sampler2D u_BlurTexture1;
 uniform sampler2D u_BlurTexture2;
 uniform sampler2D u_BlurTexture3;
 uniform sampler2D u_BlurTexture4;
-// ƒuƒ‹[ƒ€Œø‰Ê‚Ì‹­‚³
+// ãƒ–ãƒ«ãƒ¼ãƒ åŠ¹æœã®å¼·ã•
 uniform float u_BloomIntensity = 1.0;
 
 
-// ƒg[ƒ“ƒ}ƒbƒsƒ“ƒO
+// ãƒˆãƒ¼ãƒ³ãƒãƒƒãƒ”ãƒ³ã‚°
 vec3 ACESFilm(vec3 x) {
     x *= 0.6;
     float a = 2.51;
@@ -24,31 +24,31 @@ vec3 ACESFilm(vec3 x) {
     return clamp((x*(a*x+b))/(x*(c*x+d)+e), 0.0, 1.0);
 }
 
-// ƒKƒ“ƒ}ƒJƒ‰[‹óŠÔ‚©‚çƒŠƒjƒAƒJƒ‰[‹óŠÔ‚É•ÏŠ·
+// ã‚¬ãƒ³ãƒã‚«ãƒ©ãƒ¼ç©ºé–“ã‹ã‚‰ãƒªãƒ‹ã‚¢ã‚«ãƒ©ãƒ¼ç©ºé–“ã«å¤‰æ›
 vec3 GammaToLinearSpace(vec3 color) {
     return pow(color, vec3(2.2));
 }
 
-// ƒŠƒjƒAƒJƒ‰[‹óŠÔ‚©‚çƒKƒ“ƒ}ƒJƒ‰[‹óŠÔ‚É•ÏŠ·
+// ãƒªãƒ‹ã‚¢ã‚«ãƒ©ãƒ¼ç©ºé–“ã‹ã‚‰ã‚¬ãƒ³ãƒã‚«ãƒ©ãƒ¼ç©ºé–“ã«å¤‰æ›
 vec3 LinearToGammaSpace(vec3 color) {
     return pow(color, vec3(1.0/2.2));
 }
 
 void main(void) {
-    // ƒV[ƒ“‚ÌƒJƒ‰[‚ğæ“¾
+    // ã‚·ãƒ¼ãƒ³ã®ã‚«ãƒ©ãƒ¼ã‚’å–å¾—
     vec4 col = texture(u_BaseTexture, v_TexCoord);
-    // ƒŠƒjƒAƒJƒ‰[‹óŠÔ‚É•ÏŠ·
+    // ãƒªãƒ‹ã‚¢ã‚«ãƒ©ãƒ¼ç©ºé–“ã«å¤‰æ›
     col.rgb = GammaToLinearSpace(col.rgb);
-    // ƒuƒ‹[ƒ€‚ÌƒJƒ‰[‚ğ‡¬
+    // ãƒ–ãƒ«ãƒ¼ãƒ ã®ã‚«ãƒ©ãƒ¼ã‚’åˆæˆ
     vec4 bloom = vec4(0.0);
     bloom += texture(u_BlurTexture1, v_TexCoord);
     bloom += texture(u_BlurTexture2, v_TexCoord);
     bloom += texture(u_BlurTexture3, v_TexCoord);
     bloom += texture(u_BlurTexture4, v_TexCoord);
-    // ƒV[ƒ“‚ÌƒJƒ‰[‚Æƒuƒ‹[ƒ€‚ÌƒJƒ‰[‚ğ‡¬
+    // ã‚·ãƒ¼ãƒ³ã®ã‚«ãƒ©ãƒ¼ã¨ãƒ–ãƒ«ãƒ¼ãƒ ã®ã‚«ãƒ©ãƒ¼ã‚’åˆæˆ
     col += bloom * u_BloomIntensity;
-    // ƒg[ƒ“ƒ}ƒbƒsƒ“ƒO
+    // ãƒˆãƒ¼ãƒ³ãƒãƒƒãƒ”ãƒ³ã‚°
     col.rgb = ACESFilm(col.rgb);
-    // ƒKƒ“ƒ}ƒJƒ‰[‹óŠÔ‚É•ÏŠ·‚µ‚È‚­‚Ä‚à‘åä•vI(glEnable(GL_FRAMEBUFFER_SRGB);‚ª‚ ‚é‚½‚ß)
+    // glEnable(GL_FRAMEBUFFER_SRGB)ãŒã‚ã‚‹ãªã‚‰ã‚¬ãƒ³ãƒã‚«ãƒ©ãƒ¼ç©ºé–“ã®å¤‰æ›ã¯ä¸è¦
     out_FragColor = vec4(col.rgb, 1.0);
 }

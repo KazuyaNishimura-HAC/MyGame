@@ -159,9 +159,9 @@ void Boss::Debug(float deltaTime)
 {
     mesh_->Debug("Boss");
     ImGui::Begin("Enemystatus");
-    ImGui::Value("MaxHP", status_.maxHP);
-    ImGui::Value("HP", status_.hp);
-    ImGui::Value("ATK", status_.attack);
+    ImGui::Value("MaxHP", GetMaxHealth());
+    ImGui::Value("HP", GetCurrentHealth());
+    ImGui::Value("ATK", GetAttackPower());
     ImGui::End();
 }
 

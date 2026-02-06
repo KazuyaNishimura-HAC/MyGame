@@ -490,9 +490,9 @@ void Player::Debug(float deltaTime)
 {
     mesh_->Debug("Player");
     ImGui::Begin("Playerstatus");
-    ImGui::Value("MaxHP", status_.maxHP);
-    ImGui::Value("HP", status_.hp);
-    ImGui::Value("ATK", status_.attack);
+    ImGui::Value("MaxHP", GetMaxHealth());
+    ImGui::Value("HP", GetCurrentHealth());
+    ImGui::Value("ATK", GetAttackPower());
     ImGui::Value("isATK", IsAttack());
     ImGui::Value("isGuard", IsGuard());
     ImGui::Value("canUseParry", CanUseParry());

@@ -9,6 +9,8 @@ Charactor::Charactor(IWorld* world, const GSvector3& position, const GSvector3& 
 	transform_.position(position);
     transform_.rotate(rotate);
 	status_ = status;
+    //初期値を最大HPに設定
+    prevHP_ = status.maxHP;
 }
 
 Charactor::~Charactor()
@@ -47,6 +49,7 @@ void Charactor::Init(BattleManager* manager)
 
 void Charactor::TakeDamage(float damage)
 {
+    prevHP_ = status_.hp;
 	status_.hp -= damage;
     //0以下にならないようクランプ
     if (status_.hp < 0.0f) status_.hp = CLAMP(status_.hp,0,status_.maxHP);
@@ -129,6 +132,10 @@ float Charactor::GetCurrentHealth()
 float Charactor::GetMaxHealth()
 {
 	return status_.maxHP;
+}
+float Charactor::GetPrevHealth() const
+{
+    return prevHP_;
 }
 void Charactor::SetVisible(bool visible)
 {

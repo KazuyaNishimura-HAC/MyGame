@@ -49,6 +49,7 @@ public:
     float GetDefense() const;
 	float GetCurrentHealth();
 	float GetMaxHealth();
+    float GetPrevHealth() const;
 
 	//====================各状態フラグ====================
     void SetVisible(bool visible);
@@ -69,19 +70,22 @@ protected:
 	StateMachine states_;
     AttackCollider* attackCollider_{ nullptr };
     BattleManager* battleManager_{ nullptr };
-    GSuint effectHandle_;
-	Status status_{};
+    GSuint effectHandle_{ 0 };
+private:
+    Status status_{};
     //描画するか？
     bool isVisible_{ true };
     //攻撃するか？
-	bool isAttack_{ false };
+    bool isAttack_{ false };
     //無敵か？
-	bool isInvincible_{ false };
+    bool isInvincible_{ false };
     //攻撃を食らったか？（isHit有効時間）
     float hitReactTimer_{ 0.0f };
     const float hitReactDuration_{ 0.05f };
     //行動不能か？
     bool isStun_{ false };
+    //ダメージを受ける前のHP
+    float prevHP_{ 0.0f };
 };
 
 #endif

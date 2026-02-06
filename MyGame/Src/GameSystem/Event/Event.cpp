@@ -18,7 +18,7 @@ Event::~Event()
 bool Event::Invoke()
 {
     //終了処理が入ったらreturn
-    if(isEnd_) return false;
+    if(IsEnd()) return false;
     bool invoke;
     switch (invokeType_) {
     case InvokeType::Collision:

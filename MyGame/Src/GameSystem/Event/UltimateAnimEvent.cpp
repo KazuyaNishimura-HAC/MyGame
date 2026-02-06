@@ -3,8 +3,6 @@
 #include "../../GameSystem/Camera/Camera.h"
 #include "../../GameSystem/Camera/CameraController.h"
 #include "../../Actor/Charactor/Player/Player.h"
-#include "../../Graphics/Effect/PostEffect.h"
-
 UltimateAnimEvent::UltimateAnimEvent(IWorld* world, int invokeType, const GSvector3& position, GSvector2 size)
 	:Event::Event(world, invokeType, position, size)
 {
@@ -19,9 +17,6 @@ void UltimateAnimEvent::Update(float deltaTime)
 	GSvector3 forward = player_->Transform().forward();  // プレイヤーの正面方向ベクトル
 	GSvector3 right = player_->Transform().right();
 	GSvector3 up = GSvector3(0, 1, 0);    // 上方向ベクトル
-	PostEffect::Instance().SetIntensity(intensity);
-	intensity -= deltaTime / 120.0f;
-	intensity = CLAMP(intensity,0.0f,1.0f);
 	if (timer_ < 30) {
         //プレイヤーを敵に近づける
         player_->UpdateDirection();
@@ -86,5 +81,4 @@ void UltimateAnimEvent::EndEvent()
 	camera_->SetPriority(CameraController::Disable);
 	SetInvoke(false);
 	ResetTimer();
-	PostEffect::Instance().SetIntensity(0.35f);
 }

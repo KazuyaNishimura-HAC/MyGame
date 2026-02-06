@@ -33,6 +33,7 @@ protected:
     bool IsCollide();
     void ResetTimer();
     void SetEventTime(float time);
+    //void RequestTimeline(std::string name);
     void IsDebug();
     IWorld* world_{ nullptr };
     GStransform transform_;

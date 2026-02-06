@@ -69,8 +69,7 @@ protected:
 	StateMachine states_;
     AttackCollider* attackCollider_{ nullptr };
     BattleManager* battleManager_{ nullptr };
-    //loop再生用エフェクトハンドル
-    std::unordered_map<Effect::ID,GSuint> effectHandles_;
+    GSuint effectHandle_;
 	Status status_{};
     //描画するか？
     bool isVisible_{ true };

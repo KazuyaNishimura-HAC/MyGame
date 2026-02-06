@@ -28,6 +28,7 @@ Enemy::~Enemy()
 void Enemy::Update(float deltaTime)
 {
     Charactor::Update(deltaTime);
+    if (!CanAttack()) attackCoolTime_ -= deltaTime / 60.0f;
 }
 
 void Enemy::LateUpdate(float deltaTime)
@@ -74,6 +75,7 @@ void Enemy::MoveAttackCollide(float forwardValue)
 
 void Enemy::OnParryHit(const GSvector3& position)
 {
+    if (IsStun()) return;
     AddBreakPoint(50);
     ChangeState(EnemyState::Parried);
     //固定値て吹っ飛ばす
@@ -124,6 +126,16 @@ float Enemy::MaxBreakPoint() const
 bool Enemy::IsBroken()
 {
     return breakPt_ >= maxBreakPt_;
+}
+
+bool Enemy::CanAttack()
+{
+    return attackCoolTime_ <= 0.0f;
+}
+
+void Enemy::SetCoolTime(float time)
+{
+    attackCoolTime_ = time;
 }
 
 void Enemy::LookAtPlayer()

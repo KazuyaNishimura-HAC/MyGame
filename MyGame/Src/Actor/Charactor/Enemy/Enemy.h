@@ -39,6 +39,9 @@ public:
     float MaxBreakPoint() const;
     //ブレイク可能か
     bool IsBroken();
+    //攻撃可能か
+    bool CanAttack();
+    void SetCoolTime(float time = 1.5f);
     //プレイヤ方向を向く
     void LookAtPlayer();
     Charactor* GetPlayer()const;
@@ -51,5 +54,7 @@ protected:
     bool isBattleMode_{ false };
     float breakPt_{ 0 };
     float maxBreakPt_{ 100.0f };
+
+    float attackCoolTime_{ 1.5f };
 };
 #endif

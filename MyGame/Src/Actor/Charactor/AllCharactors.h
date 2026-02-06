@@ -5,6 +5,7 @@
 #include "Player/Player.h"
 #include "Enemy/Enemy.h"
 #include "Enemy/SwordEnemy1/SwordEnemy1.h"
+#include "Enemy/SwordEnemy2/SwordEnemy2.h"
 #include "Enemy/Boss/Boss.h"
 
 #endif

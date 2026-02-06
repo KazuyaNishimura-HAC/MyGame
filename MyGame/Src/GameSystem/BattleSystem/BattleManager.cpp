@@ -37,13 +37,13 @@ void BattleManager::SpawnEnemis()
     groupEnemis_[2].push_back(new SwordEnemy1(world_, 2, { 85,0,-5 }, { 0,270,0 }, Status{ 150, 5, 0 }));
     groupEnemis_[2].push_back(new SwordEnemy1(world_, 2, { 85,0,5 }, { 0,270,0 }, Status{ 150, 5, 0 }));
     groupEnemis_[3].push_back(new SwordEnemy1(world_, 3, { 130,0,-5 }, { 0,270,0 }, Status{ 150, 5, 0 }));
-    groupEnemis_[3].push_back(new SwordEnemy1(world_, 3, { 130,0,0 }, { 0,270,0 }, Status{ 150, 5, 0 }));
+    groupEnemis_[3].push_back(new SwordEnemy2(world_, 3, { 130,0,0 }, { 0,270,0 }, Status{ 250, 20, 0 },Model::Enemy2));
     groupEnemis_[3].push_back(new SwordEnemy1(world_, 3, { 130,0,5 }, { 0,270,0 }, Status{ 150, 5, 0 }));
     groupEnemis_[4].push_back(new SwordEnemy1(world_, 4, { 180,0,-5 }, { 0,270,0 }, Status{ 150, 5, 0 }));
     groupEnemis_[4].push_back(new SwordEnemy1(world_, 4, { 180,0,5 }, { 0,270,0 }, Status{ 150, 5, 0 }));
     groupEnemis_[4].push_back(new SwordEnemy1(world_, 4, { 180,0,-10 }, { 0,270,0 }, Status{ 150, 5, 0 }));
     groupEnemis_[4].push_back(new SwordEnemy1(world_, 4, { 180,0,10 }, { 0,270,0 }, Status{ 150, 5, 0 }));
-    boss_ = new Boss(world_, 4, { 185,40,0 }, { 0,270,0 }, Status{ 1200, 15, 15 });
+    boss_ = new Boss(world_, 4, { 185,40,0 }, { 0,270,0 }, Status{ 1200, 10, 15 });
     groupEnemis_[4].push_back(boss_);
     for (int i = 0; i < enemyGroupCount_ + 1;++i) {
         groupCount_[i] = groupEnemis_[i].size();

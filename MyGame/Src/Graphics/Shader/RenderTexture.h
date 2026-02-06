@@ -20,6 +20,7 @@ public:
 	static void UnBindRenderDepthEx(int id, GSuint textureID);
 
 	static void DrawRender(int id);
+    static void DrawRenderEx(int id);
 };
 
 #endif

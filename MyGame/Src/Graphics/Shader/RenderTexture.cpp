@@ -49,7 +49,6 @@ void RenderTexture::BindRenderDepthEx(int id, GSuint textureID)
 {
 	gsBindRenderTargetDepthEx(id, textureID);
 }
-
 void RenderTexture::UnBindRenderDepthEx(int id, GSuint textureID)
 {
 	gsUnbindRenderTargetDepthEx(id, textureID);
@@ -58,5 +57,9 @@ void RenderTexture::UnBindRenderDepthEx(int id, GSuint textureID)
 void RenderTexture::DrawRender(int id)
 {
 	gsDrawRenderTarget(id);
+}
+void RenderTexture::DrawRenderEx(int id)
+{
+    gsDrawRenderTargetEx(id);
 }
 

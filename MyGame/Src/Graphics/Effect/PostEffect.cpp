@@ -1,7 +1,6 @@
 ﻿#include "PostEffect.h"
 #include "../Shader/Shader.h"
 #include "../Shader/RenderTexture.h"
-#include "../../AssetID/Graphics.h"
 
 #include <imgui/imgui.h>
 
@@ -24,23 +23,26 @@ void PostEffect::Load()
 {
     CreateRender();
     LoadShader();
+    //入力・出力レンダーターゲットの設定
+    SetInputOutputRender(Rt::BaseScene,Rt::FinalScene);
 }
 
-void PostEffect::Bloom(GSuint n ,GScolor col)
+void PostEffect::Bloom()
 {
     // 輝度の高い部分を取り出す
-    bloomExtract(n, col);
+    bloomExtract(Rt::BaseScene, bloomParam_.color);
     // ガウシアンブラーでぼかす
     gaussianBlur(Rt::BloomExtract, { width_ / 4.0f, height_ / 4.0f }, Rt::BlurH1, Rt::BlurV1);
     gaussianBlur(Rt::BlurV1, { width_ / 8.0f, height_ / 8.0f }, Rt::BlurH2, Rt::BlurV2);
     gaussianBlur(Rt::BlurV2, { width_ / 16.0f, height_ / 16.0f }, Rt::BlurH3, Rt::BlurV3);
     gaussianBlur(Rt::BlurV3, { width_ / 32.0f, height_ / 32.0f }, Rt::BlurH4, Rt::BlurV4);
     // ブルームの合成
-    bloomCombine(n);
-    // 合成後の結果を表示
-    RenderTexture::BindRenderTextureEx(Rt::BloomCombine, 0, 0);
-    // レンダーターゲット描画
-    RenderTexture::DrawRender(Rt::BloomCombine);
+    bloomCombine(inputRT_);
+}
+
+void PostEffect::SetBloomParam(BloomEffectParam param)
+{
+    bloomParam_ = param;
 }
 
 void PostEffect::SetIntensity(float intensity)
@@ -110,30 +112,27 @@ void PostEffect::Dissolve(GSuint n, GSuint m)
     gsEndShader();
 }
 
-void PostEffect::MargeShader(GSuint n, GSuint m)
+void PostEffect::ApplyRenderTexture(GSuint input, GSuint output)
 {
-    // 元画像テクスチャの設定
-    gsSetShaderParamTexture("u_RenderTexture", 0);
-    gsBindRenderTargetTextureEx(n, 0, 0);
+    //レンダーターゲット設定
+    gsBeginRenderTarget(output);
+    //テクスチャバインド
+    gsBindRenderTargetTextureEx(input, 0, 0);
     // レンダーターゲットを描画
-    gsDrawRenderTargetEx(m);
+    gsDrawRenderTargetEx(output);
     // テクスチャのバインド解除
-    gsUnbindRenderTargetTextureEx(m, 0, 0);
-    gsUnbindRenderTargetDepthEx(m, 1);
+    gsUnbindRenderTargetTextureEx(input, 0, 0);
+    //レンダーターゲット解除
+    gsEndRenderTarget();
 }
 
-void PostEffect::GaussianBlur(GSuint n)
+void PostEffect::GaussianBlur()
 {
-    if (!isBlur_) return;
     // ブラーに使う解像度（必要なら調整）
     GSvector2 size = GSvector2{ width_, height_} / blurIntencity_;
 
     // 1段階のガウシアンブラー
-    gaussianBlur(n, size, Rt::BlurH1, Rt::BlurV1);
-
-    // 結果の BlurV1 を画面に描画する
-    RenderTexture::BindRenderTextureEx(Rt::BlurV1, 0, 0);
-    RenderTexture::DrawRender(Rt::BlurV1);
+    gaussianBlur(inputRT_, size, Rt::BlurH1, outputRT_);
 }
 
 void PostEffect::IsBlur(bool flg)
@@ -141,20 +140,68 @@ void PostEffect::IsBlur(bool flg)
     isBlur_ = flg;
 }
 
+void PostEffect::Vignette()
+{
+    
+    // シェーダーを有効にする
+    gsBeginShader(Sh::Vignette);
+    // 各パラメーター設定
+    gsSetShaderParam1f("u_VignetteIntensity", vignetteParam_.intencity);
+    gsSetShaderParam1f("u_VignetteRadius", vignetteParam_.radius);
+    gsSetShaderParam1f("u_VignetteSoftness", vignetteParam_.softness);
+    gsSetShaderParam3f("u_VignetteColor", &vignetteParam_.color);
+    // 元画像テクスチャの設定
+    gsSetShaderParamTexture("u_BaseTexture", 0);
+    //レンダーテクスチャをブレンド
+    ApplyRenderTexture(inputRT_, outputRT_);
+    //合成する場合、変更後のレンダーを入力先に
+    if (isBlend_) std::swap(inputRT_, outputRT_);
+    // シェーダーを無効にする
+    gsEndShader();
+}
+
+void PostEffect::SetVignetteParam(VignetteParam param)
+{
+    vignetteParam_ = param;
+}
+
+void PostEffect::RadialBlur()
+{
+    // シェーダーを有効にする
+    gsBeginShader(Sh::RadialBlur);
+    // 各パラメーター設定
+    gsSetShaderParam1f("u_BlurIntensity", radialBlurParam_.intencity);
+    gsSetShaderParam1f("u_SampleCount", radialBlurParam_.sampleCount);
+    gsSetShaderParam2f("u_Center", &radialBlurParam_.center);
+    // 元画像テクスチャの設定
+    gsSetShaderParamTexture("u_BaseTexture", 0);
+    //レンダーテクスチャをブレンド
+    ApplyRenderTexture(inputRT_, outputRT_);
+    //合成する場合、変更後のレンダーを入力先に
+    if(isBlend_) std::swap(inputRT_, outputRT_);
+    // シェーダーを無効にする
+    gsEndShader();
+}
+
+void PostEffect::SetRadialBlurParam(RadialBlurParam param)
+{
+    radialBlurParam_ = param;
+}
+
 void PostEffect::Clear()
 {
     //値を初期化
     bloomThreshold_ = { 0.01f };
     bloomIntencity_ = { 0.35f };
-   bloomColor_={ 1.0f,1.0f,1.0f,1.0f };
-   fogColor_={ 1.0f, 1.0f, 1.0f, 1.0f };
+    bloomColor_={ 1.0f,1.0f,1.0f,1.0f };
+    fogColor_={ 1.0f, 1.0f, 1.0f, 1.0f };
     fogStart_={ 500.0f };
     fogEnd_={ 1500.0f };
     tilling_={ 1.0f, 1.0f };
     offset_ = { 0.0f, 0.0f };
     threshold_ ={ 0.0f };
     edge_width_ = { 0.0f };
-   edge_color_={ 1.0f, 1.0f, 1.0f, 1.0f };
+    edge_color_={ 1.0f, 1.0f, 1.0f, 1.0f };
     edge_color_intensity_={ 1.0f };
     blurIntencity_ = { 1.0f };
 }
@@ -165,19 +212,57 @@ void PostEffect::Debug()
     ImGui::InputFloat("BloomIntencity",&bloomIntencity_);
     ImGui::InputFloat("BlurIntencity", &blurIntencity_);
     ImGui::Checkbox("IsBlur", &isBlur_);
+    ImGui::InputFloat("VignettePower", &vignetteParam_.intencity);
+    ImGui::InputFloat("VignetteRadius", &vignetteParam_.radius);
+    ImGui::InputFloat("VignetteSoftness", &vignetteParam_.softness);
+    ImGui::InputFloat3("VignetteColor", vignetteParam_.color);
+
+    ImGui::DragFloat("RadialBlurPower", &radialBlurParam_.intencity);
+    ImGui::DragInt("RadialSampleCount", &radialBlurParam_.sampleCount);
+    ImGui::DragFloat2("RadialBlurCenter", radialBlurParam_.center);
     ImGui::End();
+    //PostEffect::Instance().SetVignetteParam({ 0.5f,0.4f,0.2f,GSvector3{1.0f,0.0f,0.0f} });
 }
 
-void PostEffect::SetBloomParam(BloomEffectParam param)
+void PostEffect::BeginBlend()
 {
-    bloomIntencity_ = param.intencity;
-    bloomThreshold_ = param.threshold;
+    if (isBlend_) return;
+    isBlend_ = true;
+    //alpha値がオーバーする為ブレンドを一時的に切る
+    //glDisable(GL_BLEND);
+    //ベースシーンをPostWorkにコピー
+    gsBeginShader(Sh::CopyRender);
+    gsSetShaderParamTexture("u_BaseTexture", 0);
+    ApplyRenderTexture(Rt::BaseScene,Rt::PostWork0);
+    gsEndShader();
+    //glEnable(GL_BLEND);
+    SetInputOutputRender(Rt::PostWork0,Rt::PostWork1);
+}
+
+void PostEffect::EndBlend()
+{
+    if (!isBlend_) return;
+    isBlend_ = false;
+    gsBeginShader(Sh::CopyRender);
+    gsSetShaderParamTexture("u_BaseTexture", 0);
+    //合成結果を最終画面レンダーに描画
+    ApplyRenderTexture(inputRT_, Rt::FinalScene);
+    gsEndShader();
+}
+
+void PostEffect::SetInputOutputRender(GSuint input, GSuint output)
+{
+    inputRT_ = input;
+    outputRT_ = output;
 }
 
 void PostEffect::CreateRender()
 {
     // 元シーン用のレンダーターゲットの作成
     RenderTexture::CreateRenderTarget(Rt::BaseScene, { width_,height_ }, GS_TRUE, GS_TRUE, GS_TRUE);
+    // PingPongレンダーテクスチャの作成
+    RenderTexture::CreateRenderTarget(Rt::PostWork0, { width_,height_ }, GS_TRUE, GS_FALSE, GS_TRUE);
+    RenderTexture::CreateRenderTarget(Rt::PostWork1, { width_,height_ }, GS_TRUE, GS_FALSE, GS_TRUE);
     // 高輝度抽出シェーダー用のレンダーターゲットの作成
     RenderTexture::CreateRenderTarget(Rt::BloomExtract, { width_ / 4,height_ / 4 }, GS_TRUE, GS_FALSE, GS_TRUE);
     // ガウシアンブラー用の縮小バッファを作成
@@ -192,7 +277,8 @@ void PostEffect::CreateRender()
 
     // ブルーム合成シェーダー用のレンダーターゲットの作成
     RenderTexture::CreateRenderTarget(Rt::BloomCombine, { width_,height_ }, GS_TRUE, GS_FALSE, GS_TRUE);
-    RenderTexture::CreateRenderTarget(Rt::FinalScene, { width_,height_ }, GS_TRUE, GS_FALSE, GS_TRUE);
+    //最終的な描画シーン
+    RenderTexture::CreateRenderTarget(Rt::FinalScene, { width_,height_ }, GS_TRUE, GS_FALSE, GS_FALSE);
 
 }
 
@@ -202,9 +288,11 @@ void PostEffect::LoadShader()
     gsLoadShader(Sh::BloomExtract, "Assets/Shader/RenderTexture.vert", "Assets/Shader/BloomExtract.frag");
     gsLoadShader(Sh::GaussianBlur, "Assets/Shader/RenderTexture.vert", "Assets/Shader/GaussianBlur.frag");
     gsLoadShader(Sh::BloomCombine, "Assets/Shader/RenderTexture.vert", "Assets/Shader/BloomCombine.frag");
-    gsLoadShader(Sh::Fog, "Assets/Shader/RenderTexture.vert", "Assets/Shader/Fog.frag");
-    gsLoadShader(Sh::Dissolve, "Assets/Shader/RenderTexture.vert", "Assets/Shader/Dissolve.frag");
-
+    gsLoadShader(Sh::Fog,          "Assets/Shader/RenderTexture.vert", "Assets/Shader/Fog.frag");
+    gsLoadShader(Sh::Dissolve,     "Assets/Shader/RenderTexture.vert", "Assets/Shader/Dissolve.frag");
+    gsLoadShader(Sh::Vignette,     "Assets/Shader/RenderTexture.vert", "Assets/Shader/Vignette.frag");
+    gsLoadShader(Sh::RadialBlur,   "Assets/Shader/RenderTexture.vert", "Assets/Shader/RadialBlur.frag");
+    gsLoadShader(Sh::CopyRender, "Assets/Shader/RenderTexture.vert", "Assets/Shader/CopyRender.frag");
 }
 
 void PostEffect::bloomExtract(GSuint n, GScolor col)
@@ -221,7 +309,6 @@ void PostEffect::bloomExtract(GSuint n, GScolor col)
     gsBeginRenderTarget(Rt::BloomExtract);
     // バインド
     gsBindRenderTargetTextureEx(n, 0, 0);
-
     // レンダーターゲットの描画
     gsDrawRenderTargetEx(Rt::BloomExtract);
     // 元シーン画像用のテクスチャのバインド解除
@@ -243,7 +330,7 @@ void PostEffect::bloomCombine(GSuint n)
     //gsSetShaderParamTexture("u_BlurTexture4", 4);
     gsSetShaderParam1f("u_BloomIntensity", bloomIntencity_);
     // ブルーム合成用レンダーターゲットを描画先にする
-    gsBeginRenderTarget(Rt::BloomCombine);
+    gsBeginRenderTarget(outputRT_);
     // バインド
     gsBindRenderTargetTextureEx(n, 0, 0);
     // ブラーテクスチャをバインド
@@ -252,7 +339,7 @@ void PostEffect::bloomCombine(GSuint n)
     gsBindRenderTargetTextureEx(Rt::BlurV3, 0, 3);
     //gsBindRenderTargetTextureEx(Rt_BlurV4, 0, 4);
     // ブルーム合成用レンダーターゲットを描画
-    gsDrawRenderTargetEx(Rt::BloomCombine);
+    gsDrawRenderTargetEx(outputRT_);
     // バインド解除
     gsUnbindRenderTargetTextureEx(n, 0, 0);
     // ブラーテクスチャをバインド解除
@@ -264,6 +351,8 @@ void PostEffect::bloomCombine(GSuint n)
     gsEndRenderTarget();
     // シェーダーを無効にする
     gsEndShader();
+    //合成する場合、変更後のレンダーを入力先に
+    if (isBlend_) std::swap(inputRT_, outputRT_);
 }
 
 void PostEffect::gaussianBlur(GSuint source, GSvector2 size, GSuint blur_h, GSuint blur_v)
@@ -282,29 +371,13 @@ void PostEffect::gaussianBlur(GSuint source, GSvector2 size, GSuint blur_h, GSui
     gsSetShaderParam2f("u_Direction", &blur_h_direction);
     // テクスチャの設定
     gsSetShaderParamTexture("u_RenderTexture", 0);
-    // 水平方向ブラー用のレンダーターゲットを描画先にする
-    gsBeginRenderTarget(blur_h);
-    // 元画像のテクスチャをバインド
-    gsBindRenderTargetTextureEx(source, 0, 0);
-    // レンダーターゲットを描画
-    gsDrawRenderTargetEx(blur_h);
-    // テクスチャの解除
-    gsUnbindRenderTargetTextureEx(source, 0, 0);
-    // レンダーターゲットの解除
-    gsEndRenderTarget();
+    //水平方向ブラー用のレンダーターゲットをブレンド
+    ApplyRenderTexture(source,blur_h);
 
     // ブラーの方向を垂直方向にする
     gsSetShaderParam2f("u_Direction", &blur_v_direction);
-    // 垂直方向ブラー用のレンダーターゲットを描画先にする
-    gsBeginRenderTarget(blur_v);
-    // 水平方向ブラーのテクスチャをバインド
-    gsBindRenderTargetTextureEx(blur_h, 0, 0);
-    // レンダーターゲットを描画
-    gsDrawRenderTargetEx(blur_v);
-    // テクスチャの解除
-    gsUnbindRenderTargetTextureEx(blur_h, 0, 0);
-    // レンダーターゲットの解除
-    gsEndRenderTarget();
+    //垂直方向ブラー用のレンダーターゲットをブレンド
+    ApplyRenderTexture(blur_h, blur_v);
     // シェーダーを無効にする
     gsEndShader();
 }

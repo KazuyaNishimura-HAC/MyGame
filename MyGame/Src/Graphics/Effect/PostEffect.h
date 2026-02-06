@@ -1,11 +1,28 @@
 ﻿#ifndef POSTEFFECT_H_
 #define POSTEFFECT_H_
 #include "../../Screen.h"
+#include "../Shader/RenderTextureID.h"
+#include "../Shader/ShaderID.h"
 struct BloomEffectParam {
     // テクセルの閾値
     float threshold{ 0.01f };
     // エフェクトの強さ
     float intencity{ 0.35f };
+    //ブルームカラー
+    GScolor color{ 1.0f, 1.0f, 1.0f, 1.0f };
+};
+
+struct VignetteParam {
+    float intencity{ 0.5f };
+    float radius{ 0.4f };
+    float softness{ 0.25f };
+    GSvector3 color{ 0.0f,0.0f,0.0f };
+};
+
+struct RadialBlurParam {
+    GSvector2 center{ 0.5f,0.5f };
+    float intencity{ 0.5f };
+    int sampleCount{ 8 };
 };
 
 class PostEffect
@@ -15,28 +32,33 @@ public:
 	PostEffect();
 	~PostEffect();
     void Load();
-	void Bloom(GSuint n, GScolor col);
+	void Bloom();
+    void SetBloomParam(BloomEffectParam param);
     void SetIntensity(float intensity);
 	void Fog(GSuint n, GScolor col);
 	void Dissolve(GSuint n, GSuint m);
-	void MargeShader(GSuint n, GSuint m);
-    void GaussianBlur(GSuint n);
+	void ApplyRenderTexture(GSuint input, GSuint output);
+    void GaussianBlur();
     void IsBlur(bool blur);
+
+    void Vignette();
+    void SetVignetteParam(VignetteParam param);
+
+    void RadialBlur();
+    void SetRadialBlurParam(RadialBlurParam param);
     void Clear();
     void Debug();
-    void SetBloomParam(BloomEffectParam param);
+
+    void BeginBlend();
+    void EndBlend();
 private:
-	
+    void SetInputOutputRender(GSuint input,GSuint output);
 	void CreateRender();
 	void LoadShader();
 
     void bloomExtract(GSuint n, GScolor col);
     void bloomCombine(GSuint n);
-    // ガウシアンブラー
-    // source : 元画像のレンダーターゲット
-    // size   : 縮小バッファのサイズ
-    // blur_h : 水平方向ブラー用のレンダーターゲット
-    // blur_v : 垂直方向ブラー用のレンダーターゲット
+
     void gaussianBlur(GSuint source, GSvector2 size, GSuint blur_h, GSuint blur_v);
 
     GSvector4 zBufferParams(float near, float far);
@@ -71,8 +93,23 @@ private:
     float edge_color_intensity_{ 1.0f };
     //ブラーの強さ
     float blurIntencity_{ 1.0f };
-
+    //ブラーをかけるか
     bool isBlur_{ false };
+
+    //ブルームパラメータ
+    BloomEffectParam bloomParam_{};
+    //ビネットパラメータ
+    VignetteParam vignetteParam_{};
+
+    //ラジアルブラーパラメータ
+    RadialBlurParam radialBlurParam_{};
+
+    //入力元レンダーテクスチャ
+    GSuint inputRT_{ Rt::BaseScene };
+    //出力先レンダーテクスチャ
+    GSuint outputRT_{ Rt::FinalScene };
+    //レンダーテクスチャのブレンドを行うか
+    bool isBlend_{ false };
 };
 
 #endif

@@ -1,0 +1,35 @@
+﻿#ifndef SWORD_ENEMY2_H_
+#define SWORD_ENEMY2_H_
+
+#include <vector>
+#include <GStransform.h>
+#include "../Enemy.h"
+
+class GUI;
+
+class SwordEnemy2 : public Enemy
+{
+public:
+    //コンストラクタ
+    SwordEnemy2(IWorld* world = nullptr, float groupID = 0, const GSvector3& position = {0, 0, 0}, const GSvector3& rotate = { 0, 0, 0 }, Status status = {}, GSuint mesh = Model::Enemy);
+    //デストラクタ
+    ~SwordEnemy2()override;
+
+    //更新
+    void Update(float deltaTime)override;
+    void LateUpdate(float deltaTime)override;
+    //描画
+    void Draw()const override;
+    void React(Actor& other)override;
+    void HitAttackCollider(const AttackInfo& atkInfo)override;
+
+    bool IsGuard();
+    void SetGuard(bool guard);
+
+    virtual void Debug(float deltaTime)override;
+private:
+    void NormalAttack();
+    //ガード中か
+    bool isGuard_{ false };
+};
+#endif

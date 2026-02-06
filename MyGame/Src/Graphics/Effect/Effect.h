@@ -7,14 +7,13 @@
 
 struct EffectParam
 {
-    GSuint handle{ 0 };
     GSvector3 position{ 0,0,0 };
     GSvector3 rotation{ 0,0,0 };
     GSvector3 scale{ 1,1,1 };
     GScolor color{ 1,1,1,1 };
     float speed{ 1.0f };
-    EffectParam(GSuint id = 0, GSvector3 pos = { 0,0,0 }, GSvector3 rot = { 0,0,0 }, GSvector3 scale = { 1,1,1 }, GScolor color = { 1,1,1,1 },float speed = 1)
-        :handle{ id }, position{ pos }, rotation{ rot }, scale{ scale }, color{ color }, speed{ speed } {
+    EffectParam(GSvector3 pos = { 0,0,0 }, GSvector3 rot = { 0,0,0 }, GSvector3 scale = { 1,1,1 }, GScolor color = { 1,1,1,1 },float speed = 1)
+        :position{ pos }, rotation{ rot }, scale{ scale }, color{ color }, speed{ speed } {
     }
 };
 
@@ -30,33 +29,32 @@ public:
         GuardHit,
         ParryBreak,
         GroundDust,
-
+        Exclamation,
+        Confusion,
     };
-    //座標を指定して再生
-    static void SetEffectParam(const EffectParam& param) {
+
+    static GSuint CreateHandle(GSuint effectID) {
+
+        return gsPlayEffectEx(effectID, nullptr);
+    }
+    //パラメータ設定
+    static void SetParam(GSuint handle,const EffectParam& param) {
         GSmatrix4 matrix = GSmatrix4::TRS(param.position, GSquaternion::euler(param.rotation), param.scale);
-        GSuint handle = gsPlayEffectEx(param.handle, nullptr);
         gsSetEffectMatrix(handle, &matrix);
         gsSetEffectSpeed(handle, param.speed);
         gsSetEffectColor(handle, &param.color);
-    };
+    }
     //ローカル追従
-    static void SetEffectParam(const EffectParam& param, const GStransform& transform) {
+    static void SetParam(GSuint handle, const EffectParam& param, const GStransform& transform) {
         GSmatrix4 matrix = GSmatrix4::TRS(param.position, GSquaternion::euler(param.rotation), param.scale);
         matrix *= transform.localToWorldMatrix();
-        GSuint handle = gsPlayEffectEx(param.handle, nullptr);
-        gsSetEffectMatrix(handle,&matrix);
-        gsSetEffectSpeed(handle,param.speed);
+        gsSetEffectMatrix(handle, &matrix);
+        gsSetEffectSpeed(handle, param.speed);
         gsSetEffectColor(handle, &param.color);
-    };
-
-    static void LoopEffectParam(const EffectParam& param, const GStransform& transform) {
-        GSmatrix4 matrix = GSmatrix4::TRS(param.position, GSquaternion::euler(param.rotation), param.scale);
-        matrix *= transform.localToWorldMatrix();
-        gsSetEffectMatrix(param.handle, &matrix);
-        gsSetEffectSpeed(param.handle, param.speed);
-        gsSetEffectColor(param.handle, &param.color);
-    };
+    }
+    static void Stop(GSuint handle) {
+        gsStopEffect(handle);
+    }
 
 };
 #endif

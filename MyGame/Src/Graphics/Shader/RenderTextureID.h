@@ -3,7 +3,9 @@
 // レンダーターゲット
 struct Rt {
     enum Name {
-        BaseScene,   // シーン
+        BaseScene,   // ベースシーン
+        PostWork0,
+        PostWork1,
         FinalScene,  // 最終画面
         BloomExtract,// 高輝度テクセル抽出
         BlurH1,	    // 水平方向ブラー(1/4縮小バッファ)
@@ -15,6 +17,8 @@ struct Rt {
         BlurH4,	    // 水平方向ブラー(1/32縮小バッファ)
         BlurV4,	    // 垂直方向ブラー(1/32縮小バッファ)
         BloomCombine,// ブルームエフェクト合成
+        Vignette,   //ビネット
+        RadialBlur,//ラジアルブラー
     };
 };
 

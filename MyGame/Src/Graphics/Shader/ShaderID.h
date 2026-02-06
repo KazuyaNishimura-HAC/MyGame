@@ -4,11 +4,14 @@
 struct Sh {
     enum Name {
         Player,          // プレイヤー
+        CopyRender,       //コピーレンダー
         BloomExtract,    // 高輝度ピクセル抽出
         GaussianBlur,    // ガウシアンブラー
+        RadialBlur,      //ラジアルブラー
         BloomCombine,    // ブルームエフェクト合成
         Fog,             // フォグ
-        Dissolve,        //ディゾルブ
+        Dissolve,        // ディゾルブ
+        Vignette        // ビネット
     };
 };
 #endif

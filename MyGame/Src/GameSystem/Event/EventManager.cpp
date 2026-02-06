@@ -12,11 +12,13 @@ EventManager::~EventManager()
 
 void EventManager::Update(float deltaTime)
 {
-    timeLine_.Update(deltaTime);
+    
     //イベントが開始したらUpdate処理
-    if (!runningEvent_)return;
-    runningEvent_->Update(deltaTime);
-    if (!runningEvent_->IsInvoke() || runningEvent_->IsEnd()) runningEvent_ = nullptr;
+    if (runningEvent_) {
+        runningEvent_->Update(deltaTime);
+        if (!runningEvent_->IsInvoke() || runningEvent_->IsEnd()) runningEvent_ = nullptr;
+    }
+    timeLine_.Update(deltaTime);
 }
 
 void EventManager::Draw() const

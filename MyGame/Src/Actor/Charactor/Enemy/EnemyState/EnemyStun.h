@@ -11,7 +11,8 @@ public:
     void Exit()override;
 private:
     float stunTimer_{ 0.0f };
-    const float stunDuration_{ 3.0f };
+    const float stunDuration_{ 5.0f };
+    GSuint effectHandle_{ 0 };
 };
 
 #endif

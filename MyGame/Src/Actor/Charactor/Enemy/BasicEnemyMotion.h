@@ -9,8 +9,8 @@ public:
         Run,
         Hit,
         Parried,
-        //Stun,
-        Die
+        Die,
+        Stun
     };
 };
 

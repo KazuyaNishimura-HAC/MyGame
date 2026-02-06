@@ -10,6 +10,7 @@ public:
         Player,
         //[Charactor]
         Enemy,
+        Enemy2,
         Boss,
         //[MAP]
         DefaultMap,

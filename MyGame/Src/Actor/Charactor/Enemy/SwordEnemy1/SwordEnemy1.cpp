@@ -72,7 +72,7 @@ void SwordEnemy1::Draw() const
 void SwordEnemy1::React(Actor& other)
 {
     if (IsStun()) return;
-    if (other.GetName() == ActorName::Player && !IsCurrentState(EnemyState::Damage)) {
+    if (other.GetName() == ActorName::Player && !IsCurrentState(EnemyState::Damage) && CanAttack()) {
         ChangeState(EnemyState::Attack);
     }
 }
@@ -81,16 +81,19 @@ void SwordEnemy1::HitAttackCollider(const AttackInfo& atkInfo)
 {
     //死亡しているならreturn
     if (IsDying()) return;
+    GSuint hitEffect = Effect::CreateHandle(Effect::Hit);
     EffectParam param;
-    param.handle = Effect::Hit;
     param.position = transform_.position() + GSvector3{ 0,1,0 };
     param.scale = { 0.5f,0.5f,0.5f };
-    Effect::SetEffectParam(param);
+    Effect::SetParam(hitEffect,param);
     SoundManager::PlaySE(Sound::Hit);
     //デフォルトでHitタイマ設定
     SetHitReactTime();
-    AddBreakPoint(2);
-    Knockback(atkInfo.knockbackPower,atkInfo.hitPos);
+    //スタン中でないならゲージ上昇＋ノックバック
+    if (!IsStun()) {
+        AddBreakPoint(5);
+        Knockback(atkInfo.knockbackPower, atkInfo.hitPos);
+    }
     TakeDamage(atkInfo.damage);
     
     //hpが0なら死亡
@@ -112,5 +115,6 @@ void SwordEnemy1::Debug(float deltaTime)
 void SwordEnemy1::NormalAttack()
 {
     SpawnAttackCollider(GetAttackPower(), 0, 0.5f);
-    Effect::SetEffectParam(EffectParam(Effect::Slash, { 0,1,1 }, { 0,0,45 }, { 1,1,1 }), transform_);
+    GSuint attackEffect = Effect::CreateHandle(Effect::Slash);
+    Effect::SetParam(attackEffect, { { 0,1,1 }, { 0,0,45 } }, transform_);
 }

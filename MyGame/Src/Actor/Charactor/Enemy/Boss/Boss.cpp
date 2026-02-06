@@ -11,6 +11,7 @@
 #include "State/BossIntro.h"
 #include "State/BossIdle.h"
 #include "State/BossMove.h"
+#include "State/BossStun.h"
 #include "State/BossAttack.h"
 #include "State/BossJumpAttack.h"
 #include "State/BossDamage.h"
@@ -29,6 +30,7 @@ Boss::Boss(IWorld* world, float groupID, const GSvector3& position, const GSvect
     states_.AddState(BossState::Intro, new BossIntro(this));
     states_.AddState(BossState::Idle, new BossIdle(this));
     states_.AddState(BossState::Move, new BossMove(this));
+    states_.AddState(BossState::Stun, new BossStun(this));
     states_.AddState(BossState::Attack, new BossAttack(this));
     states_.AddState(BossState::JumpAttack, new BossJumpAttack(this));
     states_.AddState(BossState::Damage, new BossDamage(this));
@@ -46,7 +48,6 @@ Boss::Boss(IWorld* world, float groupID, const GSvector3& position, const GSvect
     SetVisible(false);
     //ブレイク値を高めに設定
     SetMaxBreakPoint(200);
-    
 }
 
 Boss::~Boss()
@@ -56,18 +57,19 @@ Boss::~Boss()
     ui_ = nullptr;
     bossUI_->End();
     bossUI_ = nullptr;
+    Effect::Stop(effectHandle_);
 }
 
 
 void Boss::Update(float deltaTime)
 {
     Enemy::Update(deltaTime);
-    if (!IsDying()) Effect::LoopEffectParam(EffectParam(effectHandles_[Effect::Aura], { 0,1,0 }, {}, { 1.5f,1.5f,1.5f }, { 1,1,1,1 }, 0.5f), transform_);
+    if (!IsDying()) Effect::SetParam(effectHandle_, { { 0,1,0 }, {}, { 1.5f,1.5f,1.5f }, { 1,1,1,1 }, 0.5f }, transform_);
 
     if (!IsBattleMode()) return;
     float dist = GSvector3::distance(player_->Transform().position(),transform_.position());
     //確率でジャンプ攻撃
-    if (!IsAttack() && dist > 5 && GetCurrentHealth() < 750) {
+    if (!IsAttack() && dist > 2.5f && GetCurrentHealth() < 750) {
         float random = 0;
         if (randomTimer_ < 0.0f) {
             random = gsRand(1, 4);
@@ -78,6 +80,11 @@ void Boss::Update(float deltaTime)
         }
         if(random == 1) ChangeState(BossState::JumpAttack);
     }
+    //ブレイク値が溜まったらスタン
+    if (IsBroken() && !IsStun()) {
+        ChangeState(BossState::Stun);
+    }
+
     //基底クラスの処理を実行
     if (!IsCurrentState(BossState::JumpAttack)) {
         attackCollider_->SetRadius(1.5f);
@@ -105,14 +112,14 @@ void Boss::Draw() const
 void Boss::React(Actor& other)
 {
     if (other.GetName() != ActorName::Player) return;
-    if (IsCurrentState(BossState::Damage) || IsAttack()) return;
-
+    if (IsCurrentState(BossState::Damage) || IsAttack() || IsStun()) return;
     ChangeState(BossState::Attack);
 }
 
 void Boss::OnParryHit(const GSvector3& position)
 {
-    AddBreakPoint(50);
+    if (IsStun()) return;
+    AddBreakPoint(30);
     ChangeState(BossState::Parried);
     Knockback(0.2f, position);
 }
@@ -121,14 +128,16 @@ void Boss::HitAttackCollider(const AttackInfo& atkInfo)
 {
     //死亡しているならreturn
     if (IsDying()) return;
+    //エフェクト再生
+    GSuint hitEffect = Effect::CreateHandle(Effect::Hit);
     EffectParam param;
-    param.handle = Effect::Hit;
     param.position = transform_.position() + GSvector3{ 0,1,0 };
     param.scale = { 0.5f,0.5f,0.5f };
-    Effect::SetEffectParam(param);
+    Effect::SetParam(hitEffect,param);
+    //効果音再生
     SoundManager::PlaySE(Sound::Hit);
     SetHitReactTime();
-    AddBreakPoint(2);
+    if (!IsStun())AddBreakPoint(2.5f);
     TakeDamage(atkInfo.damage);
     //hpが0なら死亡
     if (IsDying()) ChangeState(BossState::Dead);
@@ -160,7 +169,7 @@ void Boss::BeginIntro()
 {
     SetVisible(true);
     ChangeState(BossState::Intro);
-    effectHandles_[Effect::Aura] = gsPlayEffectEx(Effect::Aura, nullptr);
+    effectHandle_ = Effect::CreateHandle(Effect::Aura);
 }
 
 void Boss::fallEvent()

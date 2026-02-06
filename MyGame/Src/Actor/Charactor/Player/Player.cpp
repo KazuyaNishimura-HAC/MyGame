@@ -53,12 +53,6 @@ Player::Player(IWorld* world, const GSvector3& position, const GSvector3& rotate
     //専用UI生成
     ui_ = new PlayerUI(world,this);
     world_->AddGUI(ui_);
-
-    //エフェクトバグ回避用
-    EffectParam param;
-    param.handle = Effect::GuardHit;
-    param.position = transform_.position() + GSvector3{ 0,1,0 };
-    Effect::SetEffectParam(param);
 }
 Player::~Player()
 {
@@ -149,10 +143,10 @@ void Player::HitAttackCollider(const AttackInfo& info)
     //ガード処理
     if (IsCurrentState(PlayerState::Guard)) {
         SoundManager::PlaySE(Sound::Guard);
+        GSuint guardEffect = Effect::CreateHandle(Effect::GuardHit);
         EffectParam param;
-        param.handle = Effect::GuardHit;
         param.position = transform_.position() + GSvector3{ 0,1,0 };
-        Effect::SetEffectParam(param);
+        Effect::SetParam(guardEffect,param);
         //耐久値を減らす
         ReduceGuardPoint(1);
         if (IsGuardBroken()) {
@@ -379,7 +373,7 @@ void Player::NormalAttack()
 {
     SoundManager::PlaySE(Sound::Attack);
     camera_->SetShakeValues(10.0f, 5.0f, 160.0f, 1.0f, 5.0f, { 0.25f,0.25f }, 0.0f);
-    SpawnAttackCollider(GetAttackPower(), 0, 0.01f);
+    SpawnAttackCollider(GetAttackPower(), 0.1f, 0.01f);
     resultData_.totalDamage += GetAttackPower();
 }
 
@@ -387,7 +381,7 @@ void Player::UltimateATK()
 {
     float attack = GetAttackPower() * 3.0f;
     camera_->SetShakeValues(10.0f, 5.0f, 160.0f, 1.0f, 5.0f, { 0.5f,0.5f }, 0.0f);
-    SpawnAttackCollider(attack, 0, 0.01f);
+    SpawnAttackCollider(attack, 0.1f, 0.01f);
     resultData_.totalDamage += attack;
 }
 

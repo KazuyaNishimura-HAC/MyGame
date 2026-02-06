@@ -2,6 +2,7 @@
 #include "../../../../World/IWorld.h"
 #include "../../../../GameSystem/InputSystem/InputSystem.h"
 #include "../../../../GameSystem/Vibration/VibrationManager.h"
+#include "../../../../Graphics/Effect/PostEffect.h"
 PlayerParry::PlayerParry(Player* owner)
     :PlayerState::PlayerState(owner)
 {
@@ -15,12 +16,18 @@ PlayerParry::PlayerParry(Player* owner)
 void PlayerParry::Update(float deltaTime)
 {
     parryTimer_ -= owner_->World()->DeltaTime() / 60.0f;
-    if (isParryAttack_ && owner_->GetMesh()->IsEndMotion())isParryAttack_ = false;
+    blurTimer_ += (deltaTime / 60.0f);
+    blurIntencity_ = 0.25f * (std::sin(blurTimer_ * 6.0f) + 1.0f);
+    blurIntencity_ = CLAMP(blurIntencity_, 0.0f, 0.5f);
+    //制限時間もしくは攻撃モーションに切り替わったらブラーを戻す
+    if (owner_->IsAttack() && blurTimer_ >= 0.8f) isExecuted_ = true;
+
+    if (owner_->IsAttack() && owner_->GetMesh()->IsEndMotion())owner_->SetAttack(false);
 
     if (owner_->GetMesh()->MotionClip() == PlayerMotion::ParrySuccess && parryTimer_ < 0.0f) {
         isParryWait_ = false;
     }
-    if (!isParryWait_ && !isParryAttack_) {
+    if (!isParryWait_ && !owner_->IsAttack()) {
         owner_->ChangeState(PlayerState::Idle);
         return;
     }
@@ -28,25 +35,31 @@ void PlayerParry::Update(float deltaTime)
     if (isParryWait_ && InputSystem::ButtonTrigger(InputSystem::Button::B)) {
         owner_->SetTimeScale(1.0f);
         owner_->ChangeMotion(PlayerMotion::ParryATK,false,1.5f);
-        isParryAttack_ = true;
+        //isParryAttack_ = true;
         isParryWait_ = false;
+        owner_->MoveForward(1);
+        owner_->SetAttack(true);
     }
+    if(!isExecuted_) PostEffect::Instance().SetRadialBlurParam({ GSvector2{ 0.5f, 0.5f },blurIntencity_,8 });
 }
 
 void PlayerParry::Enter()
 {
     owner_->ChangeMotion(PlayerMotion::ParrySuccess, false, 1.5f,20.0f);
     VibrationManager::SetVibration({ 1,30 }, { 1,30 });
+    GSuint parryEffect = Effect::CreateHandle(Effect::ParryBreak);
     EffectParam param;
-    param.handle = Effect::ParryBreak;
     param.position = owner_->Transform().position() + GSvector3{ 0,1,0 };
-    Effect::SetEffectParam(param);
+    Effect::SetParam(parryEffect,param);
 
     parryTimer_ = waitTime_;
     owner_->SetTimeScale(0.2f,waitTime_);
     owner_->SetParry(true);
     owner_->SetInvincible(true);
     isParryWait_ = true;
+    isExecuted_ = false;
+    blurIntencity_ = 0.0f;
+    blurTimer_ = 0.0f;
 }
 
 void PlayerParry::Exit()
@@ -54,11 +67,14 @@ void PlayerParry::Exit()
     owner_->SetTimeScale(1.0f);
     owner_->SetParry(false);
     owner_->SetInvincible(false);
+    owner_->SetAttack(false);
     isParryAttack_ = false;
+    PostEffect::Instance().SetRadialBlurParam({ GSvector2{ 0.5f, 0.5f },0.0f,8 });
 }
 
 void PlayerParry::Attack(int count)
 {
-    Effect::SetEffectParam(effectParams[count], owner_->Transform());
+    GSuint attackEffect = Effect::CreateHandle(Effect::Slash);
+    Effect::SetParam(attackEffect,effectParams[count], owner_->Transform());
     owner_->NormalAttack();
 }

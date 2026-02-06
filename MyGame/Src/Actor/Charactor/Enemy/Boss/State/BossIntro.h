@@ -14,6 +14,7 @@ private:
     int nextMotion_[2] = { BossMotion::Idle,BossMotion::Attack4 };
     int count_{ 0 };
     bool vibration_{ false };
+    GSuint effectHandle_;
 };
 
 #endif

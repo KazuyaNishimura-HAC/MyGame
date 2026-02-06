@@ -12,6 +12,7 @@ public:
 private:
     void Attack();
     EffectParam currentEffect_{};
+    GSuint effectHandle_;
     int motionIndex_{ 0 };
     float waitTimer_{ 0.0f };
     const float waitduration{ 3.0f };

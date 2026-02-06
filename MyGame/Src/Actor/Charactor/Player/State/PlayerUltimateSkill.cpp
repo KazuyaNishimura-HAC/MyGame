@@ -42,6 +42,7 @@ void PlayerUltimateSkill::Exit()
 
 void PlayerUltimateSkill::Attack(int count)
 {
-    Effect::SetEffectParam(effectParams[count], owner_->Transform());
+    effectHandle_ = Effect::CreateHandle(Effect::SkillSlash);
+    Effect::SetParam(effectHandle_,effectParams[count], owner_->Transform());
     owner_->UltimateATK();
 }

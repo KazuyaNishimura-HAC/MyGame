@@ -65,7 +65,8 @@ void PlayerAttack::Exit()
 
 void PlayerAttack::ComboAttack()
 {
-    Effect::SetEffectParam(effectParams[combo_], owner_->Transform());
+    GSuint attakEffect = Effect::CreateHandle(Effect::Slash);
+    Effect::SetParam(attakEffect,effectParams[combo_], owner_->Transform());
     owner_->NormalAttack();
     combo_++;
 }

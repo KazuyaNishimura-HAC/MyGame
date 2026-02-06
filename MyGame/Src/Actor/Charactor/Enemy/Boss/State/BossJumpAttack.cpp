@@ -6,7 +6,6 @@ BossJumpAttack::BossJumpAttack(Boss* owner)
     //攻撃処理
     owner_->GetMesh()->AddEvent(BossMotion::Jump, 60, [=] {
         Attack();
-        Effect::SetEffectParam({ Effect::GroundDust, { 0,0,0 }, { 0,0,0 }, { 2,2,2 }, { 1,1,1,1 }, 1 }, owner_->Transform());
         });
 }
 
@@ -63,6 +62,7 @@ void BossJumpAttack::Exit()
 
 void BossJumpAttack::Attack()
 {
-    //Effect::SetEffectParam(currentEffect_, owner_->Transform());
+    effectHandle_ = Effect::CreateHandle(Effect::GroundDust);
+    Effect::SetParam( effectHandle_, {{ 0,0,0 }, { 0,0,0 }, { 2,2,2 }, { 1,1,1,1 }, 1 }, owner_->Transform());
     owner_->NormalAttack();
 }

@@ -14,10 +14,11 @@ public:
 private:
     void Attack(int count);
 	UltimateAnimEvent* skillEvent_{ nullptr };
+    GSuint effectHandle_;
     std::vector<EffectParam> effectParams{
-        {Effect::SkillSlash, { 0,1,1 }, { 0,0,240 }, { 1.5f,1.5f,1.5f }, { 1,0,0,1 },1.5f},
-        {Effect::SkillSlash, { 0,1,1 }, { 0,0,290 }, { 1.5f,1.5f,1.5f }, { 1,0,0,1 },1.5f},
-        {Effect::SkillSlash, { 0,1.5f,1 }, { 0,0,140 }, { 1.5f,1.5f,1.5f }, { 1,0,0,1 },1.5f},
+        {{ 0,1,1 }, { 0,0,240 }, { 1.5f,1.5f,1.5f }, { 1,0,0,1 },1.5f},
+        {{ 0,1,1 }, { 0,0,290 }, { 1.5f,1.5f,1.5f }, { 1,0,0,1 },1.5f},
+        {{ 0,1.5f,1 }, { 0,0,140 }, { 1.5f,1.5f,1.5f }, { 1,0,0,1 },1.5f},
     };
 };
 

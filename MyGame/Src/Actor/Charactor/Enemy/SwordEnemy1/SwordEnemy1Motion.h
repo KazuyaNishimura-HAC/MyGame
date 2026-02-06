@@ -5,10 +5,8 @@ class SwordEnemy1Motion
 public:
     enum Motion
     {
-        //共通モーションが5つあるためID5から
-        Attack1 = 5,
-        ParryHit,
-        Stan
+        //共通モーションが6つあるためID6から
+        Attack1 = 6,
     };
 };
 

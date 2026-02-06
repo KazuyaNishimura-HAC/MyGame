@@ -21,7 +21,8 @@ void BossIntro::Update(float deltaTime)
     if (!vibration_ && owner_->Transform().position().y <= 0.0f) {
         vibration_ = true;
         VibrationManager::SetVibration({ 2.5f,90 }, { 2.5f,90 });
-        Effect::SetEffectParam({ Effect::GroundDust, { 0,0,0 }, { 0,0,0 }, { 2,2,2 }, { 1,1,1,1 }, 1 }, owner_->Transform());
+        effectHandle_ = Effect::CreateHandle(Effect::GroundDust);
+        Effect::SetParam(effectHandle_,{{ 0,0,0 }, { 0,0,0 }, { 2,2,2 }, { 1,1,1,1 }, 1 }, owner_->Transform());
     }
     owner_->fallEvent();
 }

@@ -13,7 +13,7 @@ void PlayerGuard::Update(float deltaTime)
     if (owner_->CanUseParry() && parryTimer_ <= 0.0f) {
         owner_->SetParryEnable(false);
     }
-    //万が一違うモーションが流れていたら再度ガードモーションに
+    //違うモーションが流れていたら再度ガードモーションに
     if (owner_->GetMesh()->IsEndMotion()) {
         owner_->ChangeMotion(PlayerMotion::Guard);
     }

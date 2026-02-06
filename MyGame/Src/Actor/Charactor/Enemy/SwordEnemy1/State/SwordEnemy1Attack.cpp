@@ -21,5 +21,6 @@ void SwordEnemy1Attack::Enter()
 void SwordEnemy1Attack::Exit()
 {
 	owner_->SetAttack(false);
+    owner_->SetCoolTime();
 }
 

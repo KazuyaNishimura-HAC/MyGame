@@ -29,50 +29,37 @@ World::~World()
 void World::Start()
 {
     time_ = Time{};
-    
     GetTimeLine().SetIWorld(this);
     timeLineEditor_ = new TimeLineEditor(this,GetTimeLine());
     GetTimeLine().LoadFile();
     PostEffect::Instance().Load();
     light_ = new Light(this);
-    // シャドウマップの作成
-    static const GSuint shadow_map_size[] = { 2048, 2048 };
-    gsCreateShadowMap(2, shadow_map_size, GS_TRUE);
-    // シャドウマップを適用する距離(視点からの距離）
-    gsSetShadowMapDistance(60.0f);
-    // カスケードシャドウマップの分割位置を調整（デフォルトは0.5）
-    gsSetShadowMapCascadeLamda(0.7f);
-    // シャドウの濃さを設定(0.0:濃い～1.0:薄い)
-    gsSetShadowMapAttenuation(0.5f);
-    // ライトマップの読み込み
-    gsLoadLightmap(0, "Assets/Light/Lightmap.txt");
-    // リフレクションプローブの読み込み
-    //gsLoadReflectionProbe(0, "Assets/RefProbe/ReflectionProbe.txt");
 }
 
 void World::Update(float deltaTime)
 {
     time_.Update(deltaTime);
+#if _DEBUG
+    timeLineEditor_->DrawEditUI();
+#endif
 
     GameUpdate(time_.GameDeltaTime());
-
     vibrationManager_.Update(deltaTime);
     guiManager_.Update(deltaTime, time_.GameDeltaTime());
-    
     //当たり判定
     actorManager_.Collide();
-    actorManager_.LateUpdate(time_.GameDeltaTime());
+    
     for (auto& chara : actorManager_.GetCharactorList()) {
         fieldManager_.CollideActor(chara->Transform());
     }
     if(GetCamera())fieldManager_.CollideCamera(GetCamera()->Transform(), cameraManager_.GetActiveController()->GetViewTarget());
+    actorManager_.LateUpdate(time_.GameDeltaTime());
     eventManager_.Invoke();
-
     fieldManager_.Remove();
     actorManager_.Remove();
     eventManager_.Remove();
     guiManager_.Remove();
-    
+
     if(!time_.IsPause())cameraManager_.Update(deltaTime);
 }
 
@@ -94,13 +81,16 @@ void World::Draw() const
         eventManager_.Draw();
         gsDrawEffect();
         RenderTexture::EndRender();
-        RenderTexture::BindRenderTexture(Rt::BaseScene,0);
-        PostEffect::Instance().SetBloomParam(BloomEffectParam{0.1f,0.2f});
-        PostEffect::Instance().Bloom(Rt::BaseScene, { 1, 1, 1, 1.0f });
-        PostEffect::Instance().GaussianBlur(Rt::BaseScene);
-        //PostEffect::Instance().Fog(Rt::BaseScene, { 0.1f,0.0f,0.1f,1.0f });
-        //ベースシーンを描画
-        RenderTexture::DrawRender(Rt::BaseScene);
+
+        PostEffect::Instance().BeginBlend();
+            PostEffect::Instance().RadialBlur();
+            PostEffect::Instance().Bloom();
+            PostEffect::Instance().Vignette();
+        PostEffect::Instance().EndBlend();
+        //ブレンド後のシーン描画
+        RenderTexture::BindRenderTexture(Rt::FinalScene, 0);
+        RenderTexture::DrawRender(Rt::FinalScene);
+        RenderTexture::UnBindRenderTexture(Rt::FinalScene, 0);
     }
     //描画範囲を画面全体にリセット
     glViewport(0, 0, Screen::ScreenWidth, Screen::ScreenHeight);
@@ -320,7 +310,6 @@ void World::Debug(float deltaTime)
     cameraManager_.Debug();
     guiManager_.Debug();
     eventManager_.Debug();
-    timeLineEditor_->DrawEditUI();
     PostEffect::Instance().Debug();
 }
 

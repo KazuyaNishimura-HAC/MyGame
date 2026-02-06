@@ -13,6 +13,7 @@
 #include "../../Sound/SoundManager.h"
 #include "../../UI/SoundMenu.h"
 #include "../../UI/ResultUI.h"
+#include "../../Graphics/Effect/PostEffect.h"
 // 開始
 void GamePlayScene::Start() {
     debugCamera_ = new DebugCamera(&world_);
@@ -101,13 +102,28 @@ void GamePlayScene::InitialSettings()
     resultUI_ = new ResultUI(&world_);
     world_.AddGUI(resultUI_);
 
+    // シャドウマップの作成
+    static const GSuint shadow_map_size[] = { 2048, 2048 };
+    gsCreateShadowMap(2, shadow_map_size, GS_TRUE);
+    // シャドウマップを適用する距離(視点からの距離）
+    gsSetShadowMapDistance(60.0f);
+    // カスケードシャドウマップの分割位置を調整（デフォルトは0.5）
+    gsSetShadowMapCascadeLamda(0.7f);
+    // シャドウの濃さを設定(0.0:濃い～1.0:薄い)
+    gsSetShadowMapAttenuation(0.5f);
+    // ライトマップの読み込み
+    gsLoadLightmap(0, "Assets/Light/Lightmap.txt");
+    //初期effect設定
+    PostEffect::Instance().SetBloomParam(BloomEffectParam{ 0.1f, 0.2f });
+    PostEffect::Instance().SetRadialBlurParam({ GSvector2{ 0.5f, 0.5f },0.0f,8 });
+
+    //BGM再生
     SoundManager::PlayBGM(Sound::Battle);
 }
 
 void GamePlayScene::AddFields()
 {
-    //world_.AddField(new FieldActor({ 0,0,0 }, Model::DefaultMap, Model::MapCollide));
-    //テスト
+    //ステージCollide設定
     world_.AddField(new Field({ -7,0,0 }, { 1,10,30 }));
     world_.AddField(new Field({ 5,0,6 }, { 30,10,2 }));
     world_.AddField(new Field({ 5,0,-6 },{ 30,10,2 }));

@@ -112,6 +112,11 @@ bool AnimatedMesh::IsMotion(int motion)
     return curMotion_.clip_ == motion;
 }
 
+GSuint AnimatedMesh::MeshID() const
+{
+    return mesh_.MeshID();
+}
+
 GSmatrix4 AnimatedMesh::boneMatrices(int boneNo) const
 {
     return boneMatrices_[boneNo] * transform_;
@@ -139,14 +144,12 @@ void AnimatedMesh::UpdateEvent(float deltaTime)
 
         if (looped)
         {
-            if (prevTimer >= event->time_ && event->time_ > nextTimer)
-                continue;
+            if (prevTimer >= event->time_ && event->time_ > nextTimer) continue;
             event->callback_();
         }
         else
         {
-            if (prevTimer >= event->time_ || event->time_ > nextTimer)
-                continue;
+            if (prevTimer >= event->time_ || event->time_ > nextTimer) continue;
             event->callback_();
         }
     }

@@ -52,6 +52,7 @@ public:
     float MotionEndTime()const;
     float MotionEndTime(GSuint motion)const;
     bool IsMotion(int motion);
+    GSuint MeshID() const;
     GSmatrix4 boneMatrices(int boneNo)const;
     int MotionCount()const;
 

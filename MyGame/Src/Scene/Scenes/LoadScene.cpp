@@ -61,12 +61,14 @@ void LoadScene::Debug(float delta_time)
 }
 
 void LoadScene::LoadAssets() {
-    //メッシュ読み込み8
+    //メッシュ読み込み9
     gsLoadTexture(SkyBox::GamePlay, "Assets/SkyBox/gameSkyBox.dds");
     loadCount_++;
     gsLoadSkinMesh(Model::Player, "Assets/Model/Charactor/Player/Player.mshb");
     loadCount_++;
-    gsLoadSkinMesh(Model::Enemy, "Assets/Model/Charactor/Enemy/Enemy1.mshb");
+    gsLoadSkinMesh(Model::Enemy, "Assets/Model/Charactor/Enemy/enemy1.mshb");
+    loadCount_++;
+    gsLoadSkinMesh(Model::Enemy2, "Assets/Model/Charactor/Enemy2/enemy2.mshb");
     loadCount_++;
     gsLoadOctree(Model::DefaultMap, "Assets/Model/Stage/Tutorial/TutorialStage.oct");
     loadCount_++;
@@ -129,7 +131,7 @@ void LoadScene::LoadAssets() {
     loadCount_++;
     gsLoadTexture(Texture::UltimateIconFill, "Assets/Texture/GamePlay/UltmateIcon.png");
     loadCount_++;
-    // エフェクトファイルの読み込み7
+    // エフェクトファイルの読み込み9
     gsLoadEffect(Effect::Slash, "Assets/Effect/Slash02/Slash02_white_gray.efkefc");
     loadCount_++;
     gsLoadEffect(Effect::SkillSlash, "Assets/Effect/Slash01/Slash01.efkefc");
@@ -143,6 +145,10 @@ void LoadScene::LoadAssets() {
     gsLoadEffect(Effect::ParryBreak, "Assets/Effect/PickUpItem/PickUpItem03.efkefc");
     loadCount_++;
     gsLoadEffect(Effect::GroundDust, "Assets/Effect/GroundDust/GroundDustLarge.efkefc");
+    loadCount_++;
+    gsLoadEffect(Effect::Exclamation, "Assets/Effect/Exclamation/Exclamation.efkefc");
+    loadCount_++;
+    gsLoadEffect(Effect::Confusion, "Assets/Effect/Confusion/Confusion.efkefc");
     loadCount_++;
     //サウンド7
     gsLoadBGM(Sound::Battle, "Assets/Sound/BGM/Battle.ogg", TRUE);

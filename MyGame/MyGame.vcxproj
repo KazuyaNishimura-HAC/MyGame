@@ -143,6 +143,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Src\Actor\Charactor\Enemy\Boss\State\BossJumpAttack.cpp" />
+    <ClCompile Include="Src\Actor\Charactor\Enemy\Boss\State\BossStun.cpp" />
+    <ClCompile Include="Src\Actor\Charactor\Enemy\SwordEnemy2\State\SwordEnemy2Attack.cpp" />
+    <ClCompile Include="Src\Actor\Charactor\Enemy\SwordEnemy2\SwordEnemy2.cpp" />
     <ClCompile Include="Src\Actor\Charactor\Player\EnemyDetectionCollider.cpp" />
     <ClCompile Include="Src\Actor\Charactor\Enemy\EnemyState\EnemyStun.cpp" />
     <ClCompile Include="Src\GameSystem\Vibration\VibrationManager.cpp" />
@@ -225,9 +228,15 @@
     <ClCompile Include="Src\GameSystem\Event\UltimateAnimEvent.cpp" />
     <ClCompile Include="Src\GameSystem\Event\TimeLine\TimeLineEditor.cpp" />
     <ClCompile Include="Src\GameSystem\Event\TimeLine\TimeLine.cpp" />
+    <ClCompile Include="Src\Actor\Charactor\Enemy\SwordEnemy2\State\SwordEnemy2Guard.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Actor\Charactor\Enemy\Boss\State\BossJumpAttack.h" />
+    <ClInclude Include="Src\Actor\Charactor\Enemy\Boss\State\BossStun.h" />
+    <ClInclude Include="Src\Actor\Charactor\Enemy\SwordEnemy2\State\SwordEnemy2Attack.h" />
+    <ClInclude Include="Src\Actor\Charactor\Enemy\SwordEnemy2\State\SwordEnemy2State.h" />
+    <ClInclude Include="Src\Actor\Charactor\Enemy\SwordEnemy2\SwordEnemy2.h" />
+    <ClInclude Include="Src\Actor\Charactor\Enemy\SwordEnemy2\SwordEnemy2Motion.h" />
     <ClInclude Include="Src\Actor\Charactor\Player\EnemyDetectionCollider.h" />
     <ClInclude Include="Src\Actor\Charactor\Enemy\EnemyState\EnemyStun.h" />
     <ClInclude Include="Src\GameSystem\Vibration\VibrationManager.h" />
@@ -347,16 +356,20 @@
     <ClInclude Include="Src\GameSystem\Event\UltimateAnimEvent.h" />
     <ClInclude Include="Src\GameSystem\Event\TimeLine\TimeLineEditor.h" />
     <ClInclude Include="Src\GameSystem\Event\TimeLine\TimeLine.h" />
+    <ClInclude Include="Src\Actor\Charactor\Enemy\SwordEnemy2\State\SwordEnemy2Guard.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shader\BloomCombine.frag" />
     <None Include="Assets\Shader\BloomExtract.frag" />
+    <None Include="Assets\Shader\CopyRender.frag" />
     <None Include="Assets\Shader\Dissolve.frag" />
     <None Include="Assets\Shader\EditBox.frag" />
     <None Include="Assets\Shader\EditBox.vert" />
     <None Include="Assets\Shader\Fog.frag" />
     <None Include="Assets\Shader\GaussianBlur.frag" />
+    <None Include="Assets\Shader\RadialBlur.frag" />
     <None Include="Assets\Shader\RenderTexture.vert" />
+    <None Include="Assets\Shader\Vignette.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

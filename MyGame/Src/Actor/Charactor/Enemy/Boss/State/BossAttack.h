@@ -12,7 +12,7 @@ public:
 private:
     void Attack();
     EffectParam currentEffectParam_{};
-    GSuint effectHandle_;
+    GSuint effectHandle_{ 0 };
     //ランダムモーション
     std::vector<int> randomMotion{ BossMotion::Attack1,BossMotion::Attack2 ,BossMotion::Attack3 };
     int motionIndex_{ 0 };

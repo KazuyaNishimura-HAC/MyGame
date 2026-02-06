@@ -76,6 +76,7 @@ void ResultUI::BeginResult(ResultData data)
     valuesIndex_[1] = data.parryCount;
     valuesIndex_[2] = data.totalDamage;
     int texture;
+    //ここにスコア条件を書く
     if (data.playerDead) texture = Texture::RankC;
     else texture = Texture::RankS;
     scoreRank_ = new Image(position_ + GSvector2{ Screen::ScreenWidth - 400, Screen::HalfHeight }, Texture::Data(texture, { 0.5f,0.5f }), { 0.5f,0.5f });

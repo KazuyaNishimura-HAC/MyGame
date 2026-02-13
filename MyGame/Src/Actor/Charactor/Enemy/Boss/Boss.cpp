@@ -64,9 +64,9 @@ Boss::~Boss()
 void Boss::Update(float deltaTime)
 {
     Enemy::Update(deltaTime);
-    if (!IsDying()) Effect::SetParam(effectHandle_, { { 0,1,0 }, {}, { 1.5f,1.5f,1.5f }, { 1,1,1,1 }, 0.5f }, transform_);
-
+    
     if (!IsBattleMode()) return;
+    if (!IsDying()) Effect::SetParam(effectHandle_, { { 0,1,0 }, {}, { 1.5f,1.5f,1.5f }, { 1,1,1,1 }, 0.5f }, transform_);
     float dist = GSvector3::distance(player_->Transform().position(),transform_.position());
     //確率でジャンプ攻撃
     if (!IsAttack() && dist > 2.5f && GetCurrentHealth() < 750) {

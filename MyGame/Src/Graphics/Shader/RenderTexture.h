@@ -19,8 +19,10 @@ public:
 	static void BindRenderDepthEx(int id, GSuint textureID);
 	static void UnBindRenderDepthEx(int id, GSuint textureID);
 
-	static void DrawRender(int id);
-    static void DrawRenderEx(int id);
+	static void Draw(int id);
+    static void DrawEx(int id);
+    //レンダーテクスチャのコピー
+    static void Copy(GSuint input, GSuint output);
 };
 
 #endif

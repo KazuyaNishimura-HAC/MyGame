@@ -82,16 +82,17 @@ void World::Draw() const
         gsDrawEffect();
         RenderTexture::EndRender();
 
+        //エフェクトブレンド
         PostEffect::Instance().BeginBlend();
             PostEffect::Instance().RadialBlur();
             PostEffect::Instance().Bloom();
             PostEffect::Instance().Vignette();
         PostEffect::Instance().EndBlend();
-        //ブレンド後のシーン描画
-        RenderTexture::BindRenderTexture(Rt::FinalScene, 0);
-        RenderTexture::DrawRender(Rt::FinalScene);
-        RenderTexture::UnBindRenderTexture(Rt::FinalScene, 0);
     }
+    //ブレンド後のシーンを描画
+    RenderTexture::BindRenderTexture(Rt::FinalScene, 0);
+    RenderTexture::Draw(Rt::FinalScene);
+    RenderTexture::UnBindRenderTexture(Rt::FinalScene, 0);
     //描画範囲を画面全体にリセット
     glViewport(0, 0, Screen::ScreenWidth, Screen::ScreenHeight);
     DrawGUI();

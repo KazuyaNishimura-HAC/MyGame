@@ -37,7 +37,6 @@ public:
     void SetIntensity(float intensity);
 	void Fog(GSuint n, GScolor col);
 	void Dissolve(GSuint n, GSuint m);
-	void ApplyRenderTexture(GSuint input, GSuint output);
     void GaussianBlur();
     void IsBlur(bool blur);
 

@@ -112,20 +112,6 @@ void PostEffect::Dissolve(GSuint n, GSuint m)
     gsEndShader();
 }
 
-void PostEffect::ApplyRenderTexture(GSuint input, GSuint output)
-{
-    //レンダーターゲット設定
-    gsBeginRenderTarget(output);
-    //テクスチャバインド
-    gsBindRenderTargetTextureEx(input, 0, 0);
-    // レンダーターゲットを描画
-    gsDrawRenderTargetEx(output);
-    // テクスチャのバインド解除
-    gsUnbindRenderTargetTextureEx(input, 0, 0);
-    //レンダーターゲット解除
-    gsEndRenderTarget();
-}
-
 void PostEffect::GaussianBlur()
 {
     // ブラーに使う解像度（必要なら調整）
@@ -152,8 +138,8 @@ void PostEffect::Vignette()
     gsSetShaderParam3f("u_VignetteColor", &vignetteParam_.color);
     // 元画像テクスチャの設定
     gsSetShaderParamTexture("u_BaseTexture", 0);
-    //レンダーテクスチャをブレンド
-    ApplyRenderTexture(inputRT_, outputRT_);
+    //シェーダ適応後のinputRTをoutputRTに描画
+    RenderTexture::Copy(inputRT_, outputRT_);
     //合成する場合、変更後のレンダーを入力先に
     if (isBlend_) std::swap(inputRT_, outputRT_);
     // シェーダーを無効にする
@@ -175,8 +161,8 @@ void PostEffect::RadialBlur()
     gsSetShaderParam2f("u_Center", &radialBlurParam_.center);
     // 元画像テクスチャの設定
     gsSetShaderParamTexture("u_BaseTexture", 0);
-    //レンダーテクスチャをブレンド
-    ApplyRenderTexture(inputRT_, outputRT_);
+    //シェーダ適応後のinputRTをoutputRTに描画
+    RenderTexture::Copy(inputRT_, outputRT_);
     //合成する場合、変更後のレンダーを入力先に
     if(isBlend_) std::swap(inputRT_, outputRT_);
     // シェーダーを無効にする
@@ -221,7 +207,6 @@ void PostEffect::Debug()
     ImGui::DragInt("RadialSampleCount", &radialBlurParam_.sampleCount);
     ImGui::DragFloat2("RadialBlurCenter", radialBlurParam_.center);
     ImGui::End();
-    //PostEffect::Instance().SetVignetteParam({ 0.5f,0.4f,0.2f,GSvector3{1.0f,0.0f,0.0f} });
 }
 
 void PostEffect::BeginBlend()
@@ -233,7 +218,7 @@ void PostEffect::BeginBlend()
     //ベースシーンをPostWorkにコピー
     gsBeginShader(Sh::CopyRender);
     gsSetShaderParamTexture("u_BaseTexture", 0);
-    ApplyRenderTexture(Rt::BaseScene,Rt::PostWork0);
+    RenderTexture::Copy(Rt::BaseScene, Rt::PostWork0);
     gsEndShader();
     //glEnable(GL_BLEND);
     SetInputOutputRender(Rt::PostWork0,Rt::PostWork1);
@@ -246,7 +231,7 @@ void PostEffect::EndBlend()
     gsBeginShader(Sh::CopyRender);
     gsSetShaderParamTexture("u_BaseTexture", 0);
     //合成結果を最終画面レンダーに描画
-    ApplyRenderTexture(inputRT_, Rt::FinalScene);
+    RenderTexture::Copy(inputRT_, Rt::FinalScene);
     gsEndShader();
 }
 
@@ -372,12 +357,11 @@ void PostEffect::gaussianBlur(GSuint source, GSvector2 size, GSuint blur_h, GSui
     // テクスチャの設定
     gsSetShaderParamTexture("u_RenderTexture", 0);
     //水平方向ブラー用のレンダーターゲットをブレンド
-    ApplyRenderTexture(source,blur_h);
-
+    RenderTexture::Copy(source, blur_h);
     // ブラーの方向を垂直方向にする
     gsSetShaderParam2f("u_Direction", &blur_v_direction);
     //垂直方向ブラー用のレンダーターゲットをブレンド
-    ApplyRenderTexture(blur_h, blur_v);
+    RenderTexture::Copy(blur_h, blur_v);
     // シェーダーを無効にする
     gsEndShader();
 }

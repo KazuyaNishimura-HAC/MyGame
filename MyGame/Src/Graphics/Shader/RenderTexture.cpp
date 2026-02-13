@@ -54,12 +54,26 @@ void RenderTexture::UnBindRenderDepthEx(int id, GSuint textureID)
 	gsUnbindRenderTargetDepthEx(id, textureID);
 }
 
-void RenderTexture::DrawRender(int id)
+void RenderTexture::Draw(int id)
 {
 	gsDrawRenderTarget(id);
 }
-void RenderTexture::DrawRenderEx(int id)
+void RenderTexture::DrawEx(int id)
 {
     gsDrawRenderTargetEx(id);
+}
+
+void RenderTexture::Copy(GSuint input, GSuint output)
+{
+    //レンダーターゲット設定
+    gsBeginRenderTarget(output);
+    //テクスチャバインド
+    gsBindRenderTargetTextureEx(input, 0, 0);
+    // レンダーターゲットを描画
+    gsDrawRenderTargetEx(output);
+    // テクスチャのバインド解除
+    gsUnbindRenderTargetTextureEx(input, 0, 0);
+    //レンダーターゲット解除
+    gsEndRenderTarget();
 }
 
